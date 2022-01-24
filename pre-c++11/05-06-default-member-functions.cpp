@@ -38,6 +38,10 @@ class HomeForSale: private Uncopyable {
 //	again asking the question why not simply '= delete' these functions?
 
 
+//	If a Widget constructor accepts type 'T', that constructor defines an <implicit> conversion <(rule)> from T->Widget, unless that constructor is declared explicit 
+//	Ongoing: 2022-01-25T01:03:07AEDT (basic rules on the use of explicit constructors)
+
+
 int main()
 {
 	//	The default member functions are generated as needed:
