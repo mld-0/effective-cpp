@@ -2,6 +2,8 @@
 #include <vector>
 using namespace std;
 
+//	TODO: 2022-01-25T04:06:40AEDT rule of 4.5/4/3/0 (here or elsewhere?)
+
 //	With the implicit default class member functions, the empty class
 //class Empty {};
 //	is actually equivalent to (assuming each function is used at least once)
