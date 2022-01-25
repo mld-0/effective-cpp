@@ -23,6 +23,8 @@ public:
 //	The default copy/move constructor/assignment functions are invalid for classes with either const member variables or reference member variables
 //	Given default member functions will not be generated for a class that inherits from a parent that declares its own equivalent function private and never defines them
 
+//	The default copy constructor/assignment functions perform a memberwise copy of each variable in the class (the copy constructors of each member performing the copies). Likewise the default move constructor/assignment functions perform memberwise moves for each variable in the class.
+
 
 //	Solution (for some reason (presumedly) for an old C++ version (did it used to not support '= delete'?))
 //	inherit class from 'Uncopyable':
@@ -43,6 +45,12 @@ class HomeForSale: private Uncopyable {
 //	If a Widget constructor accepts type 'T', that constructor defines an <implicit> conversion <(rule)> from T->Widget, unless that constructor is declared explicit 
 //	Ongoing: 2022-01-25T01:03:07AEDT (basic rules on the use of explicit constructors)
 
+
+//	LINK: https://stackoverflow.com/questions/4172722/what-is-the-rule-of-three
+//	A class that manages a resource should manage only that one resource, not multiple resources
+//	The rule of three: If you need to explicitly declare either the destructor, copy constructor or copy assignment operator yourself, you probably need to explicitly declare all three of them.
+//	The rule of five: Adds the move constructor and move assignment to the rule of three
+//	The rule of zero: When none of the special member functions are declared and the defaults are used
 
 int main()
 {
