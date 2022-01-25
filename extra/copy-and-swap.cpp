@@ -8,8 +8,8 @@ using namespace std;
 //	LINK: https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
 //	LINK: https://stackoverflow.com/questions/5695548/public-friend-swap-member-function
 
-//	copy-and-swap is a technique for implementing copy-assignment (and move-assignment), in terms of the copy-constructor, and with a strong no exception guarantee. It involves making a copy of the object with the copy-constructor (or move-constructor), then swapping the contents of the current object with said new object. It solves the problem of self-assignment without requiring a test for self-assignment
-//	It is a useful solution when the rule-of-zero cannot be followed
+//	copy-and-swap is a technique for implementing copy-assignment (and move-assignment), in terms of the copy-constructor, and with a strong no exception guarantee. It involves making a temporary copy of the object with the copy-constructor (or move-constructor), then swapping the contents of the current object with said temporary object. It solves the problem of self-assignment without requiring a test for self-assignment
+//	It is a useful solution when the rule-of-zero cannot be followed. The extra memory required for the temporary object is the tradeoff required for exception safety
 //	copy-and-swap requires that we provide our own swap function for the class in question, (std::swap uses copy-assignment and therefore cannot be used to implement copy-assignment) (it also requires a copy-constructor and a destructor for that class)
 //	swap is a non-throwing function that swaps the members of two classes. 
 
