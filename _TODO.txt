@@ -1,0 +1,6 @@
+TODO: 2022-01-25T22:37:54AEDT effective-c++, extra/copy-and-swap, what (special member functions) can/should be marked as noexcept? (making things explict) (vs the compiler being able to deduce noexcept for straightforward functions?)
+TODO: 2022-01-25T07:03:21AEDT effective-c++, 11-handle-self-assignment, (this being a slightly complicated topic of which <from the book we adapt a half finished example (further)>), how best to do the 'swap()' in 'copy-and-swap' is a somewhat involved subject (swap as member/friend function, implemented best / in terms of a default?) (does copy-and-swap warrent a dedicated example (something the book doesn't make a dedicated item?)) (best copy and swap implements both move and swap (together)?)
+TODO: 2022-01-25T01:49:06AEDT effective-c++, applying the 'return *this' (i.e: reference to the LHS of the expresion(?)) rule for assignment operator to the two-argument form of the assignment operators
+TODO: 2022-01-26T23:22:55AEDT effective-c++, extra/implicit-conversion
+TODO: 2022-01-30T01:29:24AEDT effective-c++, item 18 interface design basics, (dedicated 'extra/' example for) custom deleters for shared_ptr and unique_ptr
+
