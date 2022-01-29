@@ -11,7 +11,7 @@ using namespace std;
 //	copy-and-swap is a technique for implementing copy-assignment (and move-assignment), in terms of the copy-constructor, and with a strong no exception guarantee. It involves making a temporary copy of the object with the copy-constructor (or move-constructor), then swapping the contents of the current object with said temporary object. It solves the problem of self-assignment without requiring a test for self-assignment
 //	It is a useful solution when the rule-of-zero cannot be followed. The extra memory required for the temporary object is the tradeoff required for exception safety
 //	copy-and-swap requires that we provide our own swap function for the class in question, (std::swap uses copy-assignment and therefore cannot be used to implement copy-assignment) (it also requires a copy-constructor and a destructor for that class)
-//	swap is a non-throwing function that swaps the members of two classes. 
+//	'swap()' is a non-throwing function that swaps the members of two classes. 
 
 //	TODO: 2022-01-25T22:37:54AEDT effective-c++, extra/copy-and-swap, what (special member functions) can/should be marked as noexcept? (making things explict) (vs the compiler being able to deduce noexcept for straightforward functions?)
 
@@ -32,14 +32,12 @@ public:
           mArray(mSize ? new int[mSize] : nullptr)
     {
 		cout << "dumb_array copy-constructor\n";
-        // note that this is non-throwing, because of the data
-        // types being used; more attention to detail with regards
-        // to exceptions must be given in a more general case, however
+        // note that this is non-throwing, because of the data types being used; more attention to detail with regards to exceptions must be given in a more general case, however
         std::copy(other.mArray, other.mArray + mSize, mArray);
     }
 
 	//	move-constructor
-	dumb_array(dumb_array&& rhs) noexcept 
+	dumb_array(dumb_array&& rhs) noexcept 	//	a noexcept move-ctor allows certain optimizations by the compiler
 		: dumb_array()
 	{
 		cout << "dumb_array move-constructor\n";
@@ -55,8 +53,7 @@ public:
 	//	because <reasons> <the alternative is problematic> (requires two functions, one to be found via ADL and the other to handle std:: qualifications) ((something to do with) partial template specialization)
 	//	swap is best implemented as a <member> friend function
 	//	a friend function defined inside a class is: 1) placed in the enclosing namespace, 2) automatically inline, 3) able to refer to static members of the class without further qualification
-	friend void swap(dumb_array& lhs, dumb_array& rhs)
-		//	noexcept?
+	friend void swap(dumb_array& lhs, dumb_array& rhs) 	//	noexcept?
 	{
 		cout << "dumb_array (friend) swap\n";
 		//	call swap for each class member variable, defaulting to std::swap if a specialized implementation cannot be found
