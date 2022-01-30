@@ -3,4 +3,14 @@ TODO: 2022-01-25T07:03:21AEDT effective-c++, 11-handle-self-assignment, (this be
 TODO: 2022-01-25T01:49:06AEDT effective-c++, applying the 'return *this' (i.e: reference to the LHS of the expresion(?)) rule for assignment operator to the two-argument form of the assignment operators
 TODO: 2022-01-26T23:22:55AEDT effective-c++, extra/implicit-conversion
 TODO: 2022-01-30T01:29:24AEDT effective-c++, item 18 interface design basics, (dedicated 'extra/' example for) custom deleters for shared_ptr and unique_ptr
-
+TODO: 2022-01-30T02:08:24AEDT effective-c++, 20-pass-by-const-ref, C++ compiler behaviour in optimising arguments passed by value?
+TODO: 2022-01-30T02:26:43AEDT effective-c++, item 20, polymorphic behaviour (virtual functions) (when passing by) reference
+TODO: 2022-01-30T02:40:13AEDT effective-c++, item 21, operators that return a reference (that isn't to '*this')?, (and how chained operators are (best) handled WRT to these returned objects/references?)
+TODO: 2022-01-30T03:02:23AEDT effective-c++, item 21, <correct/best> form for declaring (each of the) operator functions, ((role of ) the non-member friend?)
+TODO: 2022-01-30T03:10:02AEDT effective-c++, item 21, example is when a function 'operator*' should return by value instead of by reference ((examples for) when should operators/functions return by reference?)
+TODO: 2022-01-30T03:42:41AEDT effective-c++, perl, (one liner?), replace '#include <vector>\n#include <string>\n' with (reverse order) (and vice versa)
+TODO: 2022-01-30T10:47:43AEDT effective-c++, item 25, a better discussion of how best to declare swap (as a dedicated example) (extra/swap.cpp) (for modern/ye-olde c++)
+TODO: 2022-01-30T15:28:41AEDT effective-c++, item 25, explicit vs partial specialization (and extending std::swap for a custom type (adding to the std namespace))
+TODO: 2022-01-30T16:39:35AEDT effective-c++, extras/specialize-templates.cpp, (what does it mean) (and how might one be expected to remember said explanation) (need a better explanation?) (does either effective-c++ book touch the topic?)
+TODO: 2022-01-30T22:35:44AEDT effective-c++, extra/specializer-templates.cpp, laid-out-rules (in paragraph or points) that predict/explain the selection made for each call to 'f()' and 'g()', (and better laid out examples?) (examples reflecting a newer C++ than pre-01)
+TODO: 2022-01-30T23:57:49AEDT effective-c++, extras/specialize-templates.cpp, (for completeness (and elegance) sake), implemented the omitted (hand-waved) (in-place) counting sort for 'void custom_sort<char>(char arr[], int size)' 
