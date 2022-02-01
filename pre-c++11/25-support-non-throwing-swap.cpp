@@ -76,7 +76,7 @@ void foo(T& lhs, T& rhs) {
 
 //	Providing a swap function for a class:
 namespace Foo {
-	
+
 	//	Either using a friend function:
 	class Bar_i {
 	public:
@@ -84,7 +84,7 @@ namespace Foo {
 			//	...
 		}
 	};
-	
+
 	//	Or using a non-member and a member function:
 	class Bar_ii {
 	public:
@@ -97,7 +97,8 @@ namespace Foo {
 	}
 }
 
-//	Explicit specialization <(generally one shouldn't specialize a function template?)>
+//	Ongoing: 2022-02-01T20:40:32AEDT why one would define a custom swap in std::
+//	Explicit specialization (in std) <(generally one shouldn't specialize a function template?)> <(for classes, not templates)>
 class Bar {};
 namespace std {		// only allowed to extend namespace std with specalizations
 	template<>
