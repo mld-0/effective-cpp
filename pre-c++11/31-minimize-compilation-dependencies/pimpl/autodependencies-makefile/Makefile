@@ -24,7 +24,7 @@ $(EXE): $(objs)
 	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@ 
 
 #	Ongoing: 2022-02-07T17:08:25AEDT in what order does: compilation, creation of dependencies files, include-ing of dependencies files happen?
-#	leading '-', no error if any of the filenames do not exist
+#	leading '-' on include -> no error if any of the filenames do not exist
 -include $(deps)
 
 .PHONY: clean
