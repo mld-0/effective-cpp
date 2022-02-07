@@ -12,6 +12,5 @@ private:
 	std::string theName;
 	Date theBirthDate;
 	Address theAddress;
-
 };
 

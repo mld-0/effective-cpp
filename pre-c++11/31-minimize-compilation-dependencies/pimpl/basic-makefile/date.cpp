@@ -8,8 +8,3 @@ std::string Date::to_string() const {
 	return val;
 }
 
-void ad()
-{
-}
-
-int aalksdjflkj;
