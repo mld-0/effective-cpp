@@ -15,13 +15,14 @@ using namespace std;
 
 //	Ongoing: 2022-01-31T00:02:03AEDT this (first example 'custom_sort()') is <partial/complete> <implicit/explicit> template specialization?
 
+//	LINK: https://www.geeksforgeeks.org/counting-sort/
+
 //	For example, define a 'custom_sort()' function template, with special (counting sort) behaviour for 'char' type
 template<typename T>
 void custom_sort(T arr[], int len) {
 	cerr << "custom_sort() for typename T\n";
 	stable_sort(arr, arr+len);
 }
-//	LINK: https://www.geeksforgeeks.org/counting-sort/
 template<> 
 void custom_sort<char>(char arr[], int size) {
 	cerr << "custom_sort() counting sort\n";
