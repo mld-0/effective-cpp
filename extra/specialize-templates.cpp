@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 using namespace std;
-//	{{{1
+//	{{{2
 
 //	TODO: 2022-01-30T16:39:35AEDT effective-c++, extras/specialize-templates.cpp, (what does it mean) (and how might one be expected to remember said explanation) (need a better explanation?) (does either effective-c++ book touch the topic?)
 
@@ -21,11 +21,33 @@ void custom_sort(T arr[], int len) {
 	cerr << "custom_sort() for typename T\n";
 	stable_sort(arr, arr+len);
 }
+//	LINK: https://www.geeksforgeeks.org/counting-sort/
 template<> 
 void custom_sort<char>(char arr[], int size) {
 	cerr << "custom_sort() counting sort\n";
-	//	TODO: 2022-01-30T23:57:49AEDT effective-c++, extras/specialize-templates.cpp, (for completeness (and elegance) sake), implemented the omitted (hand-waved) (in-place) counting sort for 'void custom_sort<char>(char arr[], int size)' 
-	//	implement counting sort
+	char output[size];
+	int RANGE = 256;
+	//	array to store count of indervidual characters
+	int count[RANGE];
+	memset(count, 0, sizeof(count));
+	//	Store count of each character
+	for (int i = 0; arr[i]; ++i) {
+		++count[arr[i]];
+	}
+	//	Set count[i] to the position of <i> in output array
+	for (int i = 1; i <= RANGE; ++i) {
+		count[i] += count[i-1];
+	}
+	//	Build output array
+	for (int i = 0; arr[i]; ++i) {
+		output[count[arr[i]]-1] = arr[i];
+		--count[arr[i]];
+	}
+	//	Copy 'output' to 'arr'
+	for (int i = 0; arr[i]; ++i) {
+		cout << output[i] << "\n";
+		arr[i] = output[i];
+	}
 }
 //	The compiler checks for a <(partially/fully/best)> (matching) specialized version of a function, and (if found) it uses it instead of the main template
 
@@ -44,7 +66,117 @@ void custom_sort<char>(char arr[], int size) {
 
 //	<(means defining all of the template type variables?)>
 //	<details>
+//	An explicit specialization may be declared in any scope where its primary template may be defined. i
+//	Specializations must appears after the non-specialized template declaration. 
+//	Specializations must be declared before the first use that would cause implicit instantiation <(in every translation unit where such a use occurs)> (an implicit instantiation is a specialization of a template generated due to the use of that template)
+//	A template specialization that has been declared but not defined can be used just like any other incomplete type (pointers and references to it may be used)
+//	The explicit specialization of a function template is not necessary inline just because the primary template is 
+//	Default function arguments cannot be specified in explicit specializations of function templates, member function templates, and member functions of class templates when the class is implicitly instantiated
+//	An explicit specialization cannot be declared a friend
 
+//	Ongoing: 2022-01-31T23:39:39AEDT (this <technique> is called what?) (using structs (instead of functions) why?)
+template<typename T>
+struct my_is_void: std::false_type {};
+template<>
+struct my_is_void<void> : std::true_type {};
+
+namespace N {
+	template<typename T> class X {};		//	primary template
+	template<> class X<int> {};				//	specialization in same namespace 
+
+	template<typename T> class Y {};		//	another primary template
+	template<> class Y<double>;				//	forward declaration of specialization (in same namespace)
+}
+template<> class N::Y<double> {};			//	<(specialization in same namespace)>
+
+//	When specializing a function template, its template arguments can be omitted if template argument deducation can provide them from the function arguments:
+template<class T> class Array {};
+template<class T> void sort(Array<T>& v);		//	primary template
+template<> void sort(Array<int>& v);			//	No need to write 'template<> void sort<int>(Array<int>& v)'
+
+//	When defining a member of explicitly specialized class template outside the body of the class, the syntax 'template <>' is not used, unless if its a member of an explicitly specalizd member class template
+//	{{{
+template< typename T>
+struct A
+{
+    struct B {};                    // member class 
+    template<class U> struct C { }; // member class template
+};
+
+template<> // specialization
+struct A<int> 
+{
+    void f(int); // member function of a specialization
+};
+
+// template<> not used for a member of a specialization
+void A<int>::f(int) { /* ... */ }
+template<> // specialization of a member class
+struct A<char>::B
+{
+    void f();
+};
+
+// template<> not used for a member of a specialized member class either
+void A<char>::B::f() { /* ... */ }
+
+template<> // specialization of a member class template
+template<class U> struct A<char>::C
+{
+    void f();
+};
+
+// template<> is used when defining a member of an explicitly
+// specialized member class template specialized as a class template
+template<>
+template<class U> void A<char>::C<U>::f() { /* ... */ }
+//	}}}
+
+//	An explicit specialization of a static data member of a template if a definition if the declaration includes an initalizer, otherwise it is a declaration
+//template<> X Q<int>::x;		//	declaration of a static member
+//template<> X Q<int>::x ();	//	error, function declaration
+//template<> X Q<int>::x {};	//	definition of a default-initialized static member
+
+//	Templates may be nested within many enclosing class templates. In an explicit specialization for such a member, there is a 'template<>' for each enclosing class template that is explicit specified
+template<class T1> struct Outer {
+	template<class T2> struct Inner {
+		template<class T3> void mf();
+	};
+};
+template<> struct A<int>;
+template<> template<> struct Outer<char>::Inner<double>;
+template<> template<> template<> void Outer<char>::Inner<char>::mf<double>();
+//	In such a nested declaration, some of the levels may remain unspecified <(except that it can't specialize a class member template if its enclosing class is unspecified)>
+//	For each <such level>, the declaration needs 'template<arguments>' because such specializations are themselves templates:
+//	{{{
+template <class T1> class AA
+{
+    template<class T2> class BB
+    {
+        template<class T3> void mf1(T3); // member template
+        void mf2();                      // non-template member
+    };
+};
+
+// specialization
+template<> // for the specialized A
+template<class X> // for the unspecialized B
+class AA<int>::BB
+{
+    template <class T> void mf1(T);
+};
+
+// specialization
+template<> // for the specialized AA
+template<> // for the specialized BB
+template<class T> // for the unspecialized mf1
+void AA<int>::BB<double>::mf1(T t) {}
+
+// ERROR: B<double> is specialized and is a member template, so its enclosing A
+// must be specialized also
+//template<class Y>
+//template<> void AA<Y>::BB<double>::mf2() {}
+//	}}}
 
 //	Partial template specialiation, Supported By:
 //		class templates
@@ -57,7 +189,30 @@ void custom_sort<char>(char arr[], int size) {
 
 
 
+
 void TemplateSpecializationIntro() {
+	cout << "my_is_void<char>=(" << my_is_void<char>::value << ")\n";
+	cout << "my_is_void<void>=(" << my_is_void<void>::value << ")\n";
+	cout << "\n";
+
+	//	Ongoing: 2022-02-07T22:21:34AEDT (do we not) (ever) call (it as) custom_sort<char>()?
+
+	//	custom_sort (int):
+	cout << "custom_sort<int>:\n";
+	int A[] = { 3, 7, 9, 4, 8, 5, 2, };
+	for (const auto& x: A) { cout << x << " "; } cout << "\n";
+	custom_sort(A, sizeof(A)/sizeof(*A));
+	for (const auto& x: A) { cout << x << " "; } cout << "\n";
+	cout << "\n";
+
+	//	custom_sort (char):
+	cout << "custom_sort<char>:\n";
+	char B[] = { 3, 7, 9, 4, 8, 5, 2, };
+	for (const auto& x: B) { cout << (int) x << " "; } cout << "\n";
+	custom_sort(B, sizeof(B)/sizeof(*B));
+	for (const auto& x: B) { cout << (int) x << " "; } cout << "\n";
+	cout << "\n";
+
 }
 
 
