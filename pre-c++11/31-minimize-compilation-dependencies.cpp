@@ -10,6 +10,50 @@ using namespace std;
 
 //	C++ does a poor job of seperating interfaces from implementation
 
+//	(Basically), header files are '#included' and not compiled, whereas source files are compiled and not '#included'
+
+//	Suppose class A uses class B, (B is one of A's dependencies). 
+//	Whether it can should be forward declared or included:
+//		Do nothing if: 			A makes no reference at all to B
+//								The only reference to class B is to declare it a friend
+//	
+//		Forward declare B if:	A contains a pointer or reference to B
+//								One or more functions has a B object/pointer/reference as parameter/return-type 
+//	
+//		Include B if:			B is a parent class of A
+//								A contains a B object
+//	
+//	Prefer doing nothing, then forward declaring, then including (but don't forward declare the standard library). These rules help prevent circular dependencies
+
+
+//	Forward declaring templates:
+//	Consider:
+//	a.h:
+//		#include "b.h"
+//		template<typename T>
+//		class Tem {
+//			B b;
+//		};
+//		typedef Tem<int> A;
+//	b.h:
+//		//	incorrectly attempt to forward declare A
+//		//class A;	//	error, A is a template specialization, not a class
+//		//	correct way:
+//		template<typename T> class Tem;
+//		typedef Tem<int> A;
+//	A better solution: alternative headers with forward declarations:
+//	a.h:
+//		#include "b.h"
+//		template<typename T>
+//		class Tem {
+//		B b;
+//		};
+//	a_fwd.h:
+//		template<typename T> class Tem;
+//		typedef Tem<int> A;
+//	This allows A to be used <(as a pointer, reference, or function parameter)> by including a header without requiring the entire class definition. (It is important to keep forward headers and the corresponding definition headers <synchronized>)
+
+
 //	Declaring a class using objects by value requires the definitions of the corresponding classes, typically through imports (as a project should (obviously) not be a single file). This introduces a compilation dependency between these files - if the imported headers change (or any of the files they depend on change), the file containing 'Person_i' must be recompiled as must any files that use it. 
 //	{{{
 //	date.h:
@@ -98,6 +142,7 @@ void clearAppointments(Date d);
 	class PersonInterface_i {
 	public:
 		PersonInterface_i(const string& name, const Date& birthday, const Address& addr);
+		~PersonInterface_i();				//	must declare destructor, and provide (default) definition in source file
 		string name() const;
 		string birthDate() const;
 		string address() const;
@@ -110,9 +155,15 @@ void clearAppointments(Date d);
 	PersonInterface_i::PersonInterface_i(const string& name, const Date& birthday, const Address& addr)
 		: pImpl(new PersonImpl(name, birthday, addr))		//	note the use of 'new'
 	{}
+	//	if the default deleter for unique_ptr is used, the type used in the unique_ptr must be complete where this deleter is invoked: for this reason we define the default destructor in the cpp file
+	PersonInterface_i::~PersonInterface_i() = default;
 	string PersonInterface_i::name() const { return pImpl->name(); }
 	string PersonInterface_i::birthDate() const { return pImpl->birthDate(); }
 	string PersonInterface_i::address() const { return pImpl->address(); }
+//	main.cpp:
+	//#include "date.h"			
+	//#include "address.h"
+	//#include "person.h"
 //	}}}
 //	Cost is the dereferencing and storage of the pointer
 //	Client may create and use handle class like a conventional object
@@ -138,6 +189,7 @@ void clearAppointments(Date d);
 //	realperson.h: 
 	//#include "date.h"
 	//#include "address.h"
+	//#include "person.h"		//	required(?)
 	class PersonConcrete : public PersonInterface_ii {
 	public:
 		PersonConcrete(const string& name, const Date& birthday, const Address& addr);
@@ -169,6 +221,10 @@ void clearAppointments(Date d);
 		//	may potentially return different type of derived object, depending on argument values
 		return unique_ptr<PersonInterface_ii>(new PersonConcrete(name, birthday, addr));
 	}
+//	main.cpp:
+	//#include "date.h"			
+	//#include "address.h"
+	//#include "personinterface.h" (?)
 //	}}}
 //	Cost is that of resolving and storing virtual function pointers
 //	Client must create/manipulate object as smartpointer through factory function
