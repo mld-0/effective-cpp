@@ -15,7 +15,7 @@ class AWOV {
 public:
 	virtual ~AWOV() = 0;
 };
-//	<required for earlier C++ versions?> <It is necessary to provide a definition for a pure virtual <function/destructor>?>
+//	<required for earlier C++ versions?> <It is sometimes necessary to provide a definition for a pure virtual destructor>
 AWOV::~AWOV() {}
 
 //	When the time for destructor comes, the destructor of the most derived class is called first, then the destructor of each subiquent parent class in the hierachy
@@ -24,3 +24,8 @@ int main()
 {
 	return 0;
 }
+
+//	Summary:
+//		If a class has any virtual functions, it should have a virtual destructor
+//		If a class is not designed to be a base class (<or/that-is> use polymorphically), it should not declare a virtual destructor
+
