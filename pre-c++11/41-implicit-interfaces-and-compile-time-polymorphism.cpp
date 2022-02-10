@@ -5,7 +5,7 @@ using namespace std;
 
 //	Explicit interface: <(Receiving an object that is publicly Derived from some Base interface class (obeys 'is a' Base) (as a pointer/reference of a base type) and achieves runtime polymorphism through virtual functions. Enforced by compiler by checking class inheritance hierarchy)> 
 //	Implicit interface: <(Template function that receives a parameter type, which must support the expression in which it is used (have said operators defined, or have an implicit conversion to a type for which they are). Achieves compile-time polymorphism Through template instantiation and function overload resolution.)>
-//	Ongoing: 2022-02-10T21:17:25AEDT how to <view/get/list> the implicit interface for some function template?
+//	TODO: 2022-02-10T21:17:25AEDT effective-c++, 41-implicit-interfaces-and-compile-time-polymorphism, how to <view/get/list> the implicit interface for some function template?
 
 //	C++ OOP revolves around explicit interfaces and runtime polymorphism.
 class Widget_i {
