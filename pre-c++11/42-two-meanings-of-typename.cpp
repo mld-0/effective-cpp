@@ -27,16 +27,16 @@ void Example_i(const T& container) {
 template<typename T>
 void Example_ii(const T& container, typename T::iterator iter);
 
-//	The exceptions to this rule: typename must not precede nested dependent type names in a base class list (list of class to be inherited from), or base class identifiers in a member initalization list.
+//	The exceptions to this rule: typename must not precede nested dependent type names in a base class list (list of class to be inherited from), or base class identifiers in a member initialization list.
 template<typename T>
 class Base { class Nested {}; };
 template<typename T>
 class Derived: public Base<T>::Nested {		//	base class list, typename not allowed
 public:
 	explicit Derived(int x) 
-		: Base<T>::Nested(x)				//	base class identifer in member initalization list, typename not allowed
+		: Base<T>::Nested(x)				//	base class identifier in member initialization list, typename not allowed
 	{
-		//	typename required, not a base class list or identifier in member initalization list
+		//	typename required, not a base class list or identifier in member initialization list
 		typename Base<T>::Nested temp;		
 	}
 };
@@ -64,5 +64,5 @@ int main()
 }
 //	Summary:
 //		When declaring template parameters, 'class' and 'typename' are interchangeable.
-//		Nested dependent type names must be identified with 'typename', except in base class lists, or as a base class identifier in a member initalization list.
+//		Nested dependent type names must be identified with 'typename', except in base class lists, or as a base class identifier in a member initialization list.
 
