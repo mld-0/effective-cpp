@@ -3,6 +3,9 @@
 #include <string>
 using namespace std;
 
+//	TODO: 2022-02-09T04:25:26AEDT effective-c++, 35-virtual-function-alternatives, what (besides the obvious) is the problem with virtual functions?
+//	TODO: 2022-02-09T04:26:07AEDT effective-c++, 35-virtual-function-alternatives, complete examples for 'Strategy Pattern' ((still) being a stupid name?), std::function based and 'Classic' (pointer to (virtual function in) implementation class hierachy)
+
 //	Consider: <the obvious solution>, A base class with a virtual 
 class GameCharacter_i {
 public:
@@ -96,9 +99,6 @@ public:
 //	(Allows implementation to be extended through Derived 'HealthCalculation' classes)
 //	Ongoing: 2022-02-09T04:07:33AEDT is not 'Strategy' (in this context) the worst f------ name for <>(?)
 
-
-//	TODO: 2022-02-09T04:25:26AEDT effective-c++, 35-virtual-function-alternatives, what (besides the obvious) is the problem with virtual functions?
-//	TODO: 2022-02-09T04:26:07AEDT effective-c++, 35-virtual-function-alternatives, complete examples for 'Strategy Pattern' ((still) being a stupid name?), std::function based and 'Classic' (pointer to (virtual function in) implementation class hierachy)
 
 int main()
 {
