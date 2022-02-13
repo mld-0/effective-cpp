@@ -60,7 +60,7 @@ int main()
 
 	//	Ongoing: 2022-02-08T03:19:49AEDT behaviour when passing by pointer (can we violate the 'is a' rule?)
 	eat(p);
-	eat(s);
+	eat(s);			//	<(if necessary, compilers will implicitly turn Derived into Base)>
 	study(s);
 	//study(p);		//	error
 
