@@ -23,7 +23,7 @@ void Example_i(const T& container) {
 }
 //	The general rule: anytime one referes to a nested dependent type name in a template, it must be immediately preceded by keyword 'typename'
 
-//	Example: function recieving a template parameter container type, and an iterator of that container
+//	Example: function receiving a template parameter container type, and an iterator of that container
 template<typename T>
 void Example_ii(const T& container, typename T::iterator iter);
 
