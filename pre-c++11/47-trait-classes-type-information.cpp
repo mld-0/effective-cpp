@@ -49,6 +49,7 @@ void advance_ii(IterT& iter, DistT d) {
 		else { while (d++) --iter; }
 	}
 }
+//	This template is invalid for any 'IterT' that is not a random-access-iterator, since even though the 'iter += d' statement will not be executed unless we have determined our iterator is random access, it still must be valid for all types with which the function is instantiated in order to be compiled.
 
 
 //	Example: move(), using 'remove_reference<T>'
