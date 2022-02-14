@@ -3,6 +3,7 @@
 //	vim: set foldlevel=2 foldcolumn=2:
 //	}}}1
 #include <iostream>
+#include <iterator>
 #include <vector>
 #include <string>
 #include <limits>
@@ -60,9 +61,31 @@ typename remove_reference<T>::type&& move(T&& arg) {
 
 
 //	Type traits for Custom Iterators:
-//	<old-C++> declare typedefs without inheriting from std::iterator?
-//	TODO: 2022-02-14T18:55:29AEDT effective-c++, 47-trait-classes-type-information, type traits for custom iterators, without inheriting from std::iterator, and without 'using'
-//	<old-C++> inherit from std::iterator
+//	<old-C++> declare typedefs without inheriting from std::iterator:
+template<long FROM, long TO>
+class Range_i {
+public:
+	class iterator {
+        long num = FROM;
+    public:
+		//	iterator traits (must define all 5 for iterator_traits<> to work)
+		typedef long difference_type;
+		typedef long value_type;
+		typedef const long* pointer;
+		typedef const long& reference;
+		typedef std::forward_iterator_tag iterator_category;
+
+        iterator(long _num = 0) : num(_num) {}
+        iterator& operator++() {num = TO >= FROM ? num + 1: num - 1; return *this;}
+        iterator operator++(int) {iterator retval = *this; ++(*this); return retval;}
+        bool operator==(iterator other) const {return num == other.num;}
+        bool operator!=(iterator other) const {return !(*this == other);}
+        long operator*() {return num;}
+    };
+    iterator begin() {return FROM;}
+    iterator end() {return TO >= FROM? TO+1 : TO-1;}
+};
+//	<old-C++> inherit from std::iterator:
 template<long FROM, long TO>
 class Range_ii {
 public:
@@ -86,14 +109,14 @@ public:
     iterator begin() {return FROM;}
     iterator end() {return TO >= FROM? TO+1 : TO-1;}
 };
-//	<new-C++> 'using' declarations
+//	<new-C++> 'using' declarations:
 template<long FROM, long TO>
 class Range_iii {
 public:
     class iterator {
         long num = FROM;
     public:
-        // iterator traits
+		//	iterator traits (must define all 5 for iterator_traits<> to work)
         using difference_type = long;
         using value_type = long;
         using pointer = const long*;
@@ -164,11 +187,14 @@ int main()
 	cout << *iter4 << "\n";
 	cout << "\n";
 
-	std::iterator_traits<Range_ii<0,5>::iterator>::value_type x1 = 5;
-	std::iterator_traits<Range_ii<0,5>::iterator>::iterator_category c1;
+	std::iterator_traits<Range_i<0,5>::iterator>::value_type x1 = 5;
+	std::iterator_traits<Range_i<0,5>::iterator>::iterator_category c1;
 
-	std::iterator_traits<Range_iii<0,5>::iterator>::value_type x2 = 5;
-	std::iterator_traits<Range_iii<0,5>::iterator>::iterator_category c2;
+	std::iterator_traits<Range_ii<0,5>::iterator>::value_type x2 = 5;
+	std::iterator_traits<Range_ii<0,5>::iterator>::iterator_category c2;
+
+	std::iterator_traits<Range_iii<0,5>::iterator>::value_type x3 = 5;
+	std::iterator_traits<Range_iii<0,5>::iterator>::iterator_category c3;
 
 	return 0;
 }
