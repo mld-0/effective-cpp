@@ -74,7 +74,7 @@ public:
 		typedef const long* pointer;
 		typedef const long& reference;
 		typedef std::forward_iterator_tag iterator_category;
-
+		//	functions
         iterator(long _num = 0) : num(_num) {}
         iterator& operator++() {num = TO >= FROM ? num + 1: num - 1; return *this;}
         iterator operator++(int) {iterator retval = *this; ++(*this); return retval;}
