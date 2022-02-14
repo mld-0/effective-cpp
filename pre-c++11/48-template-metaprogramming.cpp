@@ -9,20 +9,6 @@ using namespace std;
 //	TMP makes some things easy that would otherwise be hard or impossible. It can also shift work from runtime to compile-time (and can therefore make compile times much longer).
 //	TMP is Turing Complete.
 
-//	Consider: Implementing 'advance()' using typeid (the non-TMP approach)
-template<typename IterT, typename DistT>
-void advance_i(IterT& iter, DistT d)
-{
-	if (typeid(typename std::iterator_traits<IterT>::iterator_category) == typeid(std::random_access_iterator_tag)) {
-		iter += d;
-	} else {
-		if (d >= 0) { while (d--) ++iter; }
-		else { while (d++) --iter; }
-	}
-}
-//	This template is invalid for any 'IterT' that is not a random-access-iterator, since even though the 'iter += d' statement will not be executed unless we have determined our iterator is random access, it still must be valid for all types with which the function is instantiated in order to be compiled.
-
-
 //	Consider: TMP (hello world) factorial calculator
 template<unsigned n>
 struct Factorial {
@@ -33,6 +19,39 @@ struct Factorial<0> {
 	enum { value = 1 };
 };
 //	Each instantiation of the Factorial template is a struct, and each struct uses the enum hack (see item 02) to declare a TMP variable named value.
+
+
+//	Example: 'advance()', using 'iterator_traits' (see item 47)
+//	C++ provides a conditional constructs for types that is evaluated during compilation: overloading. We overload a function for each iterator type, selecting which to call with the iterator type as <(an unnamed argument)>
+template<typename IterT, typename DistT>
+void doAdvance(IterT& iter, DistT d, std::random_access_iterator_tag) {
+	iter += d;
+}
+template<typename IterT, typename DistT>
+void doAdvance(IterT& iter, DistT d, std::bidirectional_iterator_tag) {
+	if (d >= 0) { while (d--) ++iter; }
+	else { while (d++) --iter; }
+}
+template<typename IterT, typename DistT>
+void doAdvance(IterT& iter, DistT d, std::input_iterator_tag) {		//	also handle forward_iterator_tag
+	if (d < 0) { throw std::out_of_range("Negative distance"); }
+	while (d--) ++iter;
+}
+template<typename IterT, typename DistT>
+void advance_i(IterT& iter, DistT d) {
+	doAdvance(iter, d, typename std::iterator_traits<IterT>::iterator_category());
+}
+//	Alternative (non-TMP) flawed implementation for 'advance()' using typeid comparison: even though '+=' is only called if the iterator has been determined to be random access, the template function will not compile if insubstantiated with an iterator type which does not support random access.
+template<typename IterT, typename DistT>
+void advance_ii(IterT& iter, DistT d) {
+	if (typeid(typename std::iterator_traits<IterT>::iterator_category) == typeid(std::random_access_iterator_tag)) {
+		iter += d;
+	} else {
+		if (d >= 0) { while (d--) ++iter; }
+		else { while (d++) --iter; }
+	}
+}
+//	This template is invalid for any 'IterT' that is not a random-access-iterator, since even though the 'iter += d' statement will not be executed unless we have determined our iterator is random access, it still must be valid for all types with which the function is instantiated in order to be compiled.
 
 
 //	Benefits of TMP:
