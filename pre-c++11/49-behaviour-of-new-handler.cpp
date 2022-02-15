@@ -35,6 +35,7 @@ void outOfMem_ii() {
 
 
 //	Example: implement a custom new_handler for the 'new' and 'new[]' operators for a given class
+//	Note the use of non-const static data, something very problematic in a threaded environment
 class Widget_i {
 private:
 	//	Holds an std::new_handler, when destructed, passes it to 'set_new_handler()'
