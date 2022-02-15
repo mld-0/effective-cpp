@@ -39,7 +39,7 @@ Base *pb = &d;		//	implicitly convert Derived* to Base*
 //	Casting an object to 'char*' and using pointer arithmetic on the result almost always yields undefined behaviour
 
 //	Casting creates a copy of an object:
-//	Don't case 'this'. Casting an object (i.e: from derived class to base class) creates a temporary copy of the base class parts of that object. Calling functions on the result calls those functions for (and modifies) a copy of the object and not the object. 
+//	Don't cast 'this'. Casting an object (i.e: from derived class to base class) creates a temporary copy of the base class parts of that object. Calling functions on the result calls those functions for (and modifies) a copy of the object and not the object. 
 //	The correct way to invoke a base class function from a derived class is:
 class Window {
 public:
