@@ -59,7 +59,6 @@ int main()
 	cout << "\n";
 	//	The compiler will generate a struct for each type the struct template is instantiated with. The attribute 'value' is static (the value is generated at compile time, and must be accessed with '::')
 
-
 	//	Beautifying type traits:
 	//	C++14 introduces a simplified syntax:
 	cout << "std::is_signed_v<Widget>: " << std::is_signed_v<Widget> << "\n";	//	is_signed<Widget>::value
