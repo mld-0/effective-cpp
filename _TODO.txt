@@ -1,16 +1,78 @@
 TODO: 2022-01-25T22:37:54AEDT effective-c++, extra/copy-and-swap, what (special member functions) can/should be marked as noexcept? (making things explict) (vs the compiler being able to deduce noexcept for straightforward functions?)
+
 TODO: 2022-01-25T07:03:21AEDT effective-c++, 11-handle-self-assignment, (this being a slightly complicated topic of which <from the book we adapt a half finished example (further)>), how best to do the 'swap()' in 'copy-and-swap' is a somewhat involved subject (swap as member/friend function, implemented best / in terms of a default?) (does copy-and-swap warrent a dedicated example (something the book doesn't make a dedicated item?)) (best copy and swap implements both move and swap (together)?)
+
 TODO: 2022-01-25T01:49:06AEDT effective-c++, applying the 'return *this' (i.e: reference to the LHS of the expresion(?)) rule for assignment operator to the two-argument form of the assignment operators
+
 TODO: 2022-01-26T23:22:55AEDT effective-c++, extra/implicit-conversion
+
 TODO: 2022-01-30T01:29:24AEDT effective-c++, item 18 interface design basics, (dedicated 'extra/' example for) custom deleters for shared_ptr and unique_ptr
+
 TODO: 2022-01-30T02:08:24AEDT effective-c++, 20-pass-by-const-ref, C++ compiler behaviour in optimising arguments passed by value?
+
 TODO: 2022-01-30T02:26:43AEDT effective-c++, item 20, polymorphic behaviour (virtual functions) (when passing by) reference
+
 TODO: 2022-01-30T02:40:13AEDT effective-c++, item 21, operators that return a reference (that isn't to '*this')?, (and how chained operators are (best) handled WRT to these returned objects/references?)
+
 TODO: 2022-01-30T03:02:23AEDT effective-c++, item 21, <correct/best> form for declaring (each of the) operator functions, ((role of ) the non-member friend?)
+
 TODO: 2022-01-30T03:10:02AEDT effective-c++, item 21, example is when a function 'operator*' should return by value instead of by reference ((examples for) when should operators/functions return by reference?)
+
 TODO: 2022-01-30T03:42:41AEDT effective-c++, perl, (one liner?), replace '#include <vector>\n#include <string>\n' with (reverse order) (and vice versa)
+
 TODO: 2022-01-30T10:47:43AEDT effective-c++, item 25, a better discussion of how best to declare swap (as a dedicated example) (extra/swap.cpp) (for modern/ye-olde c++)
+
 TODO: 2022-01-30T15:28:41AEDT effective-c++, item 25, explicit vs partial specialization (and extending std::swap for a custom type (adding to the std namespace))
+
 TODO: 2022-01-30T16:39:35AEDT effective-c++, extras/specialize-templates.cpp, (what does it mean) (and how might one be expected to remember said explanation) (need a better explanation?) (does either effective-c++ book touch the topic?)
+
 TODO: 2022-01-30T22:35:44AEDT effective-c++, extra/specializer-templates.cpp, laid-out-rules (in paragraph or points) that predict/explain the selection made for each call to 'f()' and 'g()', (and better laid out examples?) (examples reflecting a newer C++ than pre-01)
+
 TODO: 2022-01-30T23:57:49AEDT effective-c++, extras/specialize-templates.cpp, (for completeness (and elegance) sake), implemented the omitted (hand-waved) (in-place) counting sort for 'void custom_sort<char>(char arr[], int size)' 
+
+TODO: 2022-02-04T21:02:47AEDT effective-c++, 31-minimize-compilation-dependencies, place pImpl and Interface solutions into files-in-dir with make rules, demonstrate which files need be recompiled after changing <various>
+
+TODO: 2022-02-04T23:48:05AEDT effective-c++, 31-minimize-compilation-dependencies, cleanup <explanations> for pImpl and interface-concrete compilation-dependecy-minimizing techniques
+
+TODO: 2022-02-07T20:19:18AEDT effective-c++, 31-minimize-compilation-dependencies, pImpl/interface examples -> modify makefiles to place *.o and *.d files in seperate directories
+
+TODO: 2022-02-07T21:26:42AEDT effective-c++/31*/*/autodependencies-makefile, is a better solution where we generate dependency rules to use for clean-compiles as well as re-compiles? (can you find someone else to explain that dependencies are not needed for a clean-compile)
+
+TODO: 2022-02-08T03:08:12AEDT effective-c++, item 32, public inheritance models 'is a', (on the use of) the word <necessarily> being necessary when describing the reverse of the public inheritance 'is a' relationship: 'If B publicly inherits from A, then B is an A (but A is not <necessarily> a B)'
+
+TODO: 2022-02-08T23:41:24AEDT effective-c++, 00-terminology, <object/primative> initialization through '=', '()', and '{}', (and how) (god is dead and none of these options works in every scenario)
+
+TODO: 2022-02-09T04:25:26AEDT effective-c++, 35-virtual-function-alternatives, what (besides the obvious) is the problem with virtual functions?
+
+TODO: 2022-02-09T04:26:07AEDT effective-c++, 35-virtual-function-alternatives, complete examples for 'Strategy Pattern' ((still) being a stupid name?), std::function based and 'Classic' (pointer to (virtual function in) implementation class hierachy)
+
+TODO: 2022-02-11T02:29:42AEDT effective-c++, 41-implicit-interfaces-and-compile-time-polymorphism, rules for converting to a type which supports the functions of the implicit interface
+
+TODO: 2022-02-11T00:47:52AEDT effective-c++, 41-implicit-interfaces-and-compile-time-polymorphism, please debug: 'Widget_i(int size) { data.reserve(size); for (int i = 0; i < size; ++i) { data[i] = i; } }', fails to print, used push_back() instead (which is just as fast if space has been reserved?)
+
+TODO: 2022-02-10T21:17:25AEDT effective-c++, 41-implicit-interfaces-and-compile-time-polymorphism, how to <view/get/list> the implicit interface for some function template?
+
+TODO: 2022-02-13T19:07:51AEDT effective-c++, item 47 trait classes type information, book provided example, 'iterator_category' typedef and 'iterator_traits' struct (is) exceedingly unhelpful (this being a difficult subject, and excedingly clear example is called for?)
+
+TODO: 2022-02-13T20:13:40AEDT effective-c++, item 47, example-1, how to call algorithm_signed/algorithm_unsigned without resorting to constexpr (C++17) (using overloading, as done in (item 47)?)
+
+TODO: 2022-02-13T20:33:55AEDT effective-c++, item 47 trait classes type information, providing std::iterator_traits<> for a custom container iterator (for (at least) 'iterator_category' and 'value_type')
+
+TODO: 2022-02-14T00:50:24AEDT effective-c++, effective-c++, 47, example-2, deriving from std::iterator (a deprecated technique?) being something a dedicated example (might be wanted for), (also the new technique) (and what else is derived from to provide type information (and if that's an old technique (again) what are the modern alternatives)?)
+
+TODO: 2022-02-15T00:22:54AEDT effective-c++, item 49, behaviour of new handler, supporting a nothrow new? (behaviour<s> of nothrow new)
+
+TODO: 2022-02-15T23:45:13AEDT effective-c++, item 51, conventions for new and delete, when to call (and when is called) the (default) 'delete' with/without the 'size' argument?
+
+TODO: 2022-02-18T00:44:01AEDT effective-c++, item 52, placement-new-requires-placement-delete, purpouse of each form of new/delete
+
+TODO: 2022-02-18T01:22:57AEDT effective-c++, item 52, placement-new-requires-placement-delete, (Summary/discussion updated as per the answer to) when a custom 'new' necessitates a custom 'delete' (and vice-versa) (this question presumedly extending to "how do the default new/delete work" (can one even make assumptions about them?), (a custom delete calls the destructor and it just works?), (what are the various forms for) -> best (first/next) addressed in 'extra/new-delete'?)
+
+TODO: 2022-02-19T01:28:20AEDT effective-c++, item 51, conventions-for-new-and-delete, (in modern-c++) one is required to declare 'size' version of delete when customizing delete (for member/non-member versions?)
+
+TODO: 2022-02-19T01:35:11AEDT effective-c++, extra/new-and-delete, (one of the differences between C/C++), implicitly converting from 'void*' to <other-pointer-type>
+
+TODO: 2022-02-19T23:30:56AEDT effective-c++, c++14/00-terminology, what can be done with a declaration vs a definition
+
+TODO: 2022-02-20T02:36:19AEDT effective-c++, item 01, template-type-deduction, descriptive names for f_.* functions
+
