@@ -46,6 +46,7 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 
 //	Some actions are defined as 'undefined behaviour'. These can manifest as obvious and non-obvious bugs.
 
+//	id-expression: <(restricted form of primary expression)> <(the name of a variable)>
 
 
 int main()
