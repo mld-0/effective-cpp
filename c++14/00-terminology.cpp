@@ -13,6 +13,10 @@ public:
 //	Perfect forwarding is passing an argument while preserving the lvalue/rvalue-ness of the argument (see item 30).
 //	Copies of rvalues are generally moved-constructed, while copies of lvalues are usually copy-constructed
 
+//	Besides l/r-values, we have:
+//	xvalue: 'eXpiring' value, refers to an object near the end of its lifetime (example: the result of calling a function whose return type is an rvalue reference is an xvalue)
+//	glvalue: 'generalized' lvalue, either an lvalue or an xvalue.
+//	prvalue: 'pure' rvalue, is an rvalue that is not an xvalue (example: the result of calling a function whose return type is not a reference)
 
 
 //	A function object is an object supporting an 'operator()' member function
