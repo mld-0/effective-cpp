@@ -1,7 +1,16 @@
+//	VIM SETTINGS: {{{3
+//	vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
+//	vim: set foldlevel=2 foldcolumn=2:
+//	}}}1
 #include <iostream>
 #include <vector>
 #include <string>
 using namespace std;
+//	{{{2
+
+//	For Vim with YCM, check deduced types with
+//			:YcmCompleter GetType
+
 
 //	decltype <C++11> Inspects the declared type of an entity, or the type and value category of an expression.
 //	It is useful when declaring types that are difficult or impossible to declare using standard notation (lambda-related types, or types that depend on template parameters).
@@ -24,8 +33,8 @@ int n = 10;
 decltype(n) a = 20;					//	n is a id-expression, T = int
 decltype((n)) b = a;				//	(n) is an lvalue, T = int&
 decltype(foo()) c = foo();			//	foo() is an rvalue, T = int
-decltype(foo()) && r1 = foo();		//	T = int&&
-decltype((n)) && r2 = n;			//	T = int& (& && collapsed to &)
+decltype(foo()) && r1 = foo();		//	T = int&&	<(YCM says T = int?>
+decltype((n)) && r2 = n;			//	T = int& 	('& &&' collapses into '&')
 
 //	(Further) Examples:
 class Widget {};
@@ -38,7 +47,7 @@ decltype(f) var2;					//	T = bool(const Widget&)
 decltype(w) var3;					//	T = Widget
 decltype(f(w)) var4;				//	T = bool
 decltype(v) var5;					//	T = vector<int>
-decltype(v[0]) var6 = v[0];			//	T = int&
+decltype(v[0]) var6 = v[0];			//	T = int& 	<(the ugly truth is '__vector_base<int, std::allocator<int>>::value_type &'? which collapses into 'int&'?)>
 
 
 //	Example: incorrect, auto return type deduction follows template type deduction rules, c[i] is a reference, and that reference-ness will be ignored. Passing by reference also prevents use of rvalue arguments.
@@ -68,14 +77,29 @@ decltype(auto) f2() {
 	return (x);		//	return type = int&
 }
 
+//	Ongoing: 2022-02-21T03:12:41AEDT an auto/decltype(auto) template function (comperable to accessElement as-a-trick) and having a YCM neat correct deducable type -> for a template function, the type to get is for the called insubstantitation(?)
 
 
 int main()
 {
 	vector<int> v1 = {1,23,4,7};
+
 	//accessElement_i(v1, 1) = 1;			//	error, deduced return type is 'int'
-	accessElement_ii(v1, 1) = 2;
+
+	//	Ongoing: 2022-02-21T03:15:13AEDT Collapsing the YCM/IDE deduced type for 'accessElement_.*' to a neat <correct> 'int&' (or is it int&&'?) (from the 
+
+	accessElement_ii(v1, 1) = 2;			
+	//	T = template <> int &accessElement_ii<std::vector<int> &, int>(std::vector<int> &c, int i)
+
 	accessElement_iii(v1, 1) = 3;
+	//	T = template <> auto accessElement_iii<std::vector<int> &, int>(std::vector<int> &c, int i) -> decltype(std::forward<std::vector<int> &>(c)[i])
+
+
+	//	Ongoing: 2022-02-21T03:21:21AEDT (much about) (see below) (unnecessariy specification of template parameters)
+	//accessElement_ii<vector<int>&, vector<int>::size_type>(v1,2);
+
+	f1();
+	f2();
 
 	return 0;
 }
