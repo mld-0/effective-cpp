@@ -167,13 +167,17 @@ int main()
 
 	//	Example: <(the problem of '{}' vs '{0}')> for vector initalialization
 	//	Ongoing: 2022-02-24T05:29:06AEDT (equivalency of) '({})' with '= {}' (explaining {} vs {0} for '{{}}' vs '({})' <(Explain the (relationships-describing) following pattern)>
-	vector<int> vEmpty1;			//	{}
-	vector<int> vEmpty2 = {};		//	{}
-	vector<int> vEmpty3{};			//	{}
-	vector<int> vEmpty4({});		//	{}
-	vector<int> vEmpty5 = {{}};		//	{0}
-	vector<int> vEmpty6{{}};		//	{0}
-	vector<int> vEmpty7({{}});		//	{0}
+	//	Ongoing: 2022-02-25T00:40:43AEDT note the equivalency: '( int{} )' = '( {} )' and '{ int{} }' = '{ {} }'
+	vector<int> vEmpty1;					//	{}
+	vector<int> vEmpty2 = {};				//	{}
+	vector<int> vEmpty3{};					//	{}
+	vector<int> vEmpty4( {} );				//	{}
+	vector<int> vEmpty5( int{} );			//	{}
+	vector<int> vEmpty6 = { {} };			//	{0}
+	vector<int> vEmpty7{ {} };				//	{0}
+	vector<int> vEmpty8{ int{} };			//	{0}
+	vector<int> vEmpty9( { {} } );			//	{0}	
+	vector<int> vEmpty10( { int{} } );		//	{0}	
 	cout << "vEmpty1=("; for (const auto& x: vEmpty1) { cout << x << ","; } cout << ")\n";
 	cout << "vEmpty2=("; for (const auto& x: vEmpty2) { cout << x << ","; } cout << ")\n";
 	cout << "vEmpty3=("; for (const auto& x: vEmpty3) { cout << x << ","; } cout << ")\n";
@@ -181,6 +185,9 @@ int main()
 	cout << "vEmpty5=("; for (const auto& x: vEmpty5) { cout << x << ","; } cout << ")\n";
 	cout << "vEmpty6=("; for (const auto& x: vEmpty6) { cout << x << ","; } cout << ")\n";
 	cout << "vEmpty7=("; for (const auto& x: vEmpty7) { cout << x << ","; } cout << ")\n";
+	cout << "vEmpty8=("; for (const auto& x: vEmpty8) { cout << x << ","; } cout << ")\n";
+	cout << "vEmpty9=("; for (const auto& x: vEmpty9) { cout << x << ","; } cout << ")\n";
+	cout << "vEmpty10=("; for (const auto& x: vEmpty10) { cout << x << ","; } cout << ")\n";
 	cout << "\n";
 
 
