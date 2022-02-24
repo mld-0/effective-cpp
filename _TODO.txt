@@ -76,3 +76,27 @@ TODO: 2022-02-19T23:30:56AEDT effective-c++, c++14/00-terminology, what can be d
 
 TODO: 2022-02-20T02:36:19AEDT effective-c++, item 01, template-type-deduction, descriptive names for f_.* functions
 
+TODO: 2022-02-20T21:47:10AEDT effective-c++, item 05, prefer-auto-declrations, vim (and YCM) and how to get the type of an 'auto' variable?
+
+TODO: 2022-02-20T21:52:52AEDT effective-c++, item 05, prefer-auto-declarations, declaring as auto each <kind/type> of C++ number
+
+TODO: 2022-02-21T02:43:50AEDT effective-c++, item 02, auto-type-deduction, 'auto&& uref3 = 27' is T = int or T = int&& (and how to check?) -> (I can take its address (and I can change it) -> must be 'int'?) (where are the rules on this and what do they say?) (and if T = int, declare a 'uref4' for which T = int&&) (this is all to do with universal references and nothing to do with auto -> 'int&& uref3 = 27' <appears> to yield same result? meaning this is a topic for) (see item 24)
+
+TODO: 2022-02-21T02:59:12AEDT effective-c++, item 24, distinguish (universal) forwarding references from rvalue references (and I was so much happier before the chapter title implied they were not the same) (after which, review item 02, the case of 'auto&& uref3 = 27;') 
+
+TODO: 2022-02-21T03:24:06AEDT effective-c++, item 04, view-deduced-types, a tool to <turn/reduce> '__vector_base<int, std::allocator<int>>::value_type &' into 'int&'
+
+TODO: 2022-02-21T03:37:50AEDT effective-c++, item 01, template-type-deduction, (what is the meaning of) '&*px' (address of the value of a pointer) for 'int x = 27; const int* px = &x;'?
+
+TODO: 2022-02-23T20:44:55AEDT effective-c++, item 07, initalization-parenthesis-braces-equals, a better (laid out) example (with better classes) <of/for> (calling-ctors/initalizing-values with () vs {}) than b1/b2/b3/.../b17 (this being an important topic, present it better) (lay out the rules, then give examples?)
+
+TODO: 2022-02-24T04:17:38AEDT effective-c++, item 07, initialization-parenthesis-braces-equals, (if they aren't impossible to read as-such) the parenthesis/braces (and equals?) rules for initialization
+
+TODO: 2022-02-24T05:25:24AEDT effective-c++, item 07, initialization-parentheses-braces-equals/bookwidget (are we sure) book example is wrong 'Widget w6{w3};' calling copy-ctor instead of initializer_list-ctor (as book claims it should) (is the example all corect / can it be updated to work as expected by some detail missed?)
+
+TODO: 2022-02-24T20:01:29AEDT effective-c++, item 07, initalialization-parenthesis-braces-equals, parenthesis-vs-braces as a template author ((specifically <for/regarding>) the variadic template example?) 
+
+TODO: 2022-02-24T20:04:41AEDT effective-c++, extra/variadic-functions
+
+TODO: 2022-02-24T20:05:04AEDT effective-c++, extra/variadic-template
+
