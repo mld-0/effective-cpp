@@ -23,9 +23,11 @@ void Example_i(const T& container) {
 }
 //	The general rule: anytime one referes to a nested dependent type name in a template, it must be immediately preceded by keyword 'typename'
 
+
 //	Example: function receiving a template parameter container type, and an iterator of that container
 template<typename T>
 void Example_ii(const T& container, typename T::iterator iter);
+
 
 //	The exceptions to this rule: typename must not precede nested dependent type names in a base class list (list of class to be inherited from), or base class identifiers in a member initialization list.
 template<typename T>
@@ -41,6 +43,7 @@ public:
 	}
 };
 
+
 //	Consider: making a copy of the value of IterT of the same type 'IterT' points to
 template<typename IterT>
 void workWithIterator_i(IterT iter) {
@@ -48,6 +51,7 @@ void workWithIterator_i(IterT iter) {
 	typename std::iterator_traits<IterT>::value_type temp(*iter);
 	//	<(is this 'old' C++?)>
 }
+
 
 //	typedefs are variables containing type names (since C++ allows types that are far too verbose to type repeatedly)
 template<typename IterT>
@@ -62,6 +66,7 @@ int main()
 {
 	return 0;
 }
+
 //	Summary:
 //		When declaring template parameters, 'class' and 'typename' are interchangeable.
 //		Nested dependent type names must be identified with 'typename', except in base class lists, or as a base class identifier in a member initialization list.
