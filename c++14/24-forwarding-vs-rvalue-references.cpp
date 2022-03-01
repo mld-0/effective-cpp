@@ -18,7 +18,8 @@ class Widget {};
 //		If a forwarding reference is initalized with an rvalue, it acts as an rvalue reference
 
 
-//	Example: determine is argument is lvalue/rvalue
+//	Ongoing: 2022-03-02T02:12:02AEDT <(I <dispute/question/fail-to-see-how> how 'is_lvalue(forward(x))' gives the same result for 'int&&' and 'int' arguments of 'x')>
+//	Example: determine is argument is lvalue/rvalue 
 template<typename T>
 constexpr bool is_lvalue(T&& x) {
 	return std::is_lvalue_reference<T>{};
@@ -27,7 +28,6 @@ constexpr bool is_lvalue(T&& x) {
 //	Example: type deduction of an rvalue-reference, declares a forwarding reference
 template<typename T> void f_iv(T&& param);
 auto&& var3 = Widget();
-
 
 //	Example: no type deduction, declares an rvalue reference
 void f_v(Widget&& param);
@@ -40,7 +40,8 @@ template<typename T>
 void f_vii(const T&& param) {}			// param is an rvalue reference (const)
 
 
-//	Example: template classes and universal references
+//	Ongoing: 2022-03-02T02:08:18AEDT (after completing extra/variadic-templates), implement 'emplace_back' example
+//	Example: template classes and forwarding references
 //	Once my_vector<Widget> is instantiated, first function becomes 'push_back(Widget&& param)', type deduction is no longer involved and therefore 'param' is an rvalue reference. However, 'emplace_back(Args&&... args)' does still employ type deduction after instantiation, hence 'args' is <eligible to be> a forwarding reference.
 template<class T, class Allocator = allocator<T>>
 class my_vector {
@@ -106,6 +107,6 @@ int main()
 }
 
 //	Summary:
-//		If a function template parameter has type 'T&&' for a deduced type T, or if an object is declared using 'auto&&', the variable is a universal reference. If the declaration is const or volatile, the variable is an rvalue reference.
-//		Universal references correspond to lvalue/rvalue-references, according to lvalue/rvalue-ness of the variable they are initalized with.
+//		If a function template parameter has type 'T&&' for a deduced type T, or if an object is declared using 'auto&&', the variable is a forwarding reference. If the declaration is const or volatile, the variable is an rvalue reference.
+//		Forwarding references correspond to lvalue/rvalue-references, according to lvalue/rvalue-ness of the variable they are initalized with.
 
