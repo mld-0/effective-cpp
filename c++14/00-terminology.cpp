@@ -19,11 +19,19 @@ public:
 //	prvalue: 'pure' rvalue, is an rvalue that is not an xvalue (example: the result of calling a function whose return type is not a reference)
 
 
+//	TODO: 2022-02-27T03:10:46AEDT effective-c++, item 0, terminology, (we have <new/different> variable categories now (rvalues are now prvalues or xvalues)?), (review link (see below))
+//	LINK: https://en.cppreference.com/w/cpp/language/value_category
+
+
 //	A function object is an object supporting an 'operator()' member function
 //	Function objects created through lambda expressions are known as closures <(are they? is this a C++ specific meaning?)>
 
 //	Function/Class template: A template that generates functions/classes
 //	Template functions/classes: function/class generated from template
+
+//	function-template / template-function are synonmous
+
+//	'object' is a synonym for 'variable'
 
 
 //	Declarations:
@@ -47,6 +55,8 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 //	Some actions are defined as 'undefined behaviour'. These can manifest as obvious and non-obvious bugs.
 
 //	id-expression: <(restricted form of primary expression)> <(the name of a variable)>
+
+//	'cv-unqualified' <(means not const or volatile)>
 
 
 int main()
