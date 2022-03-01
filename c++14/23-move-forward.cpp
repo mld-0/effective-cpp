@@ -52,6 +52,7 @@ decltype(auto) my_move(T&& param) {
 //	Example: move() doesn't necessarily actually move, <(it may under some circumstance perform a copy (const, are there others?))>
 //	Ongoing: 2022-02-26T01:57:23AEDT class 'Annotation', moving a 'const string'
 //	'move' calls on const objects are silently transformed into copy operations
+//	Whenever one calls 'move' or 'forward' when passing a variable, one must assume that its value may have been erased by the callee.
 
 
 //	Example: approximation of std::forward()'
