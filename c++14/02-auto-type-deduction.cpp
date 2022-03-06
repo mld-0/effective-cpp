@@ -39,6 +39,34 @@ void f_ii(std::initializer_list<T> param) {}
 //	C++14 allows 'auto' as function return type (for which template type deduction rules are used).
 //auto createInitList() { return {1,2,3}; }			//	error, can't deduce return type
 
+//	Example: get_type_name<T>()
+//	LINK: https://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname
+#include <string_view>
+template <typename T>
+constexpr auto get_type_name() -> std::string_view {
+//	{{{
+#if defined(__clang__)
+    constexpr auto prefix = std::string_view{"[T = "};
+    constexpr auto suffix = "]";
+    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
+#elif defined(__GNUC__)
+    constexpr auto prefix = std::string_view{"with T = "};
+    constexpr auto suffix = "; ";
+    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
+#elif defined(__MSC_VER)
+    constexpr auto prefix = std::string_view{"get_type_name<"};
+    constexpr auto suffix = ">(void)";
+    constexpr auto function = std::string_view{__FUNCSIG__};
+#else
+# error Unsupported compiler
+#endif
+    const auto start = function.find(prefix) + prefix.size();
+    const auto end = function.find(suffix);
+    const auto size = end - start;
+    return function.substr(start, size);
+}
+//	}}}
+
 
 int main()
 {
@@ -59,7 +87,7 @@ int main()
 	auto&& uref1 = x;			//	x is lvalue, T = int&
 	auto&& uref2 = cx;			//	cx is lvalue, T = const int&
 
-	auto&& uref3 = 27;			//	27 is rvalue, T = int&&		<(Being what the book says, but it isn't, YCM says T = int, and I can take its address?)>
+	auto&& uref3 = 27;			//	27 is rvalue, T = int&&		<(Being what the book says, but it isn't, YCM says T = int, and I can take its address? -> get_type_name() says 'int&&')>
 	//	TODO: 2022-02-21T02:43:50AEDT effective-c++, item 02, auto-type-deduction, 'auto&& uref3 = 27' is T = int or T = int&& (and how to check?) -> (I can take its address (and I can change it) -> must be 'int'?) (where are the rules on this and what do they say?) (and if T = int, declare a 'uref4' for which T = int&&) (this is all to do with universal references and nothing to do with auto -> 'int&& uref3 = 27' <appears> to yield same result? meaning this is a topic for) (see item 24)
 
 	//	Array and Function names decay into pointers for non-reference type specifiers
@@ -94,6 +122,7 @@ int main()
 	auto resetV = [&v](const auto& newValue) { v = newValue; };
 	//resetV( {1,2,3} );		//	error, cannot deduce type T
 
+	(void) uref2; (void) uref3; (void) x1; (void) x3; (void) x2; (void) uref1; (void) rx; (void) arr2; (void) x4; (void) resetV; (void) arr1; (void) func1; (void) func2;
 	return 0;
 }
 
