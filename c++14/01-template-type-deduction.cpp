@@ -47,7 +47,6 @@ void f1(T param) { cout << "f1(" << param << ")\n"; }
 template<typename T>
 void f2(T& param) { cout << "f2(" << param << ")\n"; }
 
-
 int main()
 {
 	//	There are three cases for 'ParamType': 1) a pointer or reference but not a universal (forwarding) reference, 2) a (forwarding) universal reference, 3) neither a pointer nor reference
@@ -104,7 +103,7 @@ int main()
 	cout << "\n";
 
 
-	//	Case 3)	ParamType is neither a pointer nor reference (pass by value), 'param' will be a copy of whatever is passed in, which is modifiable even if the origional value is const.
+	//	Case 3)	ParamType is neither a pointer nor reference (pass by value), 'param' will be a copy of whatever is passed in, which is modifiable even if the origional value is const (type decay).
 	//	Rule: If expr's type is a reference, ignore the reference part. If expr is const or volatile, ignore that too.
 	//	void f_vi(T)
 	f_vi(x);					//	T = int, ParamType = int
@@ -153,18 +152,24 @@ int main()
 	//		void someFunc(int, double);
 	//		void f1(T param);
 	//		void f2(T& param);
-	f1(someFunc);		//	T = void (*)(int,double), ParamType = ptr-to-func 		'template <> void f1<void (*)(int, double)>(void (*param)(int, double))'
-
-	f2(someFunc);		//	T = void (&)(int,double), ParamType = ref-to-func 		'template <> void f2<void(int, double)>(void (&param)(int, double))'
-
+	f1(someFunc);		//	T = void (*)(int,double), ParamType = ptr-to-func 		
+	f2(someFunc);		//	T = void (&)(int,double), ParamType = ref-to-func 		
+	//	Types according to YCM:
+	//		template <> void f1<void (*)(int, double)>(void (*param)(int, double))
+	//		template <> void f2<void    (int, double)>(void (&param)(int, double))
 	cout << "\n";
+
+	//	Example: type decay (case 3), calling template function that takes by-value argument with 'const int&' yields deduced type 'int' (consider, a reference acts like the thing it refers to). (Avoid type decay by using reference parameter types).
+	int x1 = 5;
+	const int& cx1 = x1;
+	f1(cx1);			//	T = int, ParamType = int
 
 	return 0;
 }
 
 //	Summary:
-//		During template type-deduction, arguments that are references are treated as non-references
-//		When deducing types for forwarding reference parameters, lvalue arguments get special treatment
-//		When deducing types for by-value parameters, const/volatile are ignored
-//		During template type-deduction, for non-reference arguments, <names/types> that are arrays or functions decay to pointers
+//		During template type-deduction, arguments that are references are treated as non-references. <names/types> that are arrays or functions decay to pointers unless they are used to initalize references
+//		Case 1) pointer/non-forwarding-reference: ignore 'expr's reference-ness, then pattern match expr against ParamType to determine T. 
+//		Case 2) forwarding-reference: expr is an lvalue, T and ParamType are deduced to be references (only case where T is a reference). Otherwise apply case 1 rules. 
+//		Case 3) pass-by-value, ignore 'expr's reference-ness, and const/volatile-ness.
 
