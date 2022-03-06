@@ -47,8 +47,8 @@ class TD;
 //	LINK: https://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname
 #include <string_view>
 template <typename T>
-constexpr auto get_type_name() -> std::string_view
-{
+constexpr auto get_type_name() -> std::string_view {
+//	{{{
 #if defined(__clang__)
     constexpr auto prefix = std::string_view{"[T = "};
     constexpr auto suffix = "]";
@@ -68,6 +68,21 @@ constexpr auto get_type_name() -> std::string_view
     const auto end = function.find(suffix);
     const auto size = end - start;
     return function.substr(start, size);
+}
+//	}}}
+
+//	Example: arrays passed by reference do not decay, length becomes part of type
+template<typename T>
+auto make_pair_byvalue(T a, T b) {
+	return std::pair<T,T>(a, b);
+}
+template<typename T>
+auto make_pair_byref(T& a, T& b) {
+	return std::pair<T,T>(a, b);
+}
+template<typename T>
+auto make_pair_byforwardingref(T&& a, T&& b) {
+	return std::pair<T,T>(a, b);
 }
 
 
@@ -117,6 +132,23 @@ int main()
 
 	cout << get_type_name<vector<int>::reference>() << "\n";
 	cout << get_type_name<basic_string<char, char_traits<char>, allocator<char>>>() << "\n";
+	cout << "\n";
+	//	int &
+	//	std::string
+
+	const char carr1[] = "abc";
+	const char carr2[] = "hijklmnop";
+
+	//	Example: passing by value, array type decay, can pass different length arrays as same type
+	make_pair_byvalue(carr1, carr2);
+
+	//	Example: passing by reference, length is part of deduced type, arrays of same type must be same length
+	//make_pair_byref(carr1, carr2);							//	error, conflicting types 
+	//make_pair_byforwardingref(carr1, carr2);					//	error, conflicting types
+	//make_pair_byforwardingref(move(carr1), move(carr2));		//	error, conflicting types
+
+
+	//	TODO: 2022-02-25T01:07:35AEDT effective-c++, item 04, view-deduced-types, complete chapter/item
 
 	return 0;
 }
