@@ -30,7 +30,6 @@ public:
 	Person(const Person& rhs) : name(rhs.name) {
 		cout << "Person(const Person&)\n";
 	}
-
 	Person(Person&& rhs) : name(move(rhs.name)) {
 		cout << "Person(Person&&)\n";
 	};
