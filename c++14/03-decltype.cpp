@@ -8,6 +8,8 @@
 using namespace std;
 //	{{{2
 
+//	TODO: 2022-03-13T22:54:39AEDT effective-c++, item 03, decltype, f----- behaviour of functions called inside 'decltype()', an explanation to go with the 'update_counter()' side-effects example
+
 //	For Vim with YCM, check deduced types with
 //			:YcmCompleter GetType
 
@@ -67,21 +69,25 @@ auto accessElement_iii(Container&& c, Index i) -> decltype(std::forward<Containe
 }
 
 
-//	Example: decltype(auto) return type and parenthesis
+//	Example: decltype(auto) return type and parenthesis, note that 'x' and '(x)' are deduced as different types.
 decltype(auto) f1() {
 	int x = 0;
 	return x;		//	return type = int
 }
+//	Ongoing: 2022-03-13T23:01:12AEDT uncomment 'f2', (should we find some way to silence the warning)
 decltype(auto) f2() {
 	int x = 0;
-	return (x);		//	return type = int&
+	return (x);		//	warning, return type = int&
 }
 
 //	Ongoing: 2022-02-21T03:12:41AEDT an auto/decltype(auto) template function (comperable to accessElement as-a-trick) and having a YCM neat correct deducable type -> for a template function, the type to get is for the called insubstantitation(?)
 
 
+
 int main()
 {
+	cout << "\n";	//	space between compile warning and output for vim 'Exe'
+
 	vector<int> v1 = {1,23,4,7};
 
 	//accessElement_i(v1, 1) = 1;			//	error, deduced return type is 'int'
@@ -101,6 +107,20 @@ int main()
 	f1();
 	f2();
 
+
+	//	Example: f----- behaviour of functions called inside 'decltype()'
+	int side_effect_counter = 0;
+	auto update_counter = [&side_effect_counter]() { ++side_effect_counter; return 0; };
+	cout << "side_effect_counter=(" << side_effect_counter << ")\n";
+	decltype(update_counter()) vuc1;
+	cout << "decltype(update_counter())\n";
+	cout << "side_effect_counter=(" << side_effect_counter << ")\n";
+	update_counter();
+	cout << "update_counter()\n";
+	cout << "side_effect_counter=(" << side_effect_counter << ")\n";
+
+
+	(void) var1; (void) vuc1;
 	return 0;
 }
 
