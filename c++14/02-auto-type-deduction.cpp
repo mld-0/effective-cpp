@@ -100,6 +100,7 @@ int main()
 
 
 	//	Example: when the initalizer for an auto variable is enclosed in braces {}, the deduced type is initalizer_list
+	//	Ongoing: 2022-03-07T05:49:45AEDT (we the TO-DO (item 23), clarify the '<only?>' (see below))
 	//	This is the <only?> difference between auto type deduction and template type deduction
 	auto x1 = 27;				//	T = int
 	auto x2(27);				//	T = int

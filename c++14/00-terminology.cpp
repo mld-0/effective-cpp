@@ -3,6 +3,8 @@
 #include <string>
 using namespace std;
 
+//	TODO: 2022-03-03T01:13:19AEDT effective-c++, item 00, terminology, if all variables including primatives are objects, then what are 'object-objects' things that are not primatives?
+
 //	Generally, an lvalue is a variable whose address can be taken (whereas an rvalue is one whose address cannot be taken).
 //	l/r-valueness is independent of type.
 class Widget_i {
