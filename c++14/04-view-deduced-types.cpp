@@ -10,38 +10,7 @@ using namespace std;
 
 //	TODO: 2022-02-25T00:46:48AEDT effective-c++, item 04, view-deduced-types, use of Boost TypeIndex library
 
-//	For Vim with YCM, check deduced types with
-//			:YcmCompleter GetType
-
-//	Ongoing: 2022-02-25T00:44:04AEDT examples of C++ types to be simplified (by tool to be found) (see below)
-//	{{{
-//		__vector_base<int, std::allocator<int>>::value_type & 	->	int&	<(doesn't work (for get_type_name<T>()))>
-//		vector<int>::reference	->	int&
-//		basic_string<char, char_traits<char>, allocator<char>>	->	string
-//	}}}
-
-class Widget {};
-
-vector<Widget> createWidgetVec() { 
-	return { Widget{} }; 
-}
-
-template<typename T>
-void foo(const T& param) { 
-	cout << "foo(), param=(" << param << ")\n"; 
-	cout << "T = " << typeid(T).name() << "\n";
-	cout << "param = " << typeid(param).name() << "\n";
-} 
-
-//	TODO: 2022-02-21T03:24:06AEDT effective-c++, item 04, view-deduced-types, a tool to <turn/reduce> '__vector_base<int, std::allocator<int>>::value_type &' into 'int&' (c++filt -n <> for demangling of objdump symbols), ()
-
-
-//	Compiler Diagnostics: Making the compiler show a type it has deduced by using it erroneously.
-//	Example: 'TD' Type Deduction, a template class purpously lacking a definition, provides error message featuring deduced type T, when insubstantiated for 'decltype(var)', the resulting error message provides the type of 'var'.
-template<typename T>
-class TD;
-
-
+//	TODO: 2022-03-08T05:03:04AEDT effective-c++, item 04, view deduced types, version of 'get_type_name<T>()' which doesn't produce YCM warning/error
 
 //	Example: get_type_name<T>()
 //	LINK: https://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname
@@ -71,6 +40,38 @@ constexpr auto get_type_name() -> std::string_view {
 }
 //	}}}
 
+//	Ongoing: 2022-02-25T00:44:04AEDT examples of C++ types to be simplified (by tool to be found) (see below)
+//	{{{
+//		__vector_base<int, std::allocator<int>>::value_type & 	->	int&	<(doesn't work (for get_type_name<T>()))>
+//		vector<int>::reference	->	int&
+//		basic_string<char, char_traits<char>, allocator<char>>	->	string
+//	}}}
+
+//	For Vim with YCM, check deduced types with
+//			:YcmCompleter GetType
+
+class Widget {};
+
+vector<Widget> createWidgetVec() { 
+	return { Widget{} }; 
+}
+
+template<typename T>
+void foo(const T& param) { 
+	cout << "foo(), param=(" << param << ")\n"; 
+	cout << "T = " << typeid(T).name() << "\n";
+	cout << "param = " << typeid(param).name() << "\n";
+} 
+
+//	TODO: 2022-02-21T03:24:06AEDT effective-c++, item 04, view-deduced-types, a tool to <turn/reduce> '__vector_base<int, std::allocator<int>>::value_type &' into 'int&' (c++filt -n <> for demangling of objdump symbols), ()
+
+//	compiler based diagnostics - making the compiler 
+//	Example: 'TD' Type Deduction, (compiler based diagnostics), a template class purpously lacking a definition, when insubstantiated as 'TD<decltype(var)>', the resulting compiler error message provides the type of 'var'.
+template<typename T>
+class TD;
+
+
+//	Ongoing: 2022-03-08T05:16:50AEDT should not 'a'/'b' be forwarded for 'make_pair_byforwardingref'? (meaning of move for the std::pair ctor) <(book does not mention here, has not yet examined move/forward?)>
 //	Example: arrays passed by reference do not decay, length becomes part of type
 template<typename T>
 auto make_pair_byvalue(T a, T b) {
@@ -84,6 +85,7 @@ template<typename T>
 auto make_pair_byforwardingref(T&& a, T&& b) {
 	return std::pair<T,T>(a, b);
 }
+//	Note that the type of parameter is uniform <(can not all three cases be handled by the forwarding reference one?)>, <(findings from examining cases 'f(T&&,T&)', 'f(T&&,T)', ect)>
 
 
 int main()
@@ -100,17 +102,16 @@ int main()
 	Widget* pw1 = &w1;
 
 	//	Runtime type information: 'typeid()' and 'std::typeinfo::name'
-	//	Result is compiler dependent
-	cout << typeid(x).name() << "\n";
-	cout << typeid(y).name() << "\n";
-	cout << typeid(w1).name() << "\n";
-	cout << typeid(pw1).name() << "\n";
+	//	Result is compiler dependent							//	g++/clang output:
+	cout << typeid(x).name() << "\n";							//	int				i		
+	cout << typeid(y).name() << "\n";							//	int const*		PKi
+	cout << typeid(w1).name() << "\n";							//	Widget			6Widget
+	cout << typeid(pw1).name() << "\n";							//	Widget*			P6Widget
 	cout << "\n";
-	//	g++/clang output:
-	//	int				i		
-	//	int const*		PKi
-	//	Widget			6Widget
-	//	Widget*			P6Widget
+	
+	
+	
+	
 
 	const auto vw = createWidgetVec();
 	if (!vw.empty()) {
@@ -120,15 +121,12 @@ int main()
 	//	T = PK6Widget
 	//	param = PK6Widget
 
-	cout << get_type_name<decltype(x)>() << "\n";
-	cout << get_type_name<decltype(y)>() << "\n";
-	cout << get_type_name<decltype(w1)>() << "\n";
-	cout << get_type_name<decltype(pw1)>() << "\n";
+	cout << get_type_name<decltype(x)>() << "\n";				//	int
+	cout << get_type_name<decltype(y)>() << "\n";				//	const int *
+	cout << get_type_name<decltype(w1)>() << "\n";				//	Widget
+	cout << get_type_name<decltype(pw1)>() << "\n";				//	Widget *
 	cout << "\n";
-	//	int
-	//	const int *
-	//	Widget
-	//	Widget *
+	
 
 	cout << get_type_name<vector<int>::reference>() << "\n";
 	cout << get_type_name<basic_string<char, char_traits<char>, allocator<char>>>() << "\n";
@@ -141,6 +139,8 @@ int main()
 
 	//	Example: passing by value, array type decay, can pass different length arrays as same type
 	make_pair_byvalue(carr1, carr2);
+
+	//	Ongoing: 2022-03-08T05:12:25AEDT TO-DO (item <?>) is the cases <of/like> 'f(T&&, T&)' and 'f(T&&, T)' <(add details of examination of said cases)>
 
 	//	Example: passing by reference, length is part of deduced type, arrays of same type must be same length
 	//make_pair_byref(carr1, carr2);							//	error, conflicting types 
