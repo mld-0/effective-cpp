@@ -100,3 +100,71 @@ TODO: 2022-02-24T20:04:41AEDT effective-c++, extra/variadic-functions
 
 TODO: 2022-02-24T20:05:04AEDT effective-c++, extra/variadic-template
 
+TODO: 2022-02-24T23:05:36AEDT effective-c++, extra/variadic-templates, Continue
+
+TODO: 2022-02-25T00:46:48AEDT effective-c++, item 04, view-deduced-types, use of Boost TypeIndex library
+
+TODO: 2022-02-26T22:43:15AEDT effective-c++, item 24, forwarding-vs-rvalue-referneces, how to tell if 'param' is T& or T&&?
+
+TODO: 2022-02-27T02:39:28AEDT effective-c++, extra/lvalues-rvalues, (how to make work) 'assign_value(T&& x, T val)' when called with 'assign_value(var1,27)' (considering that 'assign_value(T&&, int val)' works (so it isn't a question of type deduction) ... (what is this behaviour?) (consider also that 'assign_value(move(var1),27)' does work) (and that assign_value(T&&, T&) does not work with or without 'move')
+
+TODO: 2022-02-27T03:10:46AEDT effective-c++, item 0, terminology, (we have <new/different> variable categories now (rvalues are now prvalues or xvalues)?), (review link (see below))
+
+TODO: 2022-03-01T20:45:48AEDT effective-c++, item 24, forwarding-vs-rvalue-references, example (using 'is_lvalue') where forward/move have different behaviour for lvalue/rvalue-references (our examples appear to work the same?) (and what of the use of forward<T> vs forward<T&> vs forward<T&&>) ... (the topic of item 25)
+
+TODO: 2022-03-02T01:37:06AEDT effective-c++, extra/lvalues-rvalues, contrive a situation where 'x1' and 'x2' behave differently for 'int x1 = 5;' 'int&& x2 = 5;'
+
+TODO: 2022-03-02T01:50:47AEDT effective-c++, extra/lvalues-rvalues, lvalue vs rvalue (vs template rvalue?) overloads
+
+TODO: 2022-03-02T02:01:14AEDT effective-c++, extra/variadic-templates, (item 24) contains a variadic function template example -> complete extra item example, (and from it) fill in (item 24)
+
+TODO: 2022-03-02T02:24:05AEDT effective-c++, item 23, move-forward, review implicit move assignment/ctor rules (having copied the ctor rules to be cleaned up, along with a statement of presumption that implicit move assignment works the same way?)
+
+TODO: 2022-03-02T02:52:02AEDT effective-c++, extra/lvalue-rvalue-references, details/definitions of (or just more about) lvalue/rvalue/universal references
+
+TODO: 2022-03-03T01:13:19AEDT effective-c++, item 00, terminology, if all variables including primatives are objects, then what are 'object-objects' things that are not primatives?
+
+TODO: 2022-03-03T02:32:40AEDT effective-c++, item 25, move-rvalue-refs-forward-universal-refs, implement 'my_make_unique' (which is a variadic template function)
+
+TODO: 2022-03-03T02:53:00AEDT effective-c++, item 23, move-forward, definition/example for 'std::move_if_noexcept'
+
+TODO: 2022-03-06T20:49:18AEDT effective-c++, item 23, move-forward, is calling 'forward' on a non-forwarding-reference ever meaningful/correct (considering our "show me the difference between forward/move dilemma previously"?)
+
+TODO: 2022-03-07T05:41:32AEDT effective-c++, item 23, move-forward, lambda vs function template type deduction rules, lambda with parameters 'auto&& x' vs template function 'T&& x' (difference in type deduction rules) <(try using decltype(auto)?)> (deduced type of x, and reconsiling that (for 'l_steal_.*', 'T = typename std::remove_reference<decltype(x)>::type') <- (still looking for a simpler solution / way to reconcile) -> (since 'decltype(auto)' is invalid for a lambda parameter) -> (is 'decltype(auto)' useable for any<one's> arguments? 'decltype(auto)' only for return type and variable declarations?) [...] -> <something-something only difference between template/auto type deduction?> (from item 02): "when the initalizer for an auto variable is enclosed in braces {}, the deduced type is initalizer_list, this is the <only?> difference between auto type deduction and template type deduction" <(revise (item 02) statement, clarification of the '<only?> after addressing topic?  2022-03-07T05:49:32AEDT
+
+TODO: 2022-03-07T06:10:37AEDT effective-c++, item 23, move-forward, what is the meaning of the type T used in 'forward<T>(x)', (and from there, is 'forward<decltype(x)>(x)' always valid?)
+
+TODO: 2022-03-08T05:03:04AEDT effective-c++, item 04, view deduced types, version of 'get_type_name<T>()' which doesn't produce YCM warning/error
+
+TODO: 2022-03-09T23:21:02AEDT effective-c++, item 23, move-forward, (how can) 'l_steal_forward(v1)' steal v1's values when used without move? (going back to our question of type-deduction/forwarding-references for lambdas w/ auto vs function templates)
+
+TODO: 2022-03-10T03:41:22AEDT effective-c++, item 23, move-forward, latest problem comes down to: given 'f(auto&& x)', determine what T would be if we were using 'f(T&& x)' (specifically here - make T == TD)
+
+TODO: 2022-03-10T23:48:33AEDT C++, extra/ownership-with-pointers, ongoings, cleanup
+
+TODO: 2022-03-12T23:06:07AEDT effective-c++, item 27, alternatives-to-overloading-forwarding-references, provide extended/brief definitions/descriptions of: enable_if/enable_if_t, decay/decay_t, is_same/<(is_same_t)>, is_base_of
+
+TODO: 2022-03-13T22:54:39AEDT effective-c++, item 03, decltype, f----- behaviour of functions called inside 'decltype()', an explanation to go with the 'update_counter()' side-effects example
+
+TODO: 2022-03-13T22:26:02AEDT (Do I remember right) <('decltype(x)(x)' is equivalent to 'forward<decltype(x)>(x)'?)> (and <even> if it is, the clarity of the latter is worth the extra characters?)
+
+TODO: 2022-03-14T23:17:54AEDT effective-c++, item 24, reference collapsing, how 'Widget&&', the rvalue to which lvalue 'x' refers, (a value moved to 'forward_Widget'/'compare_forward_alternatives') is recieved by 'recieve_Widget(Widget&)' and not 'recieve_Widget(Widget&&)' when passed without forward/move [...] -> why is forwarding not 'default' behaviour? [...] -> what are overload resolution rules where both forms of 'recieve_Widget' are declared?
+
+TODO: 2022-03-17T20:09:43AEDT effective-c++, item 29, do not assume move support, what the the conditions under which an implicit move will be generated (this being a topic for item 17)
+
+TODO: 2022-03-17T20:15:47AEDT effective-c++, item 28, reference-collapsing, examples for 'typedef and alias declarations' and 'decltype'
+
+TODO: 2022-03-18T00:01:06AEDT effective-c++, item 30, perfect-forwarding-failure-cases, variadic 'fwd_v', call 'print_details' for each argument passed (but first, extra/variadic-templates)
+
+TODO: 2022-03-18T20:23:14AEDT effective-c++, extra/variadic-templates, meaning and use of '...' (consider 'std::forward<Ts>(first)...') (The ... pretty much says "take what's on the left, and for each template parameter, unpack it accordingly.") (see below)
+
+TODO: 2022-03-19T03:24:57AEDT effective-c++, extra/variadic-templates, 'print_vector_elements()', most elegant solution to the 'print vector with delims between elements' problem.
+
+TODO: 2022-03-19T04:24:39AEDT effective-c++, extra/varidic-templates, alternative 'get_types_names<Ts...>()' implementations (not using constexpr/sizeof...?)
+
+TODO: 2022-03-19T04:26:30AEDT effective-c++, extra/variadic-templates, (rudimentary) implementation for 'template<typename... Ts> class Tuple'
+
+TODO: 2022-03-19T04:38:36AEDT effective-c++, extra/variadic-templates, implement 'my_printf<T,Ts...>()'
+
+TODO: 2022-03-19T04:39:37AEDT effective-c++, extra/variadic-templates, Example: variadic function template and perfect forwarding
+
