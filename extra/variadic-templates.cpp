@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 using namespace std;
 //	{{{2
 //	is_lvalue(T&&), get_type_name<T>(), print_details(T&&)
@@ -76,6 +77,7 @@ string delim_print_all = ", ";
 //	Ongoing: 2022-03-18T19:11:39AEDT 'class...' vs 'typename...'?
 //	Ongoing: 2022-03-18T20:27:03AEDT meaning of 'Ts&...', 'Ts&&...'?
 //	Ongoing: 2022-03-18T20:17:00AEDT 'Ts...' can be deduced as empty? (But we <still> need either a recursive base case, or a 'constexpr(size...)' check?)
+//	Ongoing: 2022-03-20T01:01:12AEDT 'my_adder' -> return each '__PRETTY_FUNCTION__' in a vector?
 //	}}}
 
 //	A template parameter pack is a template parameter that accepts zero or more template arguments (non-types, types, or templates). A function parameter pack is a function parameter that accepts zero or more function arguments. A template with at least one parameter pack is called a variadic template
@@ -110,10 +112,14 @@ T my_adder(T x, Args... args) {
 }
 
 
+//	Ongoing: 2022-03-20T01:26:33AEDT categorization of different <forms/implementations> of 'print_all_.*', (50 unbroken lines = bad).
 //	Ongoing: 2022-03-19T02:27:08AEDT <(passing a stream by value - even a thing? passing references to things that cannot be copied?)>
 //	Examples: print_all, output each variable recieved to stream, with a delim (where simple to do so, the delim is omitted after the last value). 
 //	Example: print_all_i <C++11>
-void print_all_i(ostream& os) {}
+template<typename T>
+void print_all_i(ostream& os, const T& first) {
+	os << first;
+}
 template<typename T, typename... Ts>
 void print_all_i(ostream& os, const T& first, const Ts&... rest) {
 	os << first << delim_print_all;
@@ -149,7 +155,6 @@ void print_all_iv(ostream& os, const Ts&... args) {
 //	Example: print_all_v, <C++17>
 template<typename T, typename... Ts>
 void print_all_v(ostream& os, const T& first, const Ts&... rest) {
-	cout << __PRETTY_FUNCTION__ << "\n";
 	os << first;
 	//	Ongoing: 2022-03-18T19:46:54AEDT 'constexpr()' used in an if statement cannot be placed in brackets?
 	if constexpr(sizeof...(rest) > 0) {
@@ -160,6 +165,7 @@ void print_all_v(ostream& os, const T& first, const Ts&... rest) {
 }
 
 
+//	Ongoing: 2022-03-20T00:59:48AEDT Do we need 'fwd_v_.*' (aren't these for (item 30)?) -> multi-line output is <too-much>
 //	Example: fwd_v_i, with 'if constexpr(sizeof...(parms) > 0)'
 template<typename T, typename... Ts>
 void fwd_v_i(T&& first, Ts&&... params) {
@@ -181,6 +187,7 @@ void fwd_v_ii(T&& first, Ts&&... params) {
 
 
 //	TODO: 2022-03-19T04:24:39AEDT effective-c++, extra/varidic-templates, alternative 'get_types_names<Ts...>()' implementations (not using constexpr/sizeof...?)
+//	Ongoing: 2022-03-20T00:58:26AEDT 'get_types_names<Ts...>()' does not use forwarding references (and how could it, even if we wanted to, our only argument is the reference to the vector where we store our result)
 //	Ongoing: 2022-03-19T04:37:03AEDT 'get_types_names<Ts...>()', returning not a vector<string>, but a vector of <(something that can be used as a type -> is there not an std::type?)>
 //	Ongoing: 2022-03-19T04:16:12AEDT the solution is 'constexpr(sizeof...(Ts) > 0)' (where 'typename... Ts' is a template parameter pack) -> being able to get the sizeof a template parameter pack with this techniques implies its implementation was necessary (for a problem just such as this?) (what alternative varidic function technique could have given us this result here?) [...] (also) we do not need the base case(?), for the last call we are fine with an empty Ts, so long as we don't attempt another recursive instantiation with it.
 //	Ongoing: 2022-03-19T03:44:35AEDT how to solve 'get_types_names' with base case recursion <(and 'get_types_name<Ts...>(result)')>
@@ -198,17 +205,6 @@ vector<string> get_types_names() {
 	get_types_names<Ts...>(result);
 	return result;
 }
-//	{{{
-//template<typename T>
-//string get_types_names() {
-//	return string( get_type_name<T>() );
-//}
-//template<typename T, typename... Ts>
-//vector<string> get_types_names() {
-//	vector<string> result;
-//	result.push_back( get_type_name<T>() );
-//}
-//	}}}
 
 
 //	Ongoing: 2022-03-18T21:32:09AEDT <('my_make_unique' must(?) be instantiated with T i.e: 'my_make_unique<T>' [...] because we have specified T and not used it as a parameter(?) (is this what the C++ template rules specifiy?))>
@@ -244,11 +240,13 @@ void my_printf(const char* format, T value, Ts... args) {
 
 
 
+//	Ongoing: 2022-03-20T01:17:41AEDT implementing 'Tuple<Ts...>' -> (something of a clusterf---)
 //	TODO: 2022-03-19T04:26:30AEDT effective-c++, extra/variadic-templates, (rudimentary) implementation for 'template<typename... Ts> class Tuple'
+//	LINK: https://stackoverflow.com/questions/10014713/build-tuple-using-variadic-templates
+//	LINK: https://hackernoon.com/variadic-template-in-c-implementing-unsophisticated-tuple-w8153ump
 //	Example: Variadic class template Tuple
 template<typename... Ts> 
 class Tuple {
-	//	<>
 };
 
 
@@ -263,68 +261,80 @@ void foo(Types... args) {
 int main()
 {
 	//	Use of 'my_adder()':
-	auto add1 = my_adder(1, 2, 3, 8, 7);
+	auto add1 = my_adder(1, 8, 7);
 	cout << "add1=(" << add1 << ")\n";
-	cout << "\n";
 	auto add2 = my_adder(string("Hello "), string("World"));
 	cout << "add2=(" << add2 << ")\n";
 	cout << "\n";
 
 	//	TODO: 2022-03-19T04:33:23AEDT effective-c++, extra/variadic-templates, 'print_all_.*' functions, print output only for first function, and for each subsiquent function, verify output is same as previous <(removing any trailing comma first)>
-	print_all_i(cout, 1, 2, 3, 8, 7, "53");
-	cout << "\n";
-	print_all_ii(cout, 1, 2, 3, 8, 7, "53");
-	cout << "\n";
-	print_all_iii(cout, 1, 2, 3, 8, 7, "53");
-	cout << "\n";
-	print_all_iv(cout, 1, 2, 3, 8, 7, "53");
-	cout << "\n";
-	print_all_v(cout, 1, 2, 3, 8, 7, "53");
-	cout << "\n";
+	//	Ongoing: 2022-03-20T01:18:58AEDT verifying output of 'print_all_.*' -> a neater solution for accounting for the trailing comma?
+	//	TODO: 2022-03-20T01:10:48AEDT effective-c++, extra/variadic-templates, (how to get) (vector of) 'print_all_.*' variadic template function (as a function pointer / std::function / callable-thing-I-can-put-in-a-vector) (and from there), (what is a type we can use to point to all of them, that is, how to put pointers to each in a single vector)
+	//	Usage: 'print_all_.*'
+	cout << "print_all_i: ";
+	stringstream ss;
+	print_all_i(ss, 1, 2, 3, 8, 7, "53");
+	string result_print_all_i = ss.str();
+	ss.str("");
+	cout << result_print_all_i << "\n";
+	auto verifyResultAndClear_print_all = [&result_print_all_i](stringstream& ss) { assert( result_print_all_i + ", " == ss.str() || result_print_all_i == ss.str() ); ss.str(""); };
+	cout << "print_all_[ii, v]: ";
+	//	{{{
+	print_all_ii(ss, 1, 2, 3, 8, 7, "53");
+	verifyResultAndClear_print_all(ss);
+	print_all_iii(ss, 1, 2, 3, 8, 7, "53");
+	verifyResultAndClear_print_all(ss);
+	print_all_iv(ss, 1, 2, 3, 8, 7, "53");
+	verifyResultAndClear_print_all(ss);
+	print_all_v(ss, 1, 2, 3, 8, 7, "53");
+	verifyResultAndClear_print_all(ss);
+	//	}}}
+	cout << "verified all\n";
 	cout << "\n";
 
-	fwd_v_i(5, "abc", 3.0, Widget());
-	cout << "\n";
-	fwd_v_ii(5, "abc", 3.0, Widget());
-	cout << "\n";
+	//	Ongoing: 2022-03-20T01:15:17AEDT (uncomment after changing implementation such that 'fwd_v_.*' (functions) no longer print umpteen-million lines)
+	//	{{{
+	////	'fwd_v_.*' Usage:
+	//cout << "fwd_v:\n";
+	//fwd_v_i(5, "abc", 3.0, Widget());
+	//cout << "\n";
+	//fwd_v_ii(5, "abc", 3.0, Widget());
+	//cout << "\n";
+	//	}}}
 
-	//	'my_make_unique<T>()' Usage:
-	auto pw1 = my_make_unique<Widget>();
-	//	A literal initalizer list is a perfect forwarding failure case (see item 30)
-	auto ps1 = my_make_unique<vector<int>>( initializer_list<int>({1,2,3,4}) );
 	//	Ongoing: 2022-03-18T21:38:35AEDT 'print_details' [...] but it correctly prints the type given to it as well (as opposed to current verison, where types become references)
-	cout << get_type_name<decltype(pw1)>() << ": ";
-	print_details(pw1);
-	cout << get_type_name<decltype(ps1)>() << ": ";
-	print_details(ps1);
+	//	'my_make_unique<T>()' Usage:
+	cout << "my_make_unique:\n";
+	auto pw1 = my_make_unique<Widget>();
+	//my_make_unique<vector<int>>( {1,2,3} ); 	//	error, literal {} is perfect-forwarding failure case (see item 30)
+	auto ps1 = my_make_unique<vector<int>>( initializer_list<int>({1,2,3,4}) );	
+	cout << get_type_name<decltype(pw1)>() << "\n";
+	cout << get_type_name<decltype(ps1)>() << "\n";
 	cout << "\n";
-
 
 	//	get_types_names<Ts...> Usage:
-	auto gtn_v1 = get_types_names<double>();
+	cout << "get_types_names:\n";
+	auto gtn_v1 = get_types_names<string,string,int,long,double,Widget,bool>();
 	print_vector_elements(cout, gtn_v1);
 	cout << "\n";
-	auto gtn_v2 = get_types_names<string,string,int,long,double,Widget,bool>();
-	print_vector_elements(cout, gtn_v2);
-	cout << "\n";
-
 
 	//	Variadic class template can be instantiated with any number of template arguments
-	Tuple<> t0;
-	Tuple<int> t1;
-	Tuple<int,float> t2;
-	//Tuple<0> t3;			//	error, '0' is not a type
+	//cout << "Tuple:\n";
+	//Tuple<> t0;
+	//Tuple<int> t1;
+	//Tuple<int,float> t2;
+	////Tuple<0> t3;			//	error, '0' is not a type
+	//cout << "\n";
 
 
-	//	'foo(Types...)' Variadic function template can be called with any number of arguments
+	//	Ongoing: 2022-03-20T01:17:14AEDT 'foo' -> not a helpful example?
 	//	{{{
+	//	'foo(Types...)' Variadic function template can be called with any number of arguments
 	//foo();				//	foo<>
 	//foo(1);				//	foo<int>
 	//foo(2, 1.0);		//	foo<int,double>
 	//	}}}
-
-
-	(void) t0; (void) t1; (void) t2;
+	//(void) t0; (void) t1; (void) t2;
 	return 0;
 }
 
