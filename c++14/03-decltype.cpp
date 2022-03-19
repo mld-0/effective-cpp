@@ -74,7 +74,7 @@ decltype(auto) f1() {
 	int x = 0;
 	return x;		//	return type = int
 }
-//	Ongoing: 2022-03-13T23:01:12AEDT uncomment 'f2', (should we find some way to silence the warning)
+//	Ongoing: 2022-03-13T23:01:12AEDT 'f2', some way to silence the warning where 'return (x)' is deduced to be int&
 decltype(auto) f2() {
 	int x = 0;
 	return (x);		//	warning, return type = int&
