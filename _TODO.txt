@@ -168,3 +168,7 @@ TODO: 2022-03-19T04:38:36AEDT effective-c++, extra/variadic-templates, implement
 
 TODO: 2022-03-19T04:39:37AEDT effective-c++, extra/variadic-templates, Example: variadic function template and perfect forwarding
 
+TODO: 2022-03-19T20:54:37AEDT effective-c++, item 09, prefer-alias-to-typedef, <explain/outline> 'using' declarations <of/and> alias-es
+
+TODO: 2022-03-20T01:10:48AEDT effective-c++, extra/variadic-templates, (how to get) (vector of) 'print_all_.*' variadic template function (as a function pointer / std::function / callable-thing-I-can-put-in-a-vector) (and from there), (what is a type we can use to point to all of them, that is, how to put pointers to each in a single vector)
+
