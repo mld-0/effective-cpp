@@ -26,7 +26,7 @@ void logName(int id) {
 
 class Person {
 public:
-	//	Default copy/move ctors
+	//	Manually declare default copy/move ctors
 	Person(const Person& rhs) : name(rhs.name) {
 		cout << "Person(const Person&)\n";
 	}
