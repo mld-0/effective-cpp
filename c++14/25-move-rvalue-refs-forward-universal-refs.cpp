@@ -8,7 +8,7 @@
 #include <random>
 using namespace std;
 //	{{{2
-//	get_vector_randoms:
+//	get_vector_randoms(), get_type_name<T>()
 //	{{{
 vector<int> get_vector_randoms(int size, int min=0, int max=9) {
 //	{{{
@@ -21,12 +21,35 @@ vector<int> get_vector_randoms(int size, int min=0, int max=9) {
 	return result;
 }
 //	}}}
+#include <string_view>
+template <typename T>
+constexpr auto get_type_name() -> std::string_view {
+//	{{{
+#if defined(__clang__)
+    constexpr auto prefix = std::string_view{"[T = "};
+    constexpr auto suffix = "]";
+    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
+#elif defined(__GNUC__)
+    constexpr auto prefix = std::string_view{"with T = "};
+    constexpr auto suffix = "; ";
+    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
+#elif defined(__MSC_VER)
+    constexpr auto prefix = std::string_view{"get_type_name<"};
+    constexpr auto suffix = ">(void)";
+    constexpr auto function = std::string_view{__FUNCSIG__};
+#else
+# error Unsupported compiler
+#endif
+    const auto start = function.find(prefix) + prefix.size();
+    const auto end = function.find(suffix);
+    const auto size = end - start;
+    return function.substr(start, size);
+}
+//	}}}
 //	}}}
 
-//	TODO: 2022-03-03T02:32:40AEDT effective-c++, item 25, move-rvalue-refs-forward-universal-refs, implement 'my_make_unique' (which is a variadic template function)
-
-//	Ongoing: 2022-03-03T01:12:56AEDT do forward/move behave differently for primitives vs <objects>
-//	Ongoing: 2022-03-01T21:05:31AEDT what is the meaning of the type T in 'forward<T>()'? What about 'T&', 'T&&'?
+//	Ongoing: 2022-03-20T22:18:41AEDT TO-DO is function parameter packs as lvalue/rvalue/forwarding refernces (extra/variadic-templates), add example here
+//	Ongoing: 2022-03-03T01:12:56AEDT do forward/move behave differently for primitives vs <objects> -> <(it is not meaningful to move a primative?)>
 
 //	Forwarding references (from item 24):
 //	{{{
@@ -45,10 +68,11 @@ vector<int> get_vector_randoms(int size, int min=0, int max=9) {
 //	Using 'forward' on rvalue references is bad (possibility of type error when instantiating template). 
 //	Using 'move' on forwarding references is very bad (possibility of <incorrectly/inadvertently> applying move to lvalue parameter, deleting its values).
 //	Moving a variable leaves it in an undefined state. Do not use forward/move variables unless they are done being used.
+//	On the question of scalability: To implement n parameters that can be lvalues/rvalues through overloading would require 2**n functions, forwarding reference parameters allow an implementation with a single function.
 
 class Widget {
 public:
-	//	Example: solution forwarding reference for both lvalues/rvalues
+	//	Example: support lvalue/rvalue arguments with a single function
 	template<typename T>
 	void setName_i(T&& newName) { 
 		//	Perfect forwarding leads to very verbose error messages when the wrong type is used. We can use a static_assert to produce a more helpful error message for incorrect types.
@@ -57,9 +81,8 @@ public:
 	}
 	//	A single parameter that supports both lvalues/rvalues is a neater and more scalable solution
 
-	//	Example: (non-ideal) alternative solution, overloads for both lvalues/rvalues
+	//	Example: (non-ideal) alternative solution, overloads for both lvalues/rvalues, requiring two functions.
 	//	When passed literal string "asdf", the less efficent lvalue version is called since it is const
-	//	It also leaves two functions to be maintained 
 	void setName_ii(const string& newName) { name = newName; }
 	void setName_ii(string&& newName) { name = move(newName); }
 	//	Using overloads like this also does not allow for scalability of the number (and hence combination) of arguments
@@ -71,10 +94,14 @@ private:
 };
 
 
-//	On the question of scalability: To implement n parameters that can be lvalues/rvalues through overloading would require 2**n functions.
-//	Example: my_make_unique
-template<class T, class... Args>
-unique_ptr<T> my_make_unique(Args&&... args) {
+//	Example: 'my_make_unique()' and 'my_make_shared()', approximations of make_unique/make_shared (from extra/variadic-templates)
+template<typename T, typename... Ts>
+std::unique_ptr<T> my_make_unique(Ts&&... args) {
+	return std::unique_ptr<T>(new T(std::forward<Ts>(args)...) );
+}
+template<typename T, typename... Ts>
+std::shared_ptr<T> my_make_shared(Ts&&... args) {
+	return std::shared_ptr<T>(new T(std::forward<Ts>(args)...) );
 }
 
 
@@ -111,6 +138,7 @@ public:
 //	Ongoing: 2022-03-03T03:03:16AEDT <(on the use of 'operator+(My_Int&&, const My_Int&)' -> when is this rvalue-ref, const-lvalue-ref combination used in examples of such an operator? -> (in fact) it is not useable for lvalue arguments? -> is is sufficient to support 'operator+=', but not 'mi1 + mi2'? -> also let us consider the question again, operators that return references/values/either, when/why? (is it binary functions returning by-value, mono functions (other parameter being 'this') return reference to '*this'? -> Is not an 'extra/operators' example item (over)due?)> <('operator+=' is not supported for 'operator+(My_Int&, My_Int&&)')>
 
 
+//	Ongoing: 2022-03-20T22:25:25AEDT implement 'Fraction', with method 'reduce' (is this not an example class used <elsewhere/previously>?)
 //	Ongoing: 2022-03-06T19:54:07AEDT (need to move), (copy-elision not applicable for returning reference by value)?
 //	Example: use forward to return a <non-local> forwarding-reference by value (otherwise a copy is performed)
 class Fraction {};
@@ -124,12 +152,10 @@ Fraction reduceAndCopy(T&& frac) {
 //	Example: Do not move/forward to return local variables. Either copy-elision is performed, or an implicit 'move()' is applied to the return value, (either way, the compiler provides the optimal solution without move/forward).
 //	<(The result of move/forward is a reference, copy-elision cannot be applied to a reference - besides being suboptimal, returning references to local variables is <problematic> <or not a problem so long a return type is by value>?)>
 Widget my_make_widget() {
-	Widget result;
-	return result;	
+	return Widget();
 }
 
-
-//	Example: Compiler warning, move-ing local variable in return statement prevents copy-elision
+//	Example: Compiler warning, moving local variable in return statement prevents copy-elision
 //Widget my_make_widget_ii() {
 //	Widget result;
 //	return move(result);
@@ -158,8 +184,6 @@ void steal_values_ii(vector<int>& values) {
 	vector<int> temp( values );
 	(void) temp;
 }
-
-
 //	Example: steal value passed as lvalue reference
 void steal_values_iii(vector<int>& values) {
 	vector<int> temp( move(values) );
@@ -174,39 +198,9 @@ void invoke_n_times(F&& f, size_t count, Args&&... args) {
 		std::__invoke(f, args...);
 	}
 	if (count == 0) {
-		std::__invoke(std::forward<F>(f), std::forward<Args>(args)...);
+		std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
 	}
 }
-//	Ongoing: 2022-03-06T22:44:42AEDT using '__invoke' because 'invoke' produces a YCM error (but not a compiler error?)
-
-
-//	Example: get_type_name<T>()
-//	LINK: https://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname
-#include <string_view>
-template <typename T>
-constexpr auto get_type_name() -> std::string_view {
-//	{{{
-#if defined(__clang__)
-    constexpr auto prefix = std::string_view{"[T = "};
-    constexpr auto suffix = "]";
-    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
-#elif defined(__GNUC__)
-    constexpr auto prefix = std::string_view{"with T = "};
-    constexpr auto suffix = "; ";
-    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
-#elif defined(__MSC_VER)
-    constexpr auto prefix = std::string_view{"get_type_name<"};
-    constexpr auto suffix = ">(void)";
-    constexpr auto function = std::string_view{__FUNCSIG__};
-#else
-# error Unsupported compiler
-#endif
-    const auto start = function.find(prefix) + prefix.size();
-    const auto end = function.find(suffix);
-    const auto size = end - start;
-    return function.substr(start, size);
-}
-//	}}}
 
 
 int main()
