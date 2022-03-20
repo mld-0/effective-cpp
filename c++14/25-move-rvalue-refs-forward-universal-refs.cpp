@@ -8,7 +8,8 @@
 #include <random>
 using namespace std;
 //	{{{2
-
+//	get_vector_randoms:
+//	{{{
 vector<int> get_vector_randoms(int size, int min=0, int max=9) {
 //	{{{
 	//	values generated are in range [min, max] 
@@ -20,6 +21,9 @@ vector<int> get_vector_randoms(int size, int min=0, int max=9) {
 	return result;
 }
 //	}}}
+//	}}}
+
+//	TODO: 2022-03-03T02:32:40AEDT effective-c++, item 25, move-rvalue-refs-forward-universal-refs, implement 'my_make_unique' (which is a variadic template function)
 
 //	Ongoing: 2022-03-03T01:12:56AEDT do forward/move behave differently for primitives vs <objects>
 //	Ongoing: 2022-03-01T21:05:31AEDT what is the meaning of the type T in 'forward<T>()'? What about 'T&', 'T&&'?
@@ -46,7 +50,11 @@ class Widget {
 public:
 	//	Example: solution forwarding reference for both lvalues/rvalues
 	template<typename T>
-	void setName_i(T&& newName) { name = std::forward<T>(newName); }
+	void setName_i(T&& newName) { 
+		//	Perfect forwarding leads to very verbose error messages when the wrong type is used. We can use a static_assert to produce a more helpful error message for incorrect types.
+		static_assert( std::is_constructible<std::string, T>::value, "n must be able to construct a string" );
+		name = std::forward<T>(newName); 
+	}
 	//	A single parameter that supports both lvalues/rvalues is a neater and more scalable solution
 
 	//	Example: (non-ideal) alternative solution, overloads for both lvalues/rvalues
@@ -63,7 +71,6 @@ private:
 };
 
 
-//	TODO: 2022-03-03T02:32:40AEDT effective-c++, item 25, move-rvalue-refs-forward-universal-refs, implement 'my_make_unique' (which is a variadic template function)
 //	On the question of scalability: To implement n parameters that can be lvalues/rvalues through overloading would require 2**n functions.
 //	Example: my_make_unique
 template<class T, class... Args>
@@ -129,18 +136,33 @@ Widget my_make_widget() {
 //}
 
 
+//	Example: <('forward<T>(x)' and 'forward<decltype(x)>(x)' are both valid, even though T and decltype(x) may be different)>
+//	<>
+
+
+//	Example: <('forward<decltype(x)>(x)' and 'decltype(x)(x)' are equivalent?)>
+//	<>
+
+
 //	Ongoing: 2022-03-06T20:42:53AEDT can construct a vector from a forwarded vector-as-forwarding-ref, cannot construct vector from moved vector-as-forwarding-ref
 template<typename T>
 void steal_values(T&& values) {
-	T temp{ std::forward<T>(values) };
+	T temp( std::forward<T>(values) );
 	(void) temp;
 }
 void steal_values_ii(vector<int>&& values) {
-	vector<int> temp{ std::move(values) };
+	vector<int> temp( std::move(values) );
 	(void) temp;
 }
 void steal_values_ii(vector<int>& values) {
-	vector<int> temp{ values };
+	vector<int> temp( values );
+	(void) temp;
+}
+
+
+//	Example: steal value passed as lvalue reference
+void steal_values_iii(vector<int>& values) {
+	vector<int> temp( move(values) );
 	(void) temp;
 }
 
@@ -189,6 +211,9 @@ constexpr auto get_type_name() -> std::string_view {
 
 int main()
 {
+	//	Ongoing: 2022-03-19T22:32:59AEDT we have established (we have?) that [...] (there is no use for forward, outside a function with forwarding reference parameters(?)
+	//	Ongoing: 2022-03-19T22:32:02AEDT not clear what (this here extensive output) is meant to demonstrate(?)
+	//	Ongoing: 2022-03-14T01:43:37AEDT would not some printing of types make the example(s) more <revealing>?
 	//	Example: value stealing behaviour when moving
 	vector<int> v1 = get_vector_randoms(20, 0, 10);
 	vector<int> v2{ move(v1) };
@@ -241,6 +266,23 @@ int main()
 	cout << "steal_values(move), v4.size()=(" << v4.size() << ")\n";
 	cout << "steal_values(move), urefv4.size()=(" << urefv4.size() << ")\n";
 	cout << "\n";
+
+	//	Ongoing: 2022-03-06T23:11:49AEDT (still) looking for different behaviour from forward for lvalue/rvalue
+	auto v5 = get_vector_randoms(20);
+	auto&& urefv5_i = get_vector_randoms(20);
+	auto&& urefv5_ii = v4;
+	steal_values(v5);
+	steal_values(urefv5_i);
+	steal_values(urefv5_ii);
+	cout << "steal_values, v5.size()=(" << v5.size() << ")\n";
+	cout << "steal_values, v4urefv5_i.size()=(" << urefv5_i.size() << ")\n";
+	cout << "steal_values, v4urefv5_ii.size()=(" << urefv5_ii.size() << ")\n";
+	cout << "\n";
+
+	//	steal
+
+	Widget w1;
+	//w1.setName_i(53);			//	test static_assert type requirements error message
 
 	(void) mi3; (void) urefv4;
 	return 0;
