@@ -13,8 +13,14 @@ trap '[ "$?" -ne 2 ] || exit 2' ERR
 
 bin_gpp=g++
 cpp_std=c++17
-build_dir=bin
+
+#	Ongoing: 2022-03-24T22:08:52AEDT use 'cpp_build_flags'
+cpp_build_flags=()
+
+#	Ongoing: 2022-03-25T01:36:20AEDT build in '/tmp' to avoid Dropbox client overhead (do not tell me to use <mktemp>(?), the quiteness of /tmp is sublime ... almost as if, by moving the day-to-day job of being a tempdir to '/var/folders/06/9pmr7sss7kg000jj16m89tkh0000gn/T' (which /tmp is *not* linked to) -> 'readlink /tmp' yields '/private/tmp' (which is a real directory)
+build_dir=/tmp/effective-c++/bin
 item_extension="cpp"
+#	Ongoing: 2022-03-24T22:13:50AEDT do not delete/create directories if dry_run!=0
 dry_run=0
 _delim=$'\n'
 _bin_python3=python3
@@ -43,7 +49,7 @@ buildItemsFromList() {
 	local build_dir=$1
 	shift
 	local input_filenames=( "$@" )
-	echo "len(input_filenames)=(${#input_filenames[@]})"
+	echo "len(input_filenames)=(${#input_filenames[@]})" > /dev/stderr
 	local _str_output_filenames=""
 	for loop_filename in "${input_filenames[@]}"; do
 		#echo "loop_filename=($loop_filename)" > /dev/stderr
@@ -82,6 +88,20 @@ buildItemsFromList() {
 	echo "${output_filenames[@]}"
 }
 
+#	Ongoing: 2022-03-25T02:09:51AEDT how to exempt binaries from XprotectService befor we run them (current solution being to run them twice)
+runBinariesFromList() {
+	local binaries_filenames=( "$@" )
+	echo "len(binaries_filenames)=(${#binaries_filenames[@]})" > /dev/stderr
+	for loop_filename in "${binaries_filenames[@]}"; do
+		if [[ ! -e $loop_filename ]]; then
+			echo "error, not found, loop_filename=($loop_filename)" > /dev/stderr
+			exit 2
+		fi
+		echo "loop_filename=($loop_filename)" > /dev/stderr
+		$loop_filename
+	done
+}
+
 #	validate $bin_gpg and $build_dir
 #	{{{
 if ! command -v $bin_gpp &> /dev/null; then
@@ -101,10 +121,11 @@ if [[ -d $build_dir ]]; then
 fi
 if [[ ! -d $build_dir ]]; then
 	echo "mkdir $build_dir" > /dev/stderr
-	mkdir $build_dir
+	mkdir -p $build_dir
 fi
 #	}}}
 
+#	TODO: 2022-03-25T01:24:02AEDT effective-c++, run-all.sh, Perl, get system nano-time one-liner (can we do with a vanilla macOS/Linux version) (currently using python, which I am inclined to think is too slow for use in 'casual' one-liners)
 _time_start=$( $_bin_python3 -c 'import time; print(int(time.time_ns()))' )
 path_precpp11="pre-c++11"
 items_precpp11_filenames=( $( getItemFilenames_inDir "$path_precpp11" ) )
@@ -115,11 +136,37 @@ path_cpp14="c++14"
 items_cpp14_filenames=( $( getItemFilenames_inDir "$path_cpp14" ) )
 binaries_cpp14_filenames=( $( buildItemsFromList "$build_dir" "${items_cpp14_filenames[@]}" ) )
 echo ""
+
+#	TODO: 2022-03-24T21:12:36AEDT effective-c++, run-all.sh, some rule for getting examples from 'extra/' to build
+path_extra="extra"
+
 _time_end=$( $_bin_python3 -c 'import time; print(int(time.time_ns()))' )
+_time_elapsed_build=$( perl -E "say(($_time_end - $_time_start) / 1E9)" )
+echo ""
 
-_time_elapsed=$( perl -E "say(($_time_end - $_time_start) / 1E9)" )
-echo "elapsed: $_time_elapsed"
 
-#	TODO: 2022-03-24T21:12:36AEDT some rule for getting examples from 'extra' to build
+_time_start=$( $_bin_python3 -c 'import time; print(int(time.time_ns()))' )
+echo "run $path_precpp11"
+runBinariesFromList "${binaries_precpp11_filenames[@]}"
+echo ""
+echo "run $path_cpp14"
+runBinariesFromList "${binaries_cpp14_filenames[@]}"
+echo ""
+_time_end=$( $_bin_python3 -c 'import time; print(int(time.time_ns()))' )
+_time_elapsed_run1=$( perl -E "say(($_time_end - $_time_start) / 1E9)" )
 
+_time_start=$( $_bin_python3 -c 'import time; print(int(time.time_ns()))' )
+echo "run $path_precpp11"
+runBinariesFromList "${binaries_precpp11_filenames[@]}"
+echo ""
+echo "run $path_cpp14"
+runBinariesFromList "${binaries_cpp14_filenames[@]}"
+echo ""
+_time_end=$( $_bin_python3 -c 'import time; print(int(time.time_ns()))' )
+_time_elapsed_run2=$( perl -E "say(($_time_end - $_time_start) / 1E9)" )
+
+echo "elapsed (build): $_time_elapsed_build"
+echo "elapsed (run 1): $_time_elapsed_run1"
+echo "elapsed (run 2): $_time_elapsed_run2"
+echo ""
 
