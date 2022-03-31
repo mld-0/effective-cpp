@@ -7,9 +7,9 @@ using namespace std;
 //		1)	leak no resources
 //		2)	not allow data structures to becomes corrupted
 
-//	We consider three guarantees of exception safety:
+//	We consider three guarantees of function exception safety:
 //		The basic guarantee: if an exception is thrown, the program remains in a valid state
-//		The strong guarantee: if an exception is thrown, the state of the program is unchanged. Such functions are atomic in the sense they either succeed completely, or it is as if they have never been called
+//		The strong guarantee: if an exception is thrown, the state of the program is unchanged (function is atomic)
 //		The nothrow guarantee: a promise to never throw exceptions for an operation that cannot fail
 //	One should offer the strongest guarantee that is practical
 
