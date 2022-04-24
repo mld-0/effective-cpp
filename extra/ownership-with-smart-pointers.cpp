@@ -70,6 +70,26 @@ public:
 };
 
 
+//	Passing smart pointers in/out of functions:
+//	{{{
+//	LINK: https://www.internalpointers.com/post/move-smart-pointers-and-out-functions-modern-c	
+//	Ways to pass a smart pointer to a function:
+//			f(unique_ptr<T>) 	f(shared_ptr<T>) 	f(weak_ptr<T>)
+//			f(unique_ptr<T>&) 	f(shared_ptr<T>&)
+//			f(T&)
+//			f(T*)
+//	Core Guidelines: Take a smart pointer as its parameter only if it examines/manipulates said smartpointer (and alternatively, take a raw pointer/reference to operate only on the underlying object)
+//	By value: shared_ptr: pass by value to <lend/share?> ownership. unique_ptr: can only be moved
+//	Pass by reference to manipulate the ownership of existing smartpointer
+//	Raw pointer/reference: <inspect/use> raw pointer (by default) (where only access to underlying object is needed) (pointer can be null, reference may not)
+//	Returning smartpointer:
+//	By value: (always?) (unique_ptr only since C++17?) <(is there not an item that discusses use of move for return? (and is the conclusion not, don't do it?))>
+//	For the underlying pointer return by 'get()': do use 'delete', and do not use it to create new smartpointers
+//	Ongoing: 2022-04-25T01:28:18AEST how to get <the/a> underlying reference <to/of> the object pointed to by a smart pointer (presumedly, that is, getting this reference from the pointer returned by 'get()'?)
+//	Ongoing: 2022-04-25T01:26:07AEST (supposedly) one does not need to move to return a unique_ptr (what is going on, is it RVO/Copy-epsilon? (are those different things?))
+//	Ongoing: 2022-04-25T01:20:54AEST (consider the question: passing (moving) and returning (moving) a unique_ptr (sounds like a terrible idea), (can it be done atomically/safely?)
+//	}}}
+
 //	LINK: https://stackoverflow.com/questions/16760334/whats-the-difference-between-raw-pointer-and-weak-ptr
 //	shared_ptr is oftern used because it mimics the style of garbage collected languages like C#/Java. There are situations where it is required, but <(unique_ptr used with raw pointers should be prefered?)>
 //	<(shared_ptr can be used to create circular references (deadlocks), weak_ptr prevents this)> 
