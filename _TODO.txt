@@ -172,3 +172,27 @@ TODO: 2022-03-19T20:54:37AEDT effective-c++, item 09, prefer-alias-to-typedef, <
 
 TODO: 2022-03-20T01:10:48AEDT effective-c++, extra/variadic-templates, (how to get) (vector of) 'print_all_.*' variadic template function (as a function pointer / std::function / callable-thing-I-can-put-in-a-vector) (and from there), (what is a type we can use to point to all of them, that is, how to put pointers to each in a single vector)
 
+TODO: 2022-03-20T22:15:41AEDT effective-c++, extra/variadic-templates, function parameter packs as lvalue/rvalue/forwarding references
+
+TODO: 2022-03-20T23:17:08AEDT effective-c++, item 10, prefer-scoped-enums, implement 'primeFactors'
+
+TODO: 2022-03-24T21:12:36AEDT effective-c++, run-all.sh, some rule for getting examples from 'extra/' to build
+
+TODO: 2022-03-25T01:24:02AEDT effective-c++, run-all.sh, Perl, get system nano-time one-liner (can we do with a vanilla macOS/Linux version) (currently using python, which I am inclined to think is too slow for use in 'casual' one-liners)
+
+TODO: 2022-03-26T23:57:03AEDT effective-c++, get_vector_randoms, add seeding to each usage
+
+TODO: 2022-03-28T01:12:04AEDT effective-c++, move/copy-failed-to-move depending on exception specification <(of move operation?)> (supposedly the standard containers are making this <check/distinction>), as demonstrated by messages from custom copy/move ctor/assignments (and classes with/without noexcept) (or perhaps differing for the other case 'noexcept(false)'?)
+
+TODO: 2022-03-28T23:20:49AEDT effective-c++, item 15, use constexpr where possible, (function) is_constexpr() (or) <meta-template> is_constexpr<>()
+
+TODO: 2022-03-28T23:38:25AEDT effective-c++, item 15, use constexpr where possible, (how) does 'is_constexpr()' work?
+
+TODO: 2022-04-02T03:04:29AEDT effective-c++, item 14, declare noexcept, (continuing from) (item 17, default/implicit functions), clarify the (generally correct?) rule 'default/implict' functions are noexcept where possible (we are given the list: default/copy/move-ctors, copy/move-assignment, comparison, are there more 'default/implicit' functions than those (and are they also noexcept where possible) (i.e: an addition operator?), (?))
+
+TODO: 2022-04-25T00:06:10AEST effective-c++, extra/ownership-with-smart-pointers, using unique_ptr ctor 'unique_ptr<T>(new T(args))' vs 'make_unique<T>(args)'? (see below)
+
+TODO: 2022-04-25T00:03:44AEST effective-c++, extra/ownership-with-smart-pointers, Polymorphism/virtual-functions and smart pointers [...] -> (supposedly?)
+
+TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers, form/use of a smart pointer vs raw pointer (as parameter type/otherwise?), (passing smart pointers)
+
