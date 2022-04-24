@@ -107,6 +107,31 @@ int main()
 	assert( buffer3.get() == nullptr );			//	note that buffer3 has been set to nullptr
 	//	deletion: none
 
+	//	TODO: 2022-04-25T00:06:10AEST effective-c++, extra/ownership-with-smart-pointers, using unique_ptr ctor 'unique_ptr<T>(new T(args))' vs 'make_unique<T>(args)'? (see below)
+	//	{{{
+	//	LINK: https://stackoverflow.com/questions/22571202/differences-between-stdmake-unique-and-stdunique-ptr-with-new
+	//	The motivation behind make_unique is primarily two-fold:
+	//	make_unique is safe for creating temporaries, whereas with explicit use of new you have to remember the rule about not using unnamed temporaries.
+	//		foo(make_unique<T>(), make_unique<U>()); 					// exception safe
+	//		foo(unique_ptr<T>(new T()), unique_ptr<U>(new U())); 		// unsafe*
+	//	The addition of make_unique finally means we can tell people to 'never' use new rather than the previous rule to "'never' use new except when you make a unique_ptr".
+	//	There's also a third reason:
+	//	make_unique does not require redundant type usage. unique_ptr<T>(new T()) -> make_unique<T>()
+	//	None of the reasons involve improving runtime efficiency the way using make_shared does (due to avoiding a second allocation, at the cost of potentially higher peak memory usage).
+	//	* It is expected that C++17 will include a rule change that means that this is no longer unsafe.
+	//	}}}
+
+	//	Use of 'new' is not safe in any <multi-statement-expresssion> <with temporaries> (see item 17). 
+	//	For this reason, 'make_unique<T>()' is preferable to 'unique_ptr<T>(new T)':
+	auto device4 = make_unique<Device_iii>();
+	auto buffer4 = device4->CreateBuffer_iii();
+	auto mesh4 = make_unique<Mesh_iii>( move(buffer4) );
+
+
+	//	TODO: 2022-04-25T00:03:44AEST effective-c++, extra/ownership-with-smart-pointers, Polymorphism/virtual-functions and smart pointers [...] -> (supposedly?)
+
+	//	TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers, form/use of a smart pointer vs raw pointer (as parameter type/otherwise?)
+
 
 	cout << "done\n";
 	return 0;
