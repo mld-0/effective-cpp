@@ -148,8 +148,6 @@ int main()
 	auto mesh4 = make_unique<Mesh_iii>( move(buffer4) );
 
 
-	//	TODO: 2022-04-25T00:03:44AEST effective-c++, extra/ownership-with-smart-pointers, Polymorphism/virtual-functions and smart pointers [...] -> (supposedly?)
-
 	//	TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers, form/use of a smart pointer vs raw pointer (as parameter type/otherwise?), (passing smart pointers)
 
 	cout << "done\n";
