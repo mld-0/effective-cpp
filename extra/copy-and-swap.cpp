@@ -53,7 +53,8 @@ public:
 	//	because <reasons> <the alternative is problematic> (requires two functions, one to be found via ADL and the other to handle std:: qualifications) ((something to do with) partial template specialization)
 	//	swap is best implemented as a <member> friend function
 	//	a friend function defined inside a class is: 1) placed in the enclosing namespace, 2) automatically inline, and 3) able to refer to static members of the class without further qualification
-	friend void swap(dumb_array& lhs, dumb_array& rhs) 	//	noexcept?
+	//friend void swap(dumb_array& lhs, dumb_array& rhs) 	//	noexcept?
+	friend void swap(dumb_array& lhs, dumb_array& rhs) noexcept
 	{
 		cout << "dumb_array (friend) swap\n";
 		//	call swap for each class member variable, defaulting to std::swap if a specialized implementation cannot be found
