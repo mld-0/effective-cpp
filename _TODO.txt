@@ -192,7 +192,7 @@ TODO: 2022-04-02T03:04:29AEDT effective-c++, item 14, declare noexcept, (continu
 
 TODO: 2022-04-25T00:06:10AEST effective-c++, extra/ownership-with-smart-pointers, using unique_ptr ctor 'unique_ptr<T>(new T(args))' vs 'make_unique<T>(args)'? (see below)
 
-TODO: 2022-04-25T00:03:44AEST effective-c++, extra/ownership-with-smart-pointers, Polymorphism/virtual-functions and smart pointers [...] -> (supposedly?)
-
 TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers, form/use of a smart pointer vs raw pointer (as parameter type/otherwise?), (passing smart pointers)
+
+TODO: 2022-04-25T01:35:32AEST effective-c++, extra/virtual-functions (what items cover them) (combining that material in one place?)
 
