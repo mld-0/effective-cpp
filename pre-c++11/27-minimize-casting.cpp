@@ -1,7 +1,13 @@
+//	VIM SETTINGS: {{{3
+//	vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
+//	vim: set foldlevel=2 foldcolumn=2:
+//	}}}1
 #include <iostream>
 #include <vector>
 #include <string>
 using namespace std;
+//	{{{2
+//	Ongoing: 2022-04-26T00:14:10AEST (alternatives to casting away const?)
 
 //	C++ attempts to eliminate type errors
 //	In theory, a program that compiles cleanly is not trying to perform any unsafe or nonsensical operations on any objects
@@ -9,24 +15,25 @@ using namespace std;
 //	casts subvert the type system
 
 //	Old-style casts (cast 'expression' to be of type T)
-//	C style casts: 			(T) expression
-//	Function style casts:	T(expression)
+//		C style casts: 			(T) expression
+//		Function style casts:	T(expression)
+//	<(The C++ equivalent is the static_cast?)>
 
 //	C++ has four new forms of cast:
-//		const_cast<T>(expression)
-//		dynamic_cast<T>(expression)
-//		reinterpret_cast<T>(expression)
 //		static_cast<T>(expression)
+//		dynamic_cast<T>(expression)
+//		const_cast<T>(expression)
+//		reinterpret_cast<T>(expression)
 //	The new style casts should be prefered to the old style
 
 
-//	const_cast: cast away the constness of an object. (The official C++ guidelines state: do not cast away const)
+//	static_cast: <The default new-style cast>. Force implicit conversions (eg: non-const T to T, int to double, void* pointer to typed pointer). Cannot cast away const.
 
 //	dynamic_cast: cannot be performed with old-style cast. Used to perform 'safe-downcasting' (i.e: determine whether an object is of a particular type in an inheriteance hierachy). Can have a significant runtime cost
 
-//	reinterpret_cast: for low-level casts that yield implementation-dependent (unportable) results, eg: casting a pointer to an int. Should be rare outside low level code. 
+//	const_cast: cast away the constness of an object. (The official C++ guidelines state: do not cast away const)
 
-//	static_cast: <The default new-style cast>. Force implicit conversions (eg: non-const T to T, int to double, void* pointer to typed pointer). Cannot cast away const.
+//	reinterpret_cast: for low-level casts that yield implementation-dependent (unportable) results, eg: casting a pointer to an int. Should be rare outside low level code. 
 
 
 //	An object may have a different address when pointed to be a different kind of pointer:
