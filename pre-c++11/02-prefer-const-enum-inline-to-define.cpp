@@ -53,6 +53,11 @@ inline void callWithMax(const T& a, const T& b)
 	f(a > b ? a: b);
 }
 
+int main()
+{
+	return 0;
+}
+
 //	Summary:
 //		For simple constants, prefer const objects or enums to #defines
 //		For function like macros, prefer inline functions to #defines
