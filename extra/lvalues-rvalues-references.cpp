@@ -9,10 +9,13 @@ using namespace std;
 //	<(The name 'lvalue' comes from left-hand-side of assignment equals? Lvalues can be assigned to if they are not const)>
 //	<(implicit lvalue-to-rvalue conversion is possible for all values that aren't arrays, functions, or incomplete types)>
 //	<(An lvalue of a non-function, non-array type 'T' can be converted to an rvalue [...] If 'T' is a non-class type, the type of the rvalue is the cv-unqualified version of 'T', otherwise the type of the rvalue is 'T'. ('cv-unqualified' means not const or volatile))>.
+//	<(C++ Rvalue References Explained: another definition for 'lvalue's, something that has a name)>
 
 //	'T&' denotes an lvalue reference of type T
 //	'T&&' denotes an rvalue reference, or a a universal reference if T is a deduced type and not const/volatile (A universal references acts as an lvalue/rvalue-reference depending on the l/r-value-ness of the value which initialized it). <C++11>
 
+//	Ongoing: 2022-03-02T03:00:48AEDT (see below) article 'C++ Rvalue References Explained'
+//	LINK: http://thbecker.net/articles/rvalue_references/section_01.html
 
 //	Meaning of the address of an rvalue reference: returns a pointer to the object (which may/may-not be temporary) that reference is bound to. (for an lvalue cast to an rvalue, this is the same as the address of the lvalue), <(for rvalues it is a temporary object?)>, <(please explain: we are taking the address of an rvalue-reference (rvalues are not rvalue references?))>
 
