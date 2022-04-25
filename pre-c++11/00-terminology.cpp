@@ -50,3 +50,8 @@ public:
 
 //	TODO: 2022-02-08T23:41:24AEDT effective-c++, 00-terminology, <object/primative> initialization through '=', '()', and '{}', (and how) (god is dead and none of these options works in every scenario)
 
+int main()
+{
+	return 0;
+}
+
