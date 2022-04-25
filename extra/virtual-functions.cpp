@@ -8,6 +8,7 @@
 using namespace std;
 //	{{{2
 //	TODO: 2022-04-25T01:35:32AEST effective-c++, extra/virtual-functions (what items cover them) (combining that material in one place?)
+//	Ongoing: 2022-04-25T22:04:16AEST Base class pointers to Derived class objects (outside the context of virtual functions) (and in the context of the is-a relationship)
 
 //	<about virtual functions>
 
@@ -38,7 +39,6 @@ public:
     void foobar()  { printf("foobar\n"); }
 };
 
-//	Ongoing: 2022-04-25T22:04:16AEST Base class pointers to Derived class objects (outside the context of virtual functions) (and in the context of the is-a relationship)
 
 int main()
 {
