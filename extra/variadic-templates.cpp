@@ -66,8 +66,7 @@ string delim_print_all = ", ";
 
 //	LINK: https://riptutorial.com/cplusplus/example/3208/iterating-over-a-parameter-pack
 
-//	Ongoings/TO-DOs:
-//	{{{
+//	TODO: 2022-03-20T22:15:41AEDT effective-c++, extra/variadic-templates, function parameter packs as lvalue/rvalue/forwarding references
 //	TODO: 2022-03-18T20:23:14AEDT effective-c++, extra/variadic-templates, meaning and use of '...' (consider 'std::forward<Ts>(first)...') (The ... pretty much says "take what's on the left, and for each template parameter, unpack it accordingly.") (see below)
 //	LINK: https://stackoverflow.com/questions/2821223/how-would-one-call-stdforward-on-all-arguments-in-a-variadic-function
 //	TODO: 2022-02-24T23:05:36AEDT effective-c++, extra/variadic-templates, Continue
@@ -78,7 +77,7 @@ string delim_print_all = ", ";
 //	Ongoing: 2022-03-18T20:27:03AEDT meaning of 'Ts&...', 'Ts&&...'?
 //	Ongoing: 2022-03-18T20:17:00AEDT 'Ts...' can be deduced as empty? (But we <still> need either a recursive base case, or a 'constexpr(size...)' check?)
 //	Ongoing: 2022-03-20T01:01:12AEDT 'my_adder' -> return each '__PRETTY_FUNCTION__' in a vector?
-//	}}}
+
 
 //	A template parameter pack is a template parameter that accepts zero or more template arguments (non-types, types, or templates). A function parameter pack is a function parameter that accepts zero or more function arguments. A template with at least one parameter pack is called a variadic template
 //	Variadic functions resolve types at runtime. Variadic templates resolve types at compile time.
@@ -208,12 +207,18 @@ vector<string> get_types_names() {
 
 
 //	Ongoing: 2022-03-18T21:32:09AEDT <('my_make_unique' must(?) be instantiated with T i.e: 'my_make_unique<T>' [...] because we have specified T and not used it as a parameter(?) (is this what the C++ template rules specifiy?))>
-//	Example: my_make_unique(), an <approximation?> of make_unique(?)
-//	<(make_unique has the same perfect-forwarding failure cases?)>
+//	Example: 'my_make_unique()', approximation of 'make_unique'
 template<typename T, typename... Ts>
 std::unique_ptr<T> my_make_unique(Ts&&... args) {
 	return std::unique_ptr<T>(new T(std::forward<Ts>(args)...) );
 }
+
+//	Example: 'my_make_shared()', approximation of 'make_shared'
+template<typename T, typename... Ts>
+std::shared_ptr<T> my_make_shared(Ts&&... args) {
+	return std::shared_ptr<T>(new T(std::forward<Ts>(args)...) );
+}
+
 
 
 //	TODO: 2022-03-19T04:38:36AEDT effective-c++, extra/variadic-templates, implement 'my_printf<T,Ts...>()'
