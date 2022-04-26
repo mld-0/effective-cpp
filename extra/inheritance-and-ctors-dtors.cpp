@@ -87,6 +87,16 @@ public:
 };
 
 
+// 	Placement New
+//	{{{
+//	LINK: https://stackoverflow.com/questions/21395395/calling-a-constructor-of-the-base-class-from-a-subclass-constructor-body/21395443?noredirect=1#21395443
+//	This code will compile but has undefined behavior
+//DerivedClass::DerivedClass() { new (this) BaseClass(); /* WRONG */ }       
+//DerivedClass::DerivedClass() { new (this) BaseClass(42); /* WRONG */ }
+//	The above is how constructor calls are actually written in C++ [...] <(meaning?)>
+//	}}}
+
+
 int main()
 {
 	Sub_i s1(2,3);
