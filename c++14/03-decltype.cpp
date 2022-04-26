@@ -7,6 +7,42 @@
 #include <string>
 using namespace std;
 //	{{{2
+//	is_lvalue(T&&), get_type_name<T>()
+//	{{{
+//	'is_lvalue()', determine is argument is lvalue/rvalue 
+template<typename T>
+constexpr bool is_lvalue(T&& x) {
+//	{{{
+	return std::is_lvalue_reference<T>{};
+}
+//	}}}
+//	LINK: https://stackoverflow.com/questions/281818/unmangling-the-result-of-stdtype-infoname
+#include <string_view>
+template <typename T>
+constexpr auto get_type_name() -> std::string_view {
+//	{{{
+#if defined(__clang__)
+    constexpr auto prefix = std::string_view{"[T = "};
+    constexpr auto suffix = "]";
+    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
+#elif defined(__GNUC__)
+    constexpr auto prefix = std::string_view{"with T = "};
+    constexpr auto suffix = "; ";
+    constexpr auto function = std::string_view{__PRETTY_FUNCTION__};
+#elif defined(__MSC_VER)
+    constexpr auto prefix = std::string_view{"get_type_name<"};
+    constexpr auto suffix = ">(void)";
+    constexpr auto function = std::string_view{__FUNCSIG__};
+#else
+# error Unsupported compiler
+#endif
+    const auto start = function.find(prefix) + prefix.size();
+    const auto end = function.find(suffix);
+    const auto size = end - start;
+    return function.substr(start, size);
+}
+//	}}}
+//	}}}
 
 //	TODO: 2022-03-13T22:54:39AEDT effective-c++, item 03, decltype, f----- behaviour of functions called inside 'decltype()', an explanation to go with the 'update_counter()' side-effects example
 
@@ -18,7 +54,8 @@ using namespace std;
 //	It is useful when declaring types that are difficult or impossible to declare using standard notation (lambda-related types, or types that depend on template parameters).
 //	The primary use for decltype is declaring function templates whose return type depends on its parameter types
 
-//	If the name of an object is parenthesized, it is treated as an ordinary lvalue expression, therefore:
+
+//	Pitfall: If the name of an object is parenthesized, it is treated as an ordinary lvalue expression, therefore:
 //			decltype(x)
 //			decltype((x))
 //	may be different types.
@@ -83,10 +120,38 @@ decltype(auto) f2() {
 //	Ongoing: 2022-02-21T03:12:41AEDT an auto/decltype(auto) template function (comperable to accessElement as-a-trick) and having a YCM neat correct deducable type -> for a template function, the type to get is for the called insubstantitation(?)
 
 
+//	Example: If the name we pass to decltype is one of a variable defined in structured binding, then the result is the type of the bound-to element
+//	LINK: https://arne-mertz.de/2017/01/decltype-declval/
+//	{{{
+//	If what we pass to decltype is the name of a variable (e.g. decltype(x) above) or function or denotes a member of an object (decltype x.i), then the result is the type of whatever this refers to. As the example of decltype(y) above shows, this includes reference, const and volatile specifiers.
+//	
+//	An exception to this last rule is the use of C++17’s structured binding: If the name we pass to decltype is one of a variable defined in structured binding, then the result is the type of the bound-to element. Example:
+//	
+//	std::pair<int volatile &&, double&> f(int);
+//	auto const& [a, b] = f(22);
+//	While the type of a is int const volatile&, decltype(a) will give int volatile&&, as that is the type of the first element of f‘s return value. Similarly, decltype(b) will result in double&, not double const&.
+//	
+//	If the expression passed to decltype is not just a name or member access expression, the resulting type depends on the value category of the expression. Given the type of the expression e is E, then decltype(e) is
+//	
+//	E, if e is an prvalue,
+//		E&, if e is an lvalue, and
+//		E&&, if e is a xvalue
+//		As an example, the above decltype(&X::bar) is just a member function pointer and not a reference to one, because the built-in address-of operator returns a prvalue.
+//	
+//		These rules may look complicated, but they mostly do what you’d naturally expect, with the exceptions of the mentioned results of structured binding and the fact that a name expression in parentheses makes it an lvalue. That means, that when x is a variable of type X, then decltype((x)) will give X& as opposed to decltype(x) giving x.
+//	}}}
+
 
 int main()
 {
-	cout << "\n";	//	space between compile warning and output for vim 'Exe'
+	//	Example: 'decltype()' does not execute anything, does not produce side effects
+	cout << get_type_name<decltype(std::cout << "Does not print\n")>() << "\n";		//	std::ostream&
+	int counter = 0;
+	cout << get_type_name<decltype(++counter)>() << "\n";							//	int&
+	cout << "counter=(" << counter << ")\n";										//	0
+
+	//	space between compile warning and output for vim 'Exe'
+	cout << "\n";	
 
 	vector<int> v1 = {1,23,4,7};
 
