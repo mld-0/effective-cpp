@@ -73,6 +73,14 @@ public:
 //	Passing smart pointers in/out of functions:
 //	{{{
 //	LINK: https://www.internalpointers.com/post/move-smart-pointers-and-out-functions-modern-c	
+
+//	Ongoings:
+//	{{{
+//	Ongoing: 2022-04-25T01:28:18AEST how to get <the/a> underlying reference <to/of> the object pointed to by a smart pointer (presumedly, that is, getting this reference from the pointer returned by 'get()'?)
+//	Ongoing: 2022-04-25T01:26:07AEST (supposedly) one does not need to move to return a unique_ptr (what is going on, is it RVO/Copy-epsilon? (are those different things?))
+//	Ongoing: 2022-04-25T01:20:54AEST (consider the question: passing (moving) and returning (moving) a unique_ptr (sounds like a terrible idea), (can it be done atomically/safely?)
+//	}}}
+
 //	Ways to pass a smart pointer to a function:
 //			f(unique_ptr<T>) 	f(shared_ptr<T>) 	f(weak_ptr<T>)
 //			f(unique_ptr<T>&) 	f(shared_ptr<T>&)
@@ -82,20 +90,226 @@ public:
 //	By value: shared_ptr: pass by value to <lend/share?> ownership. unique_ptr: can only be moved
 //	Pass by reference to manipulate the ownership of existing smartpointer
 //	Raw pointer/reference: <inspect/use> raw pointer (by default) (where only access to underlying object is needed) (pointer can be null, reference may not)
+
 //	Returning smartpointer:
 //	By value: (always?) (unique_ptr only since C++17?) <(is there not an item that discusses use of move for return? (and is the conclusion not, don't do it?))>
 //	For the underlying pointer return by 'get()': do use 'delete', and do not use it to create new smartpointers
-//	Ongoing: 2022-04-25T01:28:18AEST how to get <the/a> underlying reference <to/of> the object pointed to by a smart pointer (presumedly, that is, getting this reference from the pointer returned by 'get()'?)
-//	Ongoing: 2022-04-25T01:26:07AEST (supposedly) one does not need to move to return a unique_ptr (what is going on, is it RVO/Copy-epsilon? (are those different things?))
-//	Ongoing: 2022-04-25T01:20:54AEST (consider the question: passing (moving) and returning (moving) a unique_ptr (sounds like a terrible idea), (can it be done atomically/safely?)
+
+
+//	Ongoing: 2022-04-26T19:14:58AEST (return smartpointers by value, without using move) (the rules related to this are what / outlined where?)
+
+
+//	links (see below), a rabbit hole outlined below (and not really, entirely relevent here?) (but by being, raising questions about the rules for overriding virtual vs non-virtual functions).
+//	{{{
+//	LINK: https://www.fluentcpp.com/2017/09/12/how-to-return-a-smart-pointer-and-use-covariance/
+//	LINK: https://stackoverflow.com/questions/1115891/covariant-virtual-functions-and-smart-pointers
 //	}}}
 
-//	LINK: https://stackoverflow.com/questions/16760334/whats-the-difference-between-raw-pointer-and-weak-ptr
+//	Covariant return type: Where the return type of a method is replaced by a 'narrower' type when it is overriden by a subclass. The problem: when we introduce smartpointers.
+struct BaseCVRT {};
+struct DerivedCVRT : public BaseCVRT {};
+struct ParentCVRT {
+	virtual BaseCVRT* foo();
+	//virtual BaseCVRT foo_i();
+	//virtual unique_ptr<BaseCVRT> bar();
+};
+struct ChildCVRT : public ParentCVRT {
+	virtual DerivedCVRT* foo() override;
+	//	narrowing only valid for pointers, not <objects/instances> by value
+	//virtual DerivedCVRT foo_i() override;
+	//	error, differing return type for overriding function
+	//virtual unique_ptr<DerivedCVRT> bar(); override;
+};
+
+
+//	(A <confusing> solution) [...] (How is this not overriding a non-virtual function) (one cannot do that, right?) -> (or since one cannot use a different return type, except as (a pointer to) a narrower class)
+//	(To then get to) C++ doesn't know/allow covariant or contravariant templates <(templates meaning virtual functions?)> (There's no relation between types unique_ptr<Base> and unique_ptr<Derived> the way there is between Base* and Derived*).
+//	(The point appears to relate to) (different rules for overriding virtual vs non-virtual functions)
+class cloneable {
+public:
+   virtual ~cloneable() {}
+   std::unique_ptr<cloneable> clone() const {
+      return std::unique_ptr<cloneable>(this->clone_impl());
+   }
+private:
+   virtual cloneable* clone_impl() const = 0;
+};
+class concrete : public cloneable {
+public:
+   std::unique_ptr<concrete> clone() const {
+      return std::unique_ptr<concrete>(this->clone_impl());
+   }
+private:
+   virtual concrete* clone_impl() const override {
+      return new concrete(*this);
+   }
+};
+
+//	Curiously Recurring Template Pattern CRTP
+//	{{{
+//	LINK: https://www.fluentcpp.com/2017/05/12/curiously-recurring-template-pattern/
+//template <typename Derived, typename Base>
+////class clone_inherit<Derived, Base> : public Base {		//	<- this is invalid?
+//class clone_inherit : public Base {							//	<- article meant to say this?
+//public:
+//   std::unique_ptr<Derived> clone() const {
+//      return std::unique_ptr<Derived>(static_cast<Derived*>(this->clone_impl()));
+//   }
+//private:
+//   virtual clone_inherit* clone_impl() const override {
+//      return new Derived(*this);
+//   }
+//};
+//	}}}
+
+//	Bringing it all together:
+////	{{{
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//template <typename T>
+//class abstract_method
+//{
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//template <typename T>
+//class virtual_inherit_from : virtual public T
+//{
+//   using T::T;
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//template <typename Derived, typename ... Bases>
+//class clone_inherit : public Bases...
+//{
+//public:
+//   virtual ~clone_inherit() = default;
+//
+//   std::unique_ptr<Derived> clone() const
+//   {
+//      return std::unique_ptr<Derived>(static_cast<Derived *>(this->clone_impl()));
+//   }
+//
+//protected:
+//   //         desirable, but impossible in C++17
+//   //         see: http://cplusplus.github.io/EWG/ewg-active.html#102
+//   // using typename... Bases::Bases;
+//
+//private:
+//   virtual clone_inherit * clone_impl() const override
+//   {
+//      return new Derived(static_cast<const Derived & >(*this));
+//   }
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//template <typename Derived, typename ... Bases>
+//class clone_inherit<abstract_method<Derived>, Bases...> : public Bases...
+//{
+//public:
+//   virtual ~clone_inherit() = default;
+//
+//   std::unique_ptr<Derived> clone() const
+//   {
+//      return std::unique_ptr<Derived>(static_cast<Derived *>(this->clone_impl()));
+//   }
+//
+//protected:
+//   //         desirable, but impossible in C++17
+//   //         see: http://cplusplus.github.io/EWG/ewg-active.html#102
+//   // using typename... Bases::Bases;
+//
+//private:
+//   virtual clone_inherit * clone_impl() const = 0;
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//template <typename Derived>
+//class clone_inherit<Derived>
+//{
+//public:
+//   virtual ~clone_inherit() = default;
+//
+//   std::unique_ptr<Derived> clone() const
+//   {
+//      return std::unique_ptr<Derived>(static_cast<Derived *>(this->clone_impl()));
+//   }
+//
+//private:
+//   virtual clone_inherit * clone_impl() const override
+//   {
+//      return new Derived(static_cast<const Derived & >(*this));
+//   }
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//template <typename Derived>
+//class clone_inherit<abstract_method<Derived>>
+//{
+//public:
+//   virtual ~clone_inherit() = default;
+//
+//   std::unique_ptr<Derived> clone() const
+//   {
+//      return std::unique_ptr<Derived>(static_cast<Derived *>(this->clone_impl()));
+//   }
+//
+//private:
+//   virtual clone_inherit * clone_impl() const = 0;
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+//
+////	<User/Client> code:
+/////////////////////////////////////////////////////////////////////////////////
+// 
+//class cloneable
+//   : public clone_inherit<abstract_method<cloneable>>
+//{
+//};
+// 
+/////////////////////////////////////////////////////////////////////////////////
+//
+//class foo
+//   : public clone_inherit<abstract_method<foo>, virtual_inherit_from<cloneable>>
+//{
+//};
+//
+/////////////////////////////////////////////////////////////////////////////////
+//
+//class bar
+//   : public clone_inherit<abstract_method<bar>, virtual_inherit_from<cloneable>>
+//{
+//};
+//
+/////////////////////////////////////////////////////////////////////////////////
+//
+//class concrete
+//   : public clone_inherit<concrete, foo, bar>
+//{
+//};
+//
+/////////////////////////////////////////////////////////////////////////////////
+//
+////	}}}
+
+//	Ongoing: 2022-04-26T18:51:35AEST (article fluentcpp) goes on to introduce CRTP, and to apply these techniques to cases of multiple and diamond inheritance [...] finishes by noting that the 'whole package' example compiles for gcc/clang, but not visual studio [...] -> the need for this only arises from a need to use virtual functions <(review after outlining rules for overriding non-virtual functions)>
+
+//	}}}
+
+
 //	shared_ptr is oftern used because it mimics the style of garbage collected languages like C#/Java. There are situations where it is required, but <(unique_ptr used with raw pointers should be prefered?)>
 //	<(shared_ptr can be used to create circular references (deadlocks), weak_ptr prevents this)> 
 //	<(weak_ptr provides an alternative to raw pointers that provide warning about being left dangling)>
 //	<(weak_ptr models a temporary model of ownership)>
-//	Ongoing: 2022-03-10T23:47:47AEDT on the role (relationship vis-a-vis ownertship) of weak_ptr
+
+//	LINK: https://stackoverflow.com/questions/16760334/whats-the-difference-between-raw-pointer-and-weak-ptr
+//	Ongoing: 2022-03-10T23:47:47AEDT on the role (relationship vis-a-vis ownership) of weak_ptr
 
 
 //	Ongoing: 2022-03-10T23:41:01AEDT provide messages in example ctors/dtors?

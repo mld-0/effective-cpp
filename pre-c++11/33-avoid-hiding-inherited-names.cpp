@@ -7,6 +7,7 @@
 #include <string>
 using namespace std;
 //	{{{2
+//	TODO: 2022-04-26T18:40:13AEST effective-c++, 33-avoid-hiding-inherited-names, (clarify *rules* on <hiding/overriding> non-virtual functions) (refer to extra/ownership-with-smart-pointers, and the 'workaround' since one cannot narrow the return type of a unique_ptr like one can narrow the return type of a pointer for an overridden virtual function (the workaround being to use a non-virtual function and override that, achieving polymorphic behaviour by calling a private virtual function which returns the raw pointer for the creation of the smartpointer))
 
 //	Scope:
 //	LINK: https://en.cppreference.com/w/cpp/language/scope
