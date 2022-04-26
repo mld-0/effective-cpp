@@ -9,6 +9,7 @@ using namespace std;
 //	{{{2
 //	TODO: 2022-04-25T01:35:32AEST effective-c++, extra/virtual-functions (what items cover them) (combining that material in one place?)
 //	Ongoing: 2022-04-25T22:04:16AEST Base class pointers to Derived class objects (outside the context of virtual functions) (and in the context of the is-a relationship)
+//	TODO: 2022-04-26T18:44:01AEST effective-c++, extra/virtual-functions, (the rule that says) only the return type of a pointer can be narrowed for a virtual function, (and such restrictions do not exist for overriding non-virtual functions (something we have an item saying not to do))
 
 //	<about virtual functions>
 
