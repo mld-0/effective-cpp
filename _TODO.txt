@@ -196,3 +196,9 @@ TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers
 
 TODO: 2022-04-25T01:35:32AEST effective-c++, extra/virtual-functions (what items cover them) (combining that material in one place?)
 
+TODO: 2022-04-26T00:07:09AEST effective-c++/07-polymorphic-base-class-virtual-destructors, (on the reasoning) it is necessary to provide a definition for a pure virtual dtor
+
+TODO: 2022-04-26T18:40:13AEST effective-c++, 33-avoid-hiding-inherited-names, (clarify *rules* on <hiding/overriding> non-virtual functions) (refer to extra/ownership-with-smart-pointers, and the 'workaround' since one cannot narrow the return type of a unique_ptr like one can narrow the return type of a pointer for an overridden virtual function (the workaround being to use a non-virtual function and override that, achieving polymorphic behaviour by calling a private virtual function which returns the raw pointer for the creation of the smartpointer))
+
+TODO: 2022-04-26T18:44:01AEST effective-c++, extra/virtual-functions, (the rule that says) only the return type of a pointer can be narrowed for a virtual function, (and such restrictions do not exist for overriding non-virtual functions (something we have an item saying not to do))
+
