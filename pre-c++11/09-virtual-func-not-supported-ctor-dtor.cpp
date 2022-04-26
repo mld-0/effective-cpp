@@ -8,7 +8,7 @@ using namespace std;
 
 //	alt solutions for polymorphic behaviour from ctor/dtors:
 //		~~1) generate class specific data in derived class constructor and pass to base class destructor~~
-//		1)	generate class specific data in derived class <(static)?> function and pass to base class constructor, <(passing information up to base class instead of down from derived class)>
+//		1)	generate class specific data in derived class <(static?)> function and pass to base class constructor, <(passing information up to base class instead of down from derived class)>
 class Transaction {
 public:
 	explicit Transaction(const string& logInfo) {
@@ -31,7 +31,7 @@ private:
 	}
 };
 
-//		2)	<?> Ongoing: 2022-01-25T01:05:20AEDT another option (does the book (not) state there are 'several' options yet (only presents one)?)
+//		2)	<?> Ongoing: 2022-01-25T01:05:20AEDT another option? (does the book (not) state there are 'several' options yet (only presents one)?)
 
 
 int main()
