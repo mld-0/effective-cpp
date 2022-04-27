@@ -202,3 +202,5 @@ TODO: 2022-04-26T18:40:13AEST effective-c++, 33-avoid-hiding-inherited-names, (c
 
 TODO: 2022-04-26T18:44:01AEST effective-c++, extra/virtual-functions, (the rule that says) only the return type of a pointer can be narrowed for a virtual function, (and such restrictions do not exist for overriding non-virtual functions (something we have an item saying not to do))
 
+TODO: 2022-04-27T23:25:59AEST effective-c++, item 17, implicit-special-member-functions, member variable 'int* x = 0' -> has a value before ctor is reached? (behaviour when assigning value to both variable and ctor initalization list) (better practice for initalizing the value of a class variable (is there not some f----- of values being re-used?) (is there an item on class variable initalization?)
+
