@@ -61,6 +61,10 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 //	'cv-unqualified' <(means not const or volatile)>
 
 
+//	shallow copy: memberwise copy of values and pointers (default copy-ctor/assign)
+//	deep copy: memberwise copy of values, pointers are duplicated and deep-copied
+
+
 int main()
 {
 	return 0;
