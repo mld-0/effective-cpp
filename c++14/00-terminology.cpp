@@ -1,7 +1,12 @@
+//	VIM SETTINGS: {{{3
+//	vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
+//	vim: set foldlevel=2 foldcolumn=2:
+//	}}}1
 #include <iostream>
 #include <vector>
 #include <string>
 using namespace std;
+//	{{{2
 
 //	TODO: 2022-03-03T01:13:19AEDT effective-c++, item 00, terminology, if all variables including primatives are objects, then what are 'object-objects' things that are not primatives?
 
@@ -63,6 +68,24 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 
 //	shallow copy: memberwise copy of values and pointers (default copy-ctor/assign)
 //	deep copy: memberwise copy of values, pointers are duplicated and deep-copied
+
+
+//	Undefined behaviour: A nightmare, which may manifest as any of the following
+//	{{{
+//		program produces different results every time it is run.
+//		program consistently produces the same incorrect result.
+//		program behaves inconsistently (sometimes produces the correct result, sometimes not).
+//		program seems like its working but produces incorrect results later in the program.
+//		program crashes, either immediately or later.
+//		program works on some compilers but not others.
+//		program works until you change some other seemingly unrelated code.
+//	}}}
+
+
+//	Initialing a variable:
+int value1 = 1; 		// copy initialization
+double value2(2.2); 	// direct initialization
+char value3 {'c'}; 		// uniform initialization
 
 
 int main()
