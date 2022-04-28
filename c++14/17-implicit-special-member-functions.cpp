@@ -9,12 +9,10 @@ using namespace std;
 //	{{{2
 
 //	TODO: 2022-04-28T23:30:36AEST effective-c++, item 17, implicit special member functions (and 'noexcept')
+//	TODO: 2022-04-27T23:25:59AEST effective-c++, item 17, implicit-special-member-functions, member variable 'int* x = 0' -> has a value before ctor is reached? (behaviour when assigning value to both variable and ctor initalization list) (better practice for initalizing the value of a class variable (is there not some f----- of values being re-used?) (is there an item on class variable initalization?)
+//	TODO: 2022-04-29T00:15:42AEST effective-c++, item 17, implicit-special-member-functions, (is self-assignment a problem for any class we have created for this item?)
 
-//	special member functions: functions C++ is willing to generate on its own. 
-//	Implicitly public and inline.
-//	<C++98>: default-ctor, default-dtor, copy-ctor, copy-assign
-//	<C++11>: (adds) move-ctor, move-assign
-
+//	Ongoings:
 //	{{{
 //	Ongoing: 2022-04-27T21:45:48AEST and by 'default ctor/dtor do nothing', we mean, they implicitly do everything an empty explicit function would do?
 //	Ongoing: 2022-04-27T21:48:33AEST intuition vis-a-vis special member function rules of generation?
@@ -25,12 +23,21 @@ using namespace std;
 //	Ongoing: 2022-04-27T22:22:56AEST how hard 'ExampleDeep' would be with 'char* ptr' instead of 'string* ptr'? -> (you tell me, how f----- hard is it to copy a block of memory (being a member variable, we have access to its size?) (can one write an entire item on 'copy what is at char*'?))
 //	}}}
 
+//	Special Member Functions: functions C++ is willing to generate on its own. 
+//	Implicitly public and inline.
+//	<C++98>: default-ctor, default-dtor, copy-ctor, copy-assign
+//	<C++11>: (adds) move-ctor, move-assign
+
+//	Shallow vs Deep Copy: default special member functions perform shallow (elementwise) copy/move
 //	LINK: https://stackoverflow.com/questions/184710/what-is-the-difference-between-a-deep-copy-and-a-shallow-copy
 //	shallow copy: memberwise copy of values and pointers
 //	deep copy: memberwise copy of values, pointers are duplicated and deep-copied
 //	<(shallow copying an object containing pointers is probably a bad idea?)> <(a class with pointer member variables should probably implement a custom, deep copy copy-ctor?)>
 
-//	Example: implement deep copy
+//	{{{
+//	Ongoing: 2022-04-29T00:12:57AEST how one might 'copy' what is at 'char*' (especially for a pointer that is public) -> (a malloc-ed char* knows how big it is?)
+//	}}}
+//	Example: a class managing a pointer (resource) (probably) needs custom special member functions which perform deep copy (copying the resource)
 struct ExampleDeep {
 	string* ptr;
 	~ExampleDeep() { delete ptr; }
@@ -38,10 +45,8 @@ struct ExampleDeep {
 	ExampleDeep(const ExampleDeep& old) : ptr(new string(*old.ptr)) {}
 };
 
-
-//	If depending on implicit copy/move-ctor/assign, one should explicitly define them '= default'. 
+//	If depending on implicit copy/move-ctor/assign for a class, one should explicitly define them '= default'. 
 //	Among other reasons, because later additions to a class can (such as a custom dtor) disable previously-enabled implicit special member functions, (either breaking things, or silently causing all moves to be replaced with copies (with potentially disasterous performance implications)).
-
 
 //	Rules of Generation: special member functions are not generated unless they are needed
 //	The default ctor/dtor ~~do nothing~~ are equivalent to empty functions
@@ -50,7 +55,7 @@ struct ExampleDeep {
 //	memberwise copy/move is applied to all non-static variables (which must support copy/move)
 //	These default special member functions can be explicitly enabled/disabled with '= default' / '= delete'
 struct Widget {
-//	default-ctor: if no explicit ctor
+//	default-ctor: if no explicit ctor (including move/copy-ctor)
 	Widget();
 
 //	default-dtor: if no explicit dtor, virtual if necessary
@@ -68,12 +73,17 @@ struct Widget {
 
 
 
+//	Example: <(un-usable class? default-ctor is disabled by copy-ctor, instances cannot be created?)>
+struct B {
+	//B() = default;					//	disabled by explicit copy-ctor
+	B(const B& rhs) = default;
+};
 
 
 
-//	TODO: 2022-04-27T23:25:59AEST effective-c++, item 17, implicit-special-member-functions, member variable 'int* x = 0' -> has a value before ctor is reached? (behaviour when assigning value to both variable and ctor initalization list) (better practice for initalizing the value of a class variable (is there not some f----- of values being re-used?) (is there an item on class variable initalization?)
 //	Ongoing: 2022-04-28T00:17:27AEST (another perfectly valid alternative would have been to swap the pointers (for move-assign)) (not a solution for copy-assign (since that leaves noone to delete 'x') (unless, we pass by-value instead of by reference, and swap '*this' with the argument?) (where it would be swapped with a temp var passed-by-value and deleted by that))
 //	{{{
+//	Ongoing: 2022-04-28T23:42:06AEST (have we asked this before?) the 'default' ctor/dtor (are equivalent to empty functions (and therefore call the implicit parent class ctors/dtors?))
 //	Ongoing: 2022-04-27T21:36:30AEST move-ctor *that is, only if no explicit copy-ctor, (a class can have both implicit move-ctor and copy-ctor?)
 //	Ongoing: 2022-04-27T21:42:08AEST (verify, the above ('Widget') (special member function) signatures are correct?)
 //	Ongoing: 2022-04-27T22:33:37AEST ('cplusplus.com' lies?) -> an explict copy-move/ctor does not prevent an implicit move-ctor/assign [...] -> (and it lies again(?)) (each of move-ctor/assign can be generated from the other one?) [...] (or are these lies our compiler being generous, ought we not assume any implicit function not allowed by the rules above), (another source for these rules?) [...] or is it because 'Fruit c = move(b)' invokes move-ctor not move-assign(?) (same as 'Fruit f2 = c' invokes copy-ctor not copy-assign?)
@@ -105,8 +115,7 @@ struct A {
 	//A(const A&) = default;
 };
 
-
-//	Example: Wikipedia, Explicit vs Implicit
+//	Example: Explicit vs Implicit (wikipedia, explicit implementation examples of implicit special member functions for class with <(by-value member variable)>
 //	{{{
 //	LINK: https://en.wikipedia.org/wiki/Special_member_functions
 class Explicit {
@@ -161,6 +170,7 @@ class Implicit : public Explicit {
 };
 //	}}}
 
+
 //	Rule of Zero:
 //	Classes that have any explicit special member functions should not deal exclusively with ownership.
 //	(That is, classes that have any explicit special member functions should be (and only be) resource managers).
@@ -168,17 +178,22 @@ class Implicit : public Explicit {
 //	(other classes (classes that are not resource managers) should not have explicit special member functions).
 
 //	Rule of Three:
-//	If one is declaring copy-ctor/copy-assign/dtor, one should declare all 3. A non-default dtor implies non-default copy operations.
+//	If one is declaring a custom-dtor/copy-ctor/copy-assign, one should declare all 3. A non-default dtor implies non-default copy operations.
 
 //	Rule of Five:
 //	LINK: https://stackoverflow.com/questions/45754226/what-is-the-rule-of-four-and-a-half
 //	Add move-ctor/assign. (move support is generally an optimization, not a requirement).
 //	<(some sources state 'swap()' instead of move-assign)>
 
-//	Ongoing: 2022-04-28T01:04:34AEST (methods described by) talk of achieving the same exception safety as copy-and-swap, without using copy-and-swap?
+//	Ongoings:
+//	{{{
+//	Ongoing: 2022-04-28T00:42:20AEST supposedly, one can use copy-and-swap, and one passing-by-value for assignment to handle both copy/move-assign with one function (and it all works)? [...] (begging the wider question, is moving something to a function that accepts it by-value efficent?)
+//	Ongoing: 2022-04-28T23:39:02AEST is the '= default' by-value (copy-and-move) ctor efficent? (previously asked is the question if the by-value swap-implemented version is efficent)
+//	Ongoing: 2022-04-28T23:47:04AEST does the rule-of-4.5 <suggest> not declaring of move-assign (is it not in the name - that would make 5.5?), (also asked (more generally)), (is move assign really (ever) necessary (it is trivially implemented with 'swap()') (can (the same thing) not be efficently done by a copy-assign implemented with 'swap()'?)) [...] -> (it would be neat if (so therefore could it be what is meant by)) the rule of 4.5 combined copy-ctor/assign with a single by-value function ((which one is led to believe / noted to clarify later) is both, efficently?)
+//	Ongoing: 2022-04-28T01:04:34AEST (methods described by) talk of achieving the same exception safety as copy-and-swap, without using copy-and-swap? (stated at link (see below), example given?)
+//	}}}
 //	Rule of 4.5:
 //	LINK: https://stackoverflow.com/questions/45754226/what-is-the-rule-of-four-and-a-half#:~:text=Basically%2C%20at%20the%20end%20of,gives%20you%20strong%20exception%20guarantee).
-//	<(Recognize move-assign is probably unneccessary)>
 //	Extends the copy-and-swap idiom to the rule-of-5
 //	copy-ctor/dtor handles resource
 //	move-ctor/assignment call swap
@@ -237,7 +252,7 @@ public:
 		//*this = move(rhs);
 		swap(*this, rhs);
 	}
-	//	Ongoing: 2022-04-28T00:48:11AEST I am told I can replace operator(Rock&)/operator(Rock&&) with operator(Rock) and have it all just work(?)
+	//	Ongoing: 2022-04-28T00:48:11AEST I am told I can replace (traditional lvalue/rvalue reference copy-assigns) operator(Rock&)/operator(Rock&&) with (single, by-value assign) operator(Rock) and have it all just work(?)
 	Rock& operator=(const Rock& rhs) {
 		cout << "operator=(Rock&)\n";
 		Rock temp(rhs);
@@ -256,8 +271,6 @@ public:
 		swap(lhs.x, rhs.x);
 	}
 };
-//	Ongoing: 2022-04-28T00:42:20AEST supposedly, one can use copy-and-swap, and one passing-by-value for assignment to handle both copy/move-assign with one function (and it all works)? [...] (begging the wider question, is moving something to a function that accepts it by-value efficent?)
-
 
 
 int main()
@@ -302,4 +315,13 @@ int main()
 }
 
 //	Summary:
-//		
+//		Special member functions are those compilers may generate implicitly: default-ctor/dtor (only classes without any explicit ctors/dtors (respectively), default-dtor is virtual if necessary), copy-ctor/assign (only classes with no move operations), move-ctor/assign (only classes without any more/copy operations or dtor).
+//		<(The default dtor/ctor are equivalent to empty functions? (And implicitly call parent class ctors/dtors the same way?))>
+//		The default copy/move operations perform memberwise copies/moves (shallow copys).
+//		It is best practice to explicitly declare any special member functions of a class needed from a class, the default implementation can be specified with '= default'.
+//		<(special member function templates never suppress generation of implicit special member functions?)>
+//		The rule of 0 (along with the single-responsibility-principle) implies that a class should not have any custom special member functions unless it is a resource manager (in which case it should *only* be a resource manager).
+//		The rule of 3 states that a function that declares a custom-dtor/copy-ctor/copy-assign should declare all 3.
+//		The rule of 5 adds move-ctor/move-assign to the rule of 3. Move is (usually) an optimization, and not necessary for correctness.
+//		The rule of 4.5 extends the copy-and-swap idiom to the rule of 5, defining a friend non-member function 'swap' for that class, implementing <(copy/move-assign and move-ctor in terms of swap, and custom copy-ctor/dtor implement resource management)>.
+
