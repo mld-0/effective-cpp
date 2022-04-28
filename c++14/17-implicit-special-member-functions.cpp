@@ -8,6 +8,8 @@
 using namespace std;
 //	{{{2
 
+//	TODO: 2022-04-28T23:30:36AEST effective-c++, item 17, implicit special member functions (and 'noexcept')
+
 //	special member functions: functions C++ is willing to generate on its own. 
 //	Implicitly public and inline.
 //	<C++98>: default-ctor, default-dtor, copy-ctor, copy-assign
