@@ -204,3 +204,11 @@ TODO: 2022-04-26T18:44:01AEST effective-c++, extra/virtual-functions, (the rule 
 
 TODO: 2022-04-27T23:25:59AEST effective-c++, item 17, implicit-special-member-functions, member variable 'int* x = 0' -> has a value before ctor is reached? (behaviour when assigning value to both variable and ctor initalization list) (better practice for initalizing the value of a class variable (is there not some f----- of values being re-used?) (is there an item on class variable initalization?)
 
+TODO: 2022-04-28T23:30:36AEST effective-c++, item 17, implicit special member functions (and 'noexcept')
+
+TODO: 2022-04-29T00:15:42AEST effective-c++, item 17, implicit-special-member-functions, (is self-assignment a problem for any class we have created for this item?)
+
+TODO: 2022-04-29T03:32:36AEST effective-c++, extra/member-variable-initalization, member variables that are static and/or const
+
+TODO: 2022-04-29T03:42:59AEST effective-c++, extra/member-variable-initialization, constructor delegation
+
