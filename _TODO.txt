@@ -1,50 +1,162 @@
-TODO: 2022-01-25T22:37:54AEDT effective-c++, extra/copy-and-swap, what (special member functions) can/should be marked as noexcept? (making things explict) (vs the compiler being able to deduce noexcept for straightforward functions?)
+TODO: 2022-04-29T03:42:59AEST effective-c++, extra/member-variable-initialization, constructor delegation
 
-TODO: 2022-01-25T07:03:21AEDT effective-c++, 11-handle-self-assignment, (this being a slightly complicated topic of which <from the book we adapt a half finished example (further)>), how best to do the 'swap()' in 'copy-and-swap' is a somewhat involved subject (swap as member/friend function, implemented best / in terms of a default?) (does copy-and-swap warrent a dedicated example (something the book doesn't make a dedicated item?)) (best copy and swap implements both move and swap (together)?)
+TODO: 2022-04-29T03:32:36AEST effective-c++, extra/member-variable-initalization, member variables that are static and/or const
 
-TODO: 2022-01-25T01:49:06AEDT effective-c++, applying the 'return *this' (i.e: reference to the LHS of the expresion(?)) rule for assignment operator to the two-argument form of the assignment operators
+TODO: 2022-04-29T00:15:42AEST effective-c++, item 17, implicit-special-member-functions, (is self-assignment a problem for any class we have created for this item?)
 
-TODO: 2022-01-26T23:22:55AEDT effective-c++, extra/implicit-conversion
+TODO: 2022-04-28T23:30:36AEST effective-c++, item 17, implicit special member functions (and 'noexcept')
 
-TODO: 2022-01-30T01:29:24AEDT effective-c++, item 18 interface design basics, (dedicated 'extra/' example for) custom deleters for shared_ptr and unique_ptr
+TODO: 2022-04-27T23:25:59AEST effective-c++, item 17, implicit-special-member-functions, member variable 'int* x = 0' -> has a value before ctor is reached? (behaviour when assigning value to both variable and ctor initalization list) (better practice for initalizing the value of a class variable (is there not some f----- of values being re-used?) (is there an item on class variable initalization?)
 
-TODO: 2022-01-30T02:08:24AEDT effective-c++, 20-pass-by-const-ref, C++ compiler behaviour in optimising arguments passed by value?
+TODO: 2022-04-26T18:44:01AEST effective-c++, extra/virtual-functions, (the rule that says) only the return type of a pointer can be narrowed for a virtual function, (and such restrictions do not exist for overriding non-virtual functions (something we have an item saying not to do))
 
-TODO: 2022-01-30T02:26:43AEDT effective-c++, item 20, polymorphic behaviour (virtual functions) (when passing by) reference
+TODO: 2022-04-26T18:40:13AEST effective-c++, 33-avoid-hiding-inherited-names, (clarify *rules* on <hiding/overriding> non-virtual functions) (refer to extra/ownership-with-smart-pointers, and the 'workaround' since one cannot narrow the return type of a unique_ptr like one can narrow the return type of a pointer for an overridden virtual function (the workaround being to use a non-virtual function and override that, achieving polymorphic behaviour by calling a private virtual function which returns the raw pointer for the creation of the smartpointer))
 
-TODO: 2022-01-30T02:40:13AEDT effective-c++, item 21, operators that return a reference (that isn't to '*this')?, (and how chained operators are (best) handled WRT to these returned objects/references?)
+TODO: 2022-04-26T00:07:09AEST effective-c++/07-polymorphic-base-class-virtual-destructors, (on the reasoning) it is necessary to provide a definition for a pure virtual dtor
 
-TODO: 2022-01-30T03:02:23AEDT effective-c++, item 21, <correct/best> form for declaring (each of the) operator functions, ((role of ) the non-member friend?)
+TODO: 2022-04-25T01:35:32AEST effective-c++, extra/virtual-functions (what items cover them) (combining that material in one place?)
 
-TODO: 2022-01-30T03:10:02AEDT effective-c++, item 21, example is when a function 'operator*' should return by value instead of by reference ((examples for) when should operators/functions return by reference?)
+TODO: 2022-04-25T00:06:10AEST effective-c++, extra/ownership-with-smart-pointers, using unique_ptr ctor 'unique_ptr<T>(new T(args))' vs 'make_unique<T>(args)'? (see below)
 
-TODO: 2022-01-30T03:42:41AEDT effective-c++, perl, (one liner?), replace '#include <vector>\n#include <string>\n' with (reverse order) (and vice versa)
+TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers, form/use of a smart pointer vs raw pointer (as parameter type/otherwise?), (passing smart pointers)
 
-TODO: 2022-01-30T10:47:43AEDT effective-c++, item 25, a better discussion of how best to declare swap (as a dedicated example) (extra/swap.cpp) (for modern/ye-olde c++)
+TODO: 2022-04-02T03:04:29AEDT effective-c++, item 14, declare noexcept, (continuing from) (item 17, default/implicit functions), clarify the (generally correct?) rule 'default/implict' functions are noexcept where possible (we are given the list: default/copy/move-ctors, copy/move-assignment, comparison, are there more 'default/implicit' functions than those (and are they also noexcept where possible) (i.e: an addition operator?), (?))
 
-TODO: 2022-01-30T15:28:41AEDT effective-c++, item 25, explicit vs partial specialization (and extending std::swap for a custom type (adding to the std namespace))
+TODO: 2022-03-28T23:38:25AEDT effective-c++, item 15, use constexpr where possible, (how) does 'is_constexpr()' work?
 
-TODO: 2022-01-30T16:39:35AEDT effective-c++, extras/specialize-templates.cpp, (what does it mean) (and how might one be expected to remember said explanation) (need a better explanation?) (does either effective-c++ book touch the topic?)
+TODO: 2022-03-28T23:20:49AEDT effective-c++, item 15, use constexpr where possible, (function) is_constexpr() (or) <meta-template> is_constexpr<>()
 
-TODO: 2022-01-30T22:35:44AEDT effective-c++, extra/specializer-templates.cpp, laid-out-rules (in paragraph or points) that predict/explain the selection made for each call to 'f()' and 'g()', (and better laid out examples?) (examples reflecting a newer C++ than pre-01)
+TODO: 2022-03-28T01:12:04AEDT effective-c++, move/copy-failed-to-move depending on exception specification <(of move operation?)> (supposedly the standard containers are making this <check/distinction>), as demonstrated by messages from custom copy/move ctor/assignments (and classes with/without noexcept) (or perhaps differing for the other case 'noexcept(false)'?)
 
-TODO: 2022-01-30T23:57:49AEDT effective-c++, extras/specialize-templates.cpp, (for completeness (and elegance) sake), implemented the omitted (hand-waved) (in-place) counting sort for 'void custom_sort<char>(char arr[], int size)' 
+TODO: 2022-03-26T23:57:03AEDT effective-c++, get_vector_randoms, add seeding to each usage
 
-TODO: 2022-02-04T21:02:47AEDT effective-c++, 31-minimize-compilation-dependencies, place pImpl and Interface solutions into files-in-dir with make rules, demonstrate which files need be recompiled after changing <various>
+TODO: 2022-03-25T01:24:02AEDT effective-c++, run-all.sh, Perl, get system nano-time one-liner (can we do with a vanilla macOS/Linux version) (currently using python, which I am inclined to think is too slow for use in 'casual' one-liners)
 
-TODO: 2022-02-04T23:48:05AEDT effective-c++, 31-minimize-compilation-dependencies, cleanup <explanations> for pImpl and interface-concrete compilation-dependecy-minimizing techniques
+TODO: 2022-03-24T21:12:36AEDT effective-c++, run-all.sh, some rule for getting examples from 'extra/' to build
 
-TODO: 2022-02-07T20:19:18AEDT effective-c++, 31-minimize-compilation-dependencies, pImpl/interface examples -> modify makefiles to place *.o and *.d files in seperate directories
+TODO: 2022-03-20T23:17:08AEDT effective-c++, item 10, prefer-scoped-enums, implement 'primeFactors'
 
-TODO: 2022-02-07T21:26:42AEDT effective-c++/31*/*/autodependencies-makefile, is a better solution where we generate dependency rules to use for clean-compiles as well as re-compiles? (can you find someone else to explain that dependencies are not needed for a clean-compile)
+TODO: 2022-03-20T22:15:41AEDT effective-c++, extra/variadic-templates, function parameter packs as lvalue/rvalue/forwarding references
 
-TODO: 2022-02-08T03:08:12AEDT effective-c++, item 32, public inheritance models 'is a', (on the use of) the word <necessarily> being necessary when describing the reverse of the public inheritance 'is a' relationship: 'If B publicly inherits from A, then B is an A (but A is not <necessarily> a B)'
+TODO: 2022-03-20T01:10:48AEDT effective-c++, extra/variadic-templates, (how to get) (vector of) 'print_all_.*' variadic template function (as a function pointer / std::function / callable-thing-I-can-put-in-a-vector) (and from there), (what is a type we can use to point to all of them, that is, how to put pointers to each in a single vector)
 
-TODO: 2022-02-08T23:41:24AEDT effective-c++, 00-terminology, <object/primative> initialization through '=', '()', and '{}', (and how) (god is dead and none of these options works in every scenario)
+TODO: 2022-03-19T20:54:37AEDT effective-c++, item 09, prefer-alias-to-typedef, <explain/outline> 'using' declarations <of/and> alias-es
 
-TODO: 2022-02-09T04:25:26AEDT effective-c++, 35-virtual-function-alternatives, what (besides the obvious) is the problem with virtual functions?
+TODO: 2022-03-19T04:39:37AEDT effective-c++, extra/variadic-templates, Example: variadic function template and perfect forwarding
 
-TODO: 2022-02-09T04:26:07AEDT effective-c++, 35-virtual-function-alternatives, complete examples for 'Strategy Pattern' ((still) being a stupid name?), std::function based and 'Classic' (pointer to (virtual function in) implementation class hierachy)
+TODO: 2022-03-19T04:38:36AEDT effective-c++, extra/variadic-templates, implement 'my_printf<T,Ts...>()'
+
+TODO: 2022-03-19T04:26:30AEDT effective-c++, extra/variadic-templates, (rudimentary) implementation for 'template<typename... Ts> class Tuple'
+
+TODO: 2022-03-19T04:24:39AEDT effective-c++, extra/varidic-templates, alternative 'get_types_names<Ts...>()' implementations (not using constexpr/sizeof...?)
+
+TODO: 2022-03-19T03:24:57AEDT effective-c++, extra/variadic-templates, 'print_vector_elements()', most elegant solution to the 'print vector with delims between elements' problem.
+
+TODO: 2022-03-18T20:23:14AEDT effective-c++, extra/variadic-templates, meaning and use of '...' (consider 'std::forward<Ts>(first)...') (The ... pretty much says "take what's on the left, and for each template parameter, unpack it accordingly.") (see below)
+
+TODO: 2022-03-18T00:01:06AEDT effective-c++, item 30, perfect-forwarding-failure-cases, variadic 'fwd_v', call 'print_details' for each argument passed (but first, extra/variadic-templates)
+
+TODO: 2022-03-17T20:15:47AEDT effective-c++, item 28, reference-collapsing, examples for 'typedef and alias declarations' and 'decltype'
+
+TODO: 2022-03-17T20:09:43AEDT effective-c++, item 29, do not assume move support, what the the conditions under which an implicit move will be generated (this being a topic for item 17)
+
+TODO: 2022-03-14T23:17:54AEDT effective-c++, item 24, reference collapsing, how 'Widget&&', the rvalue to which lvalue 'x' refers, (a value moved to 'forward_Widget'/'compare_forward_alternatives') is recieved by 'recieve_Widget(Widget&)' and not 'recieve_Widget(Widget&&)' when passed without forward/move [...] -> why is forwarding not 'default' behaviour? [...] -> what are overload resolution rules where both forms of 'recieve_Widget' are declared?
+
+TODO: 2022-03-13T22:54:39AEDT effective-c++, item 03, decltype, f----- behaviour of functions called inside 'decltype()', an explanation to go with the 'update_counter()' side-effects example
+
+TODO: 2022-03-13T22:26:02AEDT (Do I remember right) <('decltype(x)(x)' is equivalent to 'forward<decltype(x)>(x)'?)> (and <even> if it is, the clarity of the latter is worth the extra characters?)
+
+TODO: 2022-03-12T23:06:07AEDT effective-c++, item 27, alternatives-to-overloading-forwarding-references, provide extended/brief definitions/descriptions of: enable_if/enable_if_t, decay/decay_t, is_same/<(is_same_t)>, is_base_of
+
+TODO: 2022-03-10T23:48:33AEDT C++, extra/ownership-with-pointers, ongoings, cleanup
+
+TODO: 2022-03-10T03:41:22AEDT effective-c++, item 23, move-forward, latest problem comes down to: given 'f(auto&& x)', determine what T would be if we were using 'f(T&& x)' (specifically here - make T == TD)
+
+TODO: 2022-03-09T23:21:02AEDT effective-c++, item 23, move-forward, (how can) 'l_steal_forward(v1)' steal v1's values when used without move? (going back to our question of type-deduction/forwarding-references for lambdas w/ auto vs function templates)
+
+TODO: 2022-03-08T05:03:04AEDT effective-c++, item 04, view deduced types, version of 'get_type_name<T>()' which doesn't produce YCM warning/error
+
+TODO: 2022-03-07T06:10:37AEDT effective-c++, item 23, move-forward, what is the meaning of the type T used in 'forward<T>(x)', (and from there, is 'forward<decltype(x)>(x)' always valid?)
+
+TODO: 2022-03-07T05:41:32AEDT effective-c++, item 23, move-forward, lambda vs function template type deduction rules, lambda with parameters 'auto&& x' vs template function 'T&& x' (difference in type deduction rules) <(try using decltype(auto)?)> (deduced type of x, and reconsiling that (for 'l_steal_.*', 'T = typename std::remove_reference<decltype(x)>::type') <- (still looking for a simpler solution / way to reconcile) -> (since 'decltype(auto)' is invalid for a lambda parameter) -> (is 'decltype(auto)' useable for any<one's> arguments? 'decltype(auto)' only for return type and variable declarations?) [...] -> <something-something only difference between template/auto type deduction?> (from item 02): "when the initalizer for an auto variable is enclosed in braces {}, the deduced type is initalizer_list, this is the <only?> difference between auto type deduction and template type deduction" <(revise (item 02) statement, clarification of the '<only?> after addressing topic?  2022-03-07T05:49:32AEDT
+
+TODO: 2022-03-06T20:49:18AEDT effective-c++, item 23, move-forward, is calling 'forward' on a non-forwarding-reference ever meaningful/correct (considering our "show me the difference between forward/move dilemma previously"?)
+
+TODO: 2022-03-03T02:53:00AEDT effective-c++, item 23, move-forward, definition/example for 'std::move_if_noexcept'
+
+TODO: 2022-03-03T02:32:40AEDT effective-c++, item 25, move-rvalue-refs-forward-universal-refs, implement 'my_make_unique' (which is a variadic template function)
+
+TODO: 2022-03-03T01:13:19AEDT effective-c++, item 00, terminology, if all variables including primatives are objects, then what are 'object-objects' things that are not primatives?
+
+TODO: 2022-03-02T02:52:02AEDT effective-c++, extra/lvalue-rvalue-references, details/definitions of (or just more about) lvalue/rvalue/universal references
+
+TODO: 2022-03-02T02:24:05AEDT effective-c++, item 23, move-forward, review implicit move assignment/ctor rules (having copied the ctor rules to be cleaned up, along with a statement of presumption that implicit move assignment works the same way?)
+
+TODO: 2022-03-02T02:01:14AEDT effective-c++, extra/variadic-templates, (item 24) contains a variadic function template example -> complete extra item example, (and from it) fill in (item 24)
+
+TODO: 2022-03-02T01:50:47AEDT effective-c++, extra/lvalues-rvalues, lvalue vs rvalue (vs template rvalue?) overloads
+
+TODO: 2022-03-02T01:37:06AEDT effective-c++, extra/lvalues-rvalues, contrive a situation where 'x1' and 'x2' behave differently for 'int x1 = 5;' 'int&& x2 = 5;'
+
+TODO: 2022-03-01T20:45:48AEDT effective-c++, item 24, forwarding-vs-rvalue-references, example (using 'is_lvalue') where forward/move have different behaviour for lvalue/rvalue-references (our examples appear to work the same?) (and what of the use of forward<T> vs forward<T&> vs forward<T&&>) ... (the topic of item 25)
+
+TODO: 2022-02-27T03:10:46AEDT effective-c++, item 0, terminology, (we have <new/different> variable categories now (rvalues are now prvalues or xvalues)?), (review link (see below))
+
+TODO: 2022-02-27T02:39:28AEDT effective-c++, extra/lvalues-rvalues, (how to make work) 'assign_value(T&& x, T val)' when called with 'assign_value(var1,27)' (considering that 'assign_value(T&&, int val)' works (so it isn't a question of type deduction) ... (what is this behaviour?) (consider also that 'assign_value(move(var1),27)' does work) (and that assign_value(T&&, T&) does not work with or without 'move')
+
+TODO: 2022-02-26T22:43:15AEDT effective-c++, item 24, forwarding-vs-rvalue-referneces, how to tell if 'param' is T& or T&&?
+
+TODO: 2022-02-25T00:46:48AEDT effective-c++, item 04, view-deduced-types, use of Boost TypeIndex library
+
+TODO: 2022-02-24T23:05:36AEDT effective-c++, extra/variadic-templates, Continue
+
+TODO: 2022-02-24T20:05:04AEDT effective-c++, extra/variadic-template
+
+TODO: 2022-02-24T20:04:41AEDT effective-c++, extra/variadic-functions
+
+TODO: 2022-02-24T20:01:29AEDT effective-c++, item 07, initalialization-parenthesis-braces-equals, parenthesis-vs-braces as a template author ((specifically <for/regarding>) the variadic template example?) 
+
+TODO: 2022-02-24T05:25:24AEDT effective-c++, item 07, initialization-parentheses-braces-equals/bookwidget (are we sure) book example is wrong 'Widget w6{w3};' calling copy-ctor instead of initializer_list-ctor (as book claims it should) (is the example all corect / can it be updated to work as expected by some detail missed?)
+
+TODO: 2022-02-24T04:17:38AEDT effective-c++, item 07, initialization-parenthesis-braces-equals, (if they aren't impossible to read as-such) the parenthesis/braces (and equals?) rules for initialization
+
+TODO: 2022-02-23T20:44:55AEDT effective-c++, item 07, initalization-parenthesis-braces-equals, a better (laid out) example (with better classes) <of/for> (calling-ctors/initalizing-values with () vs {}) than b1/b2/b3/.../b17 (this being an important topic, present it better) (lay out the rules, then give examples?)
+
+TODO: 2022-02-21T03:37:50AEDT effective-c++, item 01, template-type-deduction, (what is the meaning of) '&*px' (address of the value of a pointer) for 'int x = 27; const int* px = &x;'?
+
+TODO: 2022-02-21T03:24:06AEDT effective-c++, item 04, view-deduced-types, a tool to <turn/reduce> '__vector_base<int, std::allocator<int>>::value_type &' into 'int&'
+
+TODO: 2022-02-21T02:59:12AEDT effective-c++, item 24, distinguish (universal) forwarding references from rvalue references (and I was so much happier before the chapter title implied they were not the same) (after which, review item 02, the case of 'auto&& uref3 = 27;') 
+
+TODO: 2022-02-21T02:43:50AEDT effective-c++, item 02, auto-type-deduction, 'auto&& uref3 = 27' is T = int or T = int&& (and how to check?) -> (I can take its address (and I can change it) -> must be 'int'?) (where are the rules on this and what do they say?) (and if T = int, declare a 'uref4' for which T = int&&) (this is all to do with universal references and nothing to do with auto -> 'int&& uref3 = 27' <appears> to yield same result? meaning this is a topic for) (see item 24)
+
+TODO: 2022-02-20T21:52:52AEDT effective-c++, item 05, prefer-auto-declarations, declaring as auto each <kind/type> of C++ number
+
+TODO: 2022-02-20T21:47:10AEDT effective-c++, item 05, prefer-auto-declrations, vim (and YCM) and how to get the type of an 'auto' variable?
+
+TODO: 2022-02-20T02:36:19AEDT effective-c++, item 01, template-type-deduction, descriptive names for f_.* functions
+
+TODO: 2022-02-19T23:30:56AEDT effective-c++, c++14/00-terminology, what can be done with a declaration vs a definition
+
+TODO: 2022-02-19T01:35:11AEDT effective-c++, extra/new-and-delete, (one of the differences between C/C++), implicitly converting from 'void*' to <other-pointer-type>
+
+TODO: 2022-02-19T01:28:20AEDT effective-c++, item 51, conventions-for-new-and-delete, (in modern-c++) one is required to declare 'size' version of delete when customizing delete (for member/non-member versions?)
+
+TODO: 2022-02-18T01:22:57AEDT effective-c++, item 52, placement-new-requires-placement-delete, (Summary/discussion updated as per the answer to) when a custom 'new' necessitates a custom 'delete' (and vice-versa) (this question presumedly extending to "how do the default new/delete work" (can one even make assumptions about them?), (a custom delete calls the destructor and it just works?), (what are the various forms for) -> best (first/next) addressed in 'extra/new-delete'?)
+
+TODO: 2022-02-18T00:44:01AEDT effective-c++, item 52, placement-new-requires-placement-delete, purpouse of each form of new/delete
+
+TODO: 2022-02-15T23:45:13AEDT effective-c++, item 51, conventions for new and delete, when to call (and when is called) the (default) 'delete' with/without the 'size' argument?
+
+TODO: 2022-02-15T00:22:54AEDT effective-c++, item 49, behaviour of new handler, supporting a nothrow new? (behaviour<s> of nothrow new)
+
+TODO: 2022-02-14T00:50:24AEDT effective-c++, effective-c++, 47, example-2, deriving from std::iterator (a deprecated technique?) being something a dedicated example (might be wanted for), (also the new technique) (and what else is derived from to provide type information (and if that's an old technique (again) what are the modern alternatives)?)
+
+TODO: 2022-02-13T20:33:55AEDT effective-c++, item 47 trait classes type information, providing std::iterator_traits<> for a custom container iterator (for (at least) 'iterator_category' and 'value_type')
+
+TODO: 2022-02-13T20:13:40AEDT effective-c++, item 47, example-1, how to call algorithm_signed/algorithm_unsigned without resorting to constexpr (C++17) (using overloading, as done in (item 47)?)
+
+TODO: 2022-02-13T19:07:51AEDT effective-c++, item 47 trait classes type information, book provided example, 'iterator_category' typedef and 'iterator_traits' struct (is) exceedingly unhelpful (this being a difficult subject, and excedingly clear example is called for?)
 
 TODO: 2022-02-11T02:29:42AEDT effective-c++, 41-implicit-interfaces-and-compile-time-polymorphism, rules for converting to a type which supports the functions of the implicit interface
 
@@ -52,163 +164,51 @@ TODO: 2022-02-11T00:47:52AEDT effective-c++, 41-implicit-interfaces-and-compile-
 
 TODO: 2022-02-10T21:17:25AEDT effective-c++, 41-implicit-interfaces-and-compile-time-polymorphism, how to <view/get/list> the implicit interface for some function template?
 
-TODO: 2022-02-13T19:07:51AEDT effective-c++, item 47 trait classes type information, book provided example, 'iterator_category' typedef and 'iterator_traits' struct (is) exceedingly unhelpful (this being a difficult subject, and excedingly clear example is called for?)
+TODO: 2022-02-09T04:26:07AEDT effective-c++, 35-virtual-function-alternatives, complete examples for 'Strategy Pattern' ((still) being a stupid name?), std::function based and 'Classic' (pointer to (virtual function in) implementation class hierachy)
 
-TODO: 2022-02-13T20:13:40AEDT effective-c++, item 47, example-1, how to call algorithm_signed/algorithm_unsigned without resorting to constexpr (C++17) (using overloading, as done in (item 47)?)
+TODO: 2022-02-09T04:25:26AEDT effective-c++, 35-virtual-function-alternatives, what (besides the obvious) is the problem with virtual functions?
 
-TODO: 2022-02-13T20:33:55AEDT effective-c++, item 47 trait classes type information, providing std::iterator_traits<> for a custom container iterator (for (at least) 'iterator_category' and 'value_type')
+TODO: 2022-02-08T23:41:24AEDT effective-c++, 00-terminology, <object/primative> initialization through '=', '()', and '{}', (and how) (god is dead and none of these options works in every scenario)
 
-TODO: 2022-02-14T00:50:24AEDT effective-c++, effective-c++, 47, example-2, deriving from std::iterator (a deprecated technique?) being something a dedicated example (might be wanted for), (also the new technique) (and what else is derived from to provide type information (and if that's an old technique (again) what are the modern alternatives)?)
+TODO: 2022-02-08T03:08:12AEDT effective-c++, item 32, public inheritance models 'is a', (on the use of) the word <necessarily> being necessary when describing the reverse of the public inheritance 'is a' relationship: 'If B publicly inherits from A, then B is an A (but A is not <necessarily> a B)'
 
-TODO: 2022-02-15T00:22:54AEDT effective-c++, item 49, behaviour of new handler, supporting a nothrow new? (behaviour<s> of nothrow new)
+TODO: 2022-02-07T21:26:42AEDT effective-c++/31*/*/autodependencies-makefile, is a better solution where we generate dependency rules to use for clean-compiles as well as re-compiles? (can you find someone else to explain that dependencies are not needed for a clean-compile)
 
-TODO: 2022-02-15T23:45:13AEDT effective-c++, item 51, conventions for new and delete, when to call (and when is called) the (default) 'delete' with/without the 'size' argument?
+TODO: 2022-02-07T20:19:18AEDT effective-c++, 31-minimize-compilation-dependencies, pImpl/interface examples -> modify makefiles to place *.o and *.d files in seperate directories
 
-TODO: 2022-02-18T00:44:01AEDT effective-c++, item 52, placement-new-requires-placement-delete, purpouse of each form of new/delete
+TODO: 2022-02-04T23:48:05AEDT effective-c++, 31-minimize-compilation-dependencies, cleanup <explanations> for pImpl and interface-concrete compilation-dependecy-minimizing techniques
 
-TODO: 2022-02-18T01:22:57AEDT effective-c++, item 52, placement-new-requires-placement-delete, (Summary/discussion updated as per the answer to) when a custom 'new' necessitates a custom 'delete' (and vice-versa) (this question presumedly extending to "how do the default new/delete work" (can one even make assumptions about them?), (a custom delete calls the destructor and it just works?), (what are the various forms for) -> best (first/next) addressed in 'extra/new-delete'?)
+TODO: 2022-02-04T21:02:47AEDT effective-c++, 31-minimize-compilation-dependencies, place pImpl and Interface solutions into files-in-dir with make rules, demonstrate which files need be recompiled after changing <various>
 
-TODO: 2022-02-19T01:28:20AEDT effective-c++, item 51, conventions-for-new-and-delete, (in modern-c++) one is required to declare 'size' version of delete when customizing delete (for member/non-member versions?)
+TODO: 2022-01-30T23:57:49AEDT effective-c++, extras/specialize-templates.cpp, (for completeness (and elegance) sake), implemented the omitted (hand-waved) (in-place) counting sort for 'void custom_sort<char>(char arr[], int size)' 
 
-TODO: 2022-02-19T01:35:11AEDT effective-c++, extra/new-and-delete, (one of the differences between C/C++), implicitly converting from 'void*' to <other-pointer-type>
+TODO: 2022-01-30T22:35:44AEDT effective-c++, extra/specializer-templates.cpp, laid-out-rules (in paragraph or points) that predict/explain the selection made for each call to 'f()' and 'g()', (and better laid out examples?) (examples reflecting a newer C++ than pre-01)
 
-TODO: 2022-02-19T23:30:56AEDT effective-c++, c++14/00-terminology, what can be done with a declaration vs a definition
+TODO: 2022-01-30T16:39:35AEDT effective-c++, extras/specialize-templates.cpp, (what does it mean) (and how might one be expected to remember said explanation) (need a better explanation?) (does either effective-c++ book touch the topic?)
 
-TODO: 2022-02-20T02:36:19AEDT effective-c++, item 01, template-type-deduction, descriptive names for f_.* functions
+TODO: 2022-01-30T15:28:41AEDT effective-c++, item 25, explicit vs partial specialization (and extending std::swap for a custom type (adding to the std namespace))
 
-TODO: 2022-02-20T21:47:10AEDT effective-c++, item 05, prefer-auto-declrations, vim (and YCM) and how to get the type of an 'auto' variable?
+TODO: 2022-01-30T10:47:43AEDT effective-c++, item 25, a better discussion of how best to declare swap (as a dedicated example) (extra/swap.cpp) (for modern/ye-olde c++)
 
-TODO: 2022-02-20T21:52:52AEDT effective-c++, item 05, prefer-auto-declarations, declaring as auto each <kind/type> of C++ number
+TODO: 2022-01-30T03:42:41AEDT effective-c++, perl, (one liner?), replace '#include <vector>\n#include <string>\n' with (reverse order) (and vice versa)
 
-TODO: 2022-02-21T02:43:50AEDT effective-c++, item 02, auto-type-deduction, 'auto&& uref3 = 27' is T = int or T = int&& (and how to check?) -> (I can take its address (and I can change it) -> must be 'int'?) (where are the rules on this and what do they say?) (and if T = int, declare a 'uref4' for which T = int&&) (this is all to do with universal references and nothing to do with auto -> 'int&& uref3 = 27' <appears> to yield same result? meaning this is a topic for) (see item 24)
+TODO: 2022-01-30T03:10:02AEDT effective-c++, item 21, example is when a function 'operator*' should return by value instead of by reference ((examples for) when should operators/functions return by reference?)
 
-TODO: 2022-02-21T02:59:12AEDT effective-c++, item 24, distinguish (universal) forwarding references from rvalue references (and I was so much happier before the chapter title implied they were not the same) (after which, review item 02, the case of 'auto&& uref3 = 27;') 
+TODO: 2022-01-30T03:02:23AEDT effective-c++, item 21, <correct/best> form for declaring (each of the) operator functions, ((role of ) the non-member friend?)
 
-TODO: 2022-02-21T03:24:06AEDT effective-c++, item 04, view-deduced-types, a tool to <turn/reduce> '__vector_base<int, std::allocator<int>>::value_type &' into 'int&'
+TODO: 2022-01-30T02:40:13AEDT effective-c++, item 21, operators that return a reference (that isn't to '*this')?, (and how chained operators are (best) handled WRT to these returned objects/references?)
 
-TODO: 2022-02-21T03:37:50AEDT effective-c++, item 01, template-type-deduction, (what is the meaning of) '&*px' (address of the value of a pointer) for 'int x = 27; const int* px = &x;'?
+TODO: 2022-01-30T02:26:43AEDT effective-c++, item 20, polymorphic behaviour (virtual functions) (when passing by) reference
 
-TODO: 2022-02-23T20:44:55AEDT effective-c++, item 07, initalization-parenthesis-braces-equals, a better (laid out) example (with better classes) <of/for> (calling-ctors/initalizing-values with () vs {}) than b1/b2/b3/.../b17 (this being an important topic, present it better) (lay out the rules, then give examples?)
+TODO: 2022-01-30T02:08:24AEDT effective-c++, 20-pass-by-const-ref, C++ compiler behaviour in optimising arguments passed by value?
 
-TODO: 2022-02-24T04:17:38AEDT effective-c++, item 07, initialization-parenthesis-braces-equals, (if they aren't impossible to read as-such) the parenthesis/braces (and equals?) rules for initialization
+TODO: 2022-01-30T01:29:24AEDT effective-c++, item 18 interface design basics, (dedicated 'extra/' example for) custom deleters for shared_ptr and unique_ptr
 
-TODO: 2022-02-24T05:25:24AEDT effective-c++, item 07, initialization-parentheses-braces-equals/bookwidget (are we sure) book example is wrong 'Widget w6{w3};' calling copy-ctor instead of initializer_list-ctor (as book claims it should) (is the example all corect / can it be updated to work as expected by some detail missed?)
+TODO: 2022-01-26T23:22:55AEDT effective-c++, extra/implicit-conversion
 
-TODO: 2022-02-24T20:01:29AEDT effective-c++, item 07, initalialization-parenthesis-braces-equals, parenthesis-vs-braces as a template author ((specifically <for/regarding>) the variadic template example?) 
+TODO: 2022-01-25T22:37:54AEDT effective-c++, extra/copy-and-swap, what (special member functions) can/should be marked as noexcept? (making things explict) (vs the compiler being able to deduce noexcept for straightforward functions?)
 
-TODO: 2022-02-24T20:04:41AEDT effective-c++, extra/variadic-functions
+TODO: 2022-01-25T07:03:21AEDT effective-c++, 11-handle-self-assignment, (this being a slightly complicated topic of which <from the book we adapt a half finished example (further)>), how best to do the 'swap()' in 'copy-and-swap' is a somewhat involved subject (swap as member/friend function, implemented best / in terms of a default?) (does copy-and-swap warrent a dedicated example (something the book doesn't make a dedicated item?)) (best copy and swap implements both move and swap (together)?)
 
-TODO: 2022-02-24T20:05:04AEDT effective-c++, extra/variadic-template
-
-TODO: 2022-02-24T23:05:36AEDT effective-c++, extra/variadic-templates, Continue
-
-TODO: 2022-02-25T00:46:48AEDT effective-c++, item 04, view-deduced-types, use of Boost TypeIndex library
-
-TODO: 2022-02-26T22:43:15AEDT effective-c++, item 24, forwarding-vs-rvalue-referneces, how to tell if 'param' is T& or T&&?
-
-TODO: 2022-02-27T02:39:28AEDT effective-c++, extra/lvalues-rvalues, (how to make work) 'assign_value(T&& x, T val)' when called with 'assign_value(var1,27)' (considering that 'assign_value(T&&, int val)' works (so it isn't a question of type deduction) ... (what is this behaviour?) (consider also that 'assign_value(move(var1),27)' does work) (and that assign_value(T&&, T&) does not work with or without 'move')
-
-TODO: 2022-02-27T03:10:46AEDT effective-c++, item 0, terminology, (we have <new/different> variable categories now (rvalues are now prvalues or xvalues)?), (review link (see below))
-
-TODO: 2022-03-01T20:45:48AEDT effective-c++, item 24, forwarding-vs-rvalue-references, example (using 'is_lvalue') where forward/move have different behaviour for lvalue/rvalue-references (our examples appear to work the same?) (and what of the use of forward<T> vs forward<T&> vs forward<T&&>) ... (the topic of item 25)
-
-TODO: 2022-03-02T01:37:06AEDT effective-c++, extra/lvalues-rvalues, contrive a situation where 'x1' and 'x2' behave differently for 'int x1 = 5;' 'int&& x2 = 5;'
-
-TODO: 2022-03-02T01:50:47AEDT effective-c++, extra/lvalues-rvalues, lvalue vs rvalue (vs template rvalue?) overloads
-
-TODO: 2022-03-02T02:01:14AEDT effective-c++, extra/variadic-templates, (item 24) contains a variadic function template example -> complete extra item example, (and from it) fill in (item 24)
-
-TODO: 2022-03-02T02:24:05AEDT effective-c++, item 23, move-forward, review implicit move assignment/ctor rules (having copied the ctor rules to be cleaned up, along with a statement of presumption that implicit move assignment works the same way?)
-
-TODO: 2022-03-02T02:52:02AEDT effective-c++, extra/lvalue-rvalue-references, details/definitions of (or just more about) lvalue/rvalue/universal references
-
-TODO: 2022-03-03T01:13:19AEDT effective-c++, item 00, terminology, if all variables including primatives are objects, then what are 'object-objects' things that are not primatives?
-
-TODO: 2022-03-03T02:32:40AEDT effective-c++, item 25, move-rvalue-refs-forward-universal-refs, implement 'my_make_unique' (which is a variadic template function)
-
-TODO: 2022-03-03T02:53:00AEDT effective-c++, item 23, move-forward, definition/example for 'std::move_if_noexcept'
-
-TODO: 2022-03-06T20:49:18AEDT effective-c++, item 23, move-forward, is calling 'forward' on a non-forwarding-reference ever meaningful/correct (considering our "show me the difference between forward/move dilemma previously"?)
-
-TODO: 2022-03-07T05:41:32AEDT effective-c++, item 23, move-forward, lambda vs function template type deduction rules, lambda with parameters 'auto&& x' vs template function 'T&& x' (difference in type deduction rules) <(try using decltype(auto)?)> (deduced type of x, and reconsiling that (for 'l_steal_.*', 'T = typename std::remove_reference<decltype(x)>::type') <- (still looking for a simpler solution / way to reconcile) -> (since 'decltype(auto)' is invalid for a lambda parameter) -> (is 'decltype(auto)' useable for any<one's> arguments? 'decltype(auto)' only for return type and variable declarations?) [...] -> <something-something only difference between template/auto type deduction?> (from item 02): "when the initalizer for an auto variable is enclosed in braces {}, the deduced type is initalizer_list, this is the <only?> difference between auto type deduction and template type deduction" <(revise (item 02) statement, clarification of the '<only?> after addressing topic?  2022-03-07T05:49:32AEDT
-
-TODO: 2022-03-07T06:10:37AEDT effective-c++, item 23, move-forward, what is the meaning of the type T used in 'forward<T>(x)', (and from there, is 'forward<decltype(x)>(x)' always valid?)
-
-TODO: 2022-03-08T05:03:04AEDT effective-c++, item 04, view deduced types, version of 'get_type_name<T>()' which doesn't produce YCM warning/error
-
-TODO: 2022-03-09T23:21:02AEDT effective-c++, item 23, move-forward, (how can) 'l_steal_forward(v1)' steal v1's values when used without move? (going back to our question of type-deduction/forwarding-references for lambdas w/ auto vs function templates)
-
-TODO: 2022-03-10T03:41:22AEDT effective-c++, item 23, move-forward, latest problem comes down to: given 'f(auto&& x)', determine what T would be if we were using 'f(T&& x)' (specifically here - make T == TD)
-
-TODO: 2022-03-10T23:48:33AEDT C++, extra/ownership-with-pointers, ongoings, cleanup
-
-TODO: 2022-03-12T23:06:07AEDT effective-c++, item 27, alternatives-to-overloading-forwarding-references, provide extended/brief definitions/descriptions of: enable_if/enable_if_t, decay/decay_t, is_same/<(is_same_t)>, is_base_of
-
-TODO: 2022-03-13T22:54:39AEDT effective-c++, item 03, decltype, f----- behaviour of functions called inside 'decltype()', an explanation to go with the 'update_counter()' side-effects example
-
-TODO: 2022-03-13T22:26:02AEDT (Do I remember right) <('decltype(x)(x)' is equivalent to 'forward<decltype(x)>(x)'?)> (and <even> if it is, the clarity of the latter is worth the extra characters?)
-
-TODO: 2022-03-14T23:17:54AEDT effective-c++, item 24, reference collapsing, how 'Widget&&', the rvalue to which lvalue 'x' refers, (a value moved to 'forward_Widget'/'compare_forward_alternatives') is recieved by 'recieve_Widget(Widget&)' and not 'recieve_Widget(Widget&&)' when passed without forward/move [...] -> why is forwarding not 'default' behaviour? [...] -> what are overload resolution rules where both forms of 'recieve_Widget' are declared?
-
-TODO: 2022-03-17T20:09:43AEDT effective-c++, item 29, do not assume move support, what the the conditions under which an implicit move will be generated (this being a topic for item 17)
-
-TODO: 2022-03-17T20:15:47AEDT effective-c++, item 28, reference-collapsing, examples for 'typedef and alias declarations' and 'decltype'
-
-TODO: 2022-03-18T00:01:06AEDT effective-c++, item 30, perfect-forwarding-failure-cases, variadic 'fwd_v', call 'print_details' for each argument passed (but first, extra/variadic-templates)
-
-TODO: 2022-03-18T20:23:14AEDT effective-c++, extra/variadic-templates, meaning and use of '...' (consider 'std::forward<Ts>(first)...') (The ... pretty much says "take what's on the left, and for each template parameter, unpack it accordingly.") (see below)
-
-TODO: 2022-03-19T03:24:57AEDT effective-c++, extra/variadic-templates, 'print_vector_elements()', most elegant solution to the 'print vector with delims between elements' problem.
-
-TODO: 2022-03-19T04:24:39AEDT effective-c++, extra/varidic-templates, alternative 'get_types_names<Ts...>()' implementations (not using constexpr/sizeof...?)
-
-TODO: 2022-03-19T04:26:30AEDT effective-c++, extra/variadic-templates, (rudimentary) implementation for 'template<typename... Ts> class Tuple'
-
-TODO: 2022-03-19T04:38:36AEDT effective-c++, extra/variadic-templates, implement 'my_printf<T,Ts...>()'
-
-TODO: 2022-03-19T04:39:37AEDT effective-c++, extra/variadic-templates, Example: variadic function template and perfect forwarding
-
-TODO: 2022-03-19T20:54:37AEDT effective-c++, item 09, prefer-alias-to-typedef, <explain/outline> 'using' declarations <of/and> alias-es
-
-TODO: 2022-03-20T01:10:48AEDT effective-c++, extra/variadic-templates, (how to get) (vector of) 'print_all_.*' variadic template function (as a function pointer / std::function / callable-thing-I-can-put-in-a-vector) (and from there), (what is a type we can use to point to all of them, that is, how to put pointers to each in a single vector)
-
-TODO: 2022-03-20T22:15:41AEDT effective-c++, extra/variadic-templates, function parameter packs as lvalue/rvalue/forwarding references
-
-TODO: 2022-03-20T23:17:08AEDT effective-c++, item 10, prefer-scoped-enums, implement 'primeFactors'
-
-TODO: 2022-03-24T21:12:36AEDT effective-c++, run-all.sh, some rule for getting examples from 'extra/' to build
-
-TODO: 2022-03-25T01:24:02AEDT effective-c++, run-all.sh, Perl, get system nano-time one-liner (can we do with a vanilla macOS/Linux version) (currently using python, which I am inclined to think is too slow for use in 'casual' one-liners)
-
-TODO: 2022-03-26T23:57:03AEDT effective-c++, get_vector_randoms, add seeding to each usage
-
-TODO: 2022-03-28T01:12:04AEDT effective-c++, move/copy-failed-to-move depending on exception specification <(of move operation?)> (supposedly the standard containers are making this <check/distinction>), as demonstrated by messages from custom copy/move ctor/assignments (and classes with/without noexcept) (or perhaps differing for the other case 'noexcept(false)'?)
-
-TODO: 2022-03-28T23:20:49AEDT effective-c++, item 15, use constexpr where possible, (function) is_constexpr() (or) <meta-template> is_constexpr<>()
-
-TODO: 2022-03-28T23:38:25AEDT effective-c++, item 15, use constexpr where possible, (how) does 'is_constexpr()' work?
-
-TODO: 2022-04-02T03:04:29AEDT effective-c++, item 14, declare noexcept, (continuing from) (item 17, default/implicit functions), clarify the (generally correct?) rule 'default/implict' functions are noexcept where possible (we are given the list: default/copy/move-ctors, copy/move-assignment, comparison, are there more 'default/implicit' functions than those (and are they also noexcept where possible) (i.e: an addition operator?), (?))
-
-TODO: 2022-04-25T00:06:10AEST effective-c++, extra/ownership-with-smart-pointers, using unique_ptr ctor 'unique_ptr<T>(new T(args))' vs 'make_unique<T>(args)'? (see below)
-
-TODO: 2022-04-25T00:05:26AEST effective-c++, extra/ownership-with-smart-pointers, form/use of a smart pointer vs raw pointer (as parameter type/otherwise?), (passing smart pointers)
-
-TODO: 2022-04-25T01:35:32AEST effective-c++, extra/virtual-functions (what items cover them) (combining that material in one place?)
-
-TODO: 2022-04-26T00:07:09AEST effective-c++/07-polymorphic-base-class-virtual-destructors, (on the reasoning) it is necessary to provide a definition for a pure virtual dtor
-
-TODO: 2022-04-26T18:40:13AEST effective-c++, 33-avoid-hiding-inherited-names, (clarify *rules* on <hiding/overriding> non-virtual functions) (refer to extra/ownership-with-smart-pointers, and the 'workaround' since one cannot narrow the return type of a unique_ptr like one can narrow the return type of a pointer for an overridden virtual function (the workaround being to use a non-virtual function and override that, achieving polymorphic behaviour by calling a private virtual function which returns the raw pointer for the creation of the smartpointer))
-
-TODO: 2022-04-26T18:44:01AEST effective-c++, extra/virtual-functions, (the rule that says) only the return type of a pointer can be narrowed for a virtual function, (and such restrictions do not exist for overriding non-virtual functions (something we have an item saying not to do))
-
-TODO: 2022-04-27T23:25:59AEST effective-c++, item 17, implicit-special-member-functions, member variable 'int* x = 0' -> has a value before ctor is reached? (behaviour when assigning value to both variable and ctor initalization list) (better practice for initalizing the value of a class variable (is there not some f----- of values being re-used?) (is there an item on class variable initalization?)
-
-TODO: 2022-04-28T23:30:36AEST effective-c++, item 17, implicit special member functions (and 'noexcept')
-
-TODO: 2022-04-29T00:15:42AEST effective-c++, item 17, implicit-special-member-functions, (is self-assignment a problem for any class we have created for this item?)
-
-TODO: 2022-04-29T03:32:36AEST effective-c++, extra/member-variable-initalization, member variables that are static and/or const
-
-TODO: 2022-04-29T03:42:59AEST effective-c++, extra/member-variable-initialization, constructor delegation
+TODO: 2022-01-25T01:49:06AEDT effective-c++, applying the 'return *this' (i.e: reference to the LHS of the expresion(?)) rule for assignment operator to the two-argument form of the assignment operators
 
