@@ -40,6 +40,7 @@ using namespace std;
 //	Example: a class managing a pointer (resource) (probably) needs custom special member functions which perform deep copy (copying the resource)
 struct ExampleDeep {
 	string* ptr;
+	//	Ongoing: 2022-05-03T03:09:57AEST no default-ctor, cannot <instantiate?> 'ExampleDeep' instances (<is/was> this a book example?)
 	~ExampleDeep() { delete ptr; }
 	ExampleDeep(const string& str) : ptr(new string(str)) {}
 	ExampleDeep(const ExampleDeep& old) : ptr(new string(*old.ptr)) {}
@@ -93,8 +94,8 @@ struct B {
 //	If a custom copy is needed (it stands to reason) a custom move is needed
 //	}}}
 class Fruit {
-	int* x = 0;
 public:
+	int* x = 0;
 	~Fruit() { delete x; }
 	Fruit(int val) : x(new int(val)) { cout << "Fruit(int)\n"; }
 	Fruit(const Fruit& old) { cout << "Fruit(Fruit&)\n"; *this = old; }
@@ -228,8 +229,8 @@ class Implicit : public Explicit {
 //	And now that we have that temporary object, we simply perform a swap on the temporary object. It's automatically destroyed when it goes out of scope and we now have the value from the right-hand side of the operator in our object.
 //	}}}
 class Rock {
-	int* x;
 public:
+	int* x;
 	~Rock() { delete x; }
 	Rock(int val) : x(new int(val)) { cout << "Rock(int)\n"; }
 	Rock(const Rock& rhs) {
@@ -272,6 +273,12 @@ public:
 	}
 };
 
+//	Ongoings:
+//	{{{
+//	Ongoing: 2022-05-03T03:05:54AEST testing/validating a class for self-assignment? (when does self assignment become a problem? usage of 'delete', <?>) [...] (a few basic google searches for 'c++ test self assignment handling' yields nothing obvious? (ought be an example somewhere even if it is typically only a problem for <class/type> authors?) 
+//	Ongoing: 2022-05-03T03:07:09AEST (worthy of its own example?) testing/validating a class for self-assignment? (using the classes here?)
+//	}}}
+
 
 int main()
 {
@@ -308,8 +315,21 @@ int main()
 	r2 = r1;
 	r2 = move(r1);
 	cout << "\n";
-	cout << "done\n";
+	//cout << "done\n";
 
+
+	//	Test correct self-assignment(?)
+	//ExampleDeep ed1;
+	Fruit fr1(5);
+	//	Ongoing: 2022-05-03T03:16:14AEST self-assignment is something one needs knowledge of the class to check for (considering also things like memory leaks that might be missed) and/or something one simply hopes to avoid by best practice (there must be a <methodology> to <test/validate> self-assignment?)
+	//	Ongoing: 2022-05-03T03:13:01AEST 'Fruit' fails self-assignment [...] Rock passes(?) (could it not be more-efficent/better to check explicitly?)
+	fr1 = fr1;
+	cout << "*fr1.x=(" << *fr1.x << ")\n";
+	cout << "\n";
+	Rock rock1(5);
+	rock1 = rock1;
+	cout << "*rock1.x=(" << *rock1.x << ")\n";
+	cout << "\n";
 
 	return 0;
 }
