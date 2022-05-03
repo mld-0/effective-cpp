@@ -10,7 +10,13 @@ using namespace std;
 //	{{{2
 
 //	TODO: 2022-05-03T21:18:56AEST effective-c++, item 16, thread safety const member funcs, (an example of) thread1/thread2 calling 'p.roots()' with/without mutex
+//	TODO: 2022-05-03T21:32:50AEST effective-c++, item 16, thread safety const member funcs, (a book on the topic of exception/thread safety)
 
+//	Ongoings:
+//	{{{
+//	Ongoing: 2022-05-03T21:38:00AEST (provide) definitions of 'thread/exception safe'
+//	Ongoing: 2022-05-03T21:38:29AEST 'Polynomial2D/Polynomial2D_sync' are largely redundant, and too bulky, succinct/less-redundant example?
+//	}}}
 
 //	Example: not-threadsafe, produces a data race for 'rootsAreValid'.
 //	Such reading and writing the same memory without synchronization is undefined behaviour.
@@ -74,4 +80,9 @@ int main()
 {
 	return 0;
 }
+
+//	Summary:
+//		const member functions <(and anything else?)> should be thread-safe unless one is *certain* they will never be used in a concurrent context
+//		<(std::mutex vs std::atomic)>
+//		<(any info beyond book chapter?)>
 
