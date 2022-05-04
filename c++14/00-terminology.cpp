@@ -95,6 +95,8 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 
 //	anonymous function: a function definition not bound to an identifier (name)
 
+//	functor: classes which implement 'operator()', creating objects which can be called like functions
+
 
 //	Undefined behaviour: A nightmare, which may manifest as any of the following
 //	{{{
