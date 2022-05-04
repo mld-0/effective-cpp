@@ -70,6 +70,30 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 //	deep copy: memberwise copy of values, pointers are duplicated and deep-copied
 
 
+//	storage class specifiers:
+//		auto
+//		register		<pre-C++17>
+//		static
+//		extern
+//		thread_local	<C++11>
+//		mutable
+
+//	storage duration:
+//		automatic: (local variables), storage is allocated for the enclosing block
+//		static: (static/extern and global variables), storage is allocated for the entire program runtime
+//		thread: (thread_local variables) <C++11>, storage is allocated for lifetime of thread
+//		dynamic: (new/malloc), storage is allocated/deallocated upon request
+
+//	linkage: <(refers to same name introduced by declaration in another scope)>
+//	LINK: https://en.cppreference.com/w/cpp/language/storage_duration
+//	{{{
+//		no linkage: (names declared at block scope), visible only in containing scope
+//		internal linkage: (static functions/variables, non-extern const/constexpr variables, names declared in unnamed namespace), all scopes in current translation unit
+//		external linkage: (unless they are declared in unnamed namespace or attached to named module and not exported: non-static functions, non-static/const variables, extern variables, enums, classes, static data members, nested classes, friend functions declared in class bodies) (also any of declared at block scope: extern variables, names of functions), name can be refered to from the scopes in other translation units. (variables/functions with external linkage have language-linkage (used for linking to translation units written in other languages)).
+//		module linkage: (names declared at namespace scope have module linkage if their declarations are attached to a named module and are not exported, and don't have internal linkage) name can only be refered to from the scopes in the same module unit or in the other translation units of the same named module
+//	}}}
+
+
 //	Undefined behaviour: A nightmare, which may manifest as any of the following
 //	{{{
 //		program produces different results every time it is run.
