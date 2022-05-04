@@ -93,6 +93,8 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 //		module linkage: (names declared at namespace scope have module linkage if their declarations are attached to a named module and are not exported, and don't have internal linkage) name can only be refered to from the scopes in the same module unit or in the other translation units of the same named module
 //	}}}
 
+//	anonymous function: a function definition not bound to an identifier (name)
+
 
 //	Undefined behaviour: A nightmare, which may manifest as any of the following
 //	{{{
