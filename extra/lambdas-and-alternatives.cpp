@@ -44,6 +44,21 @@ constexpr bool is_lvalue(T&& x) {
 //	}}}
 //	Ongoings:
 //	{{{
+//	Ongoing: 2022-05-06T01:49:41AEST example 'Delegate' -> create actually (non-commented) example
+//	Ongoing: 2022-05-06T01:44:16AEST (for lambda c1), '(void) c1' does not silence error about being unused
+//	Ongoing: 2022-05-04T02:39:16AEST (declaring a lambda with a (captured?) global variable), details of error 'does not have automatic storage duration'
+//	Ongoing: 2022-05-05T19:54:35AEST a template is neater (way to pass a lambda), (but if std::function wasn't neccessary, it wouldn't <exist/be-recomended-as-such>?)
+//	Ongoing: 2022-05-05T19:47:03AEST using std::function to pass lambda requires <specifying/supplying> the type of that lambda (to specalize std::function)(?) [...] -> is using 'decltype()' (any) improvement? (it does not work?)
+//	Ongoing: 2022-05-06T01:33:13AEST example 'execute lambda immediately upon definition' (implies) a default-capture by-reference is the same thing as looking into the surrouding scope(?)
+//	Ongoing: 2022-05-06T01:26:21AEST <merge/combine/reconcile> two examples of 'form/components of a lambda' (with <supporting/duplicate> definitions of the components of a lambda)
+//	Ongoing: 2022-05-06T01:09:40AEST deciphering 'Dangling references', (is <what/all> <the-copy-pasted-definitions> saying it is undefined to use an object/variable captured by reference if it is no longer defined (has been released, or gone out of scope)?) [...] (and, meaning of 'Reference captures introduce a lifetime dependency, but value captures have no lifetime dependencies')
+//	Ongoing: 2022-05-06T01:06:08AEST Implications of deprevation in <C++23> of first version of form-of-a-lambda (4)? (specs becomes required, (but each of them are optional?))
+//	Ongoing: 2022-05-04T03:49:44AEST 'cppreference' provides extensive/exhorbitant/unhelpfully-detailed details on the lambda -> better results from (starting with) friendlier <reference/source>-material?
+//	Ongoing: 2022-05-04T03:37:54AEST lambdas, (problems?) calling non-const member functions of captured objects(?)
+//	Ongoing: 2022-05-04T03:40:53AEST (a lot of) words above used above (without providing the <C++> definition) (i.e: attribute-specification, operator-template-specialization, dynamic-exception-specification, <...>) 
+//	Ongoing: 2022-05-04T03:45:35AEST later definitions (see above) copied, (their) <meaning/definition> still unclear
+//	Ongoing: 2022-05-04T02:37:15AEST meaning/example of/for closure class?
+//	Ongoing: 2022-05-06T00:01:22AEST closure class <generated-from/equivalent-to> the lambda it was generated from, (differencess between lambda/class), (can a <callable> class be equivalent to a lambda (there are no inreconcilable differences, (<something-regarding> <meaning/treatment> of 'this'?))
 //	Ongoing: 2022-05-05T19:43:46AEST by default, 'operator()' is const
 //	Ongoing: 2022-05-05T19:26:27AEST lambda vs custom functor object - difference in meaning of 'this'?
 //	Ongoing: 2022-05-04T21:13:15AEST default capture (by-reference) (also somehow dependent-on/captures values (as they were) when the lambda is defined?)
@@ -52,6 +67,11 @@ constexpr bool is_lvalue(T&& x) {
 //	Ongoing: 2022-05-04T20:48:28AEST capturing variables vs passing parameters (arguments) (reasons, best practice)?
 //	Ongoing: 2022-05-04T20:50:45AEST some wider meaning of 'closure' (beyond an instance of a lambda?)
 //	}}}
+//	LINKS:
+//	{{{
+//	LINK: https://towardsdatascience.com/c-basics-understanding-lambda-7df00705fa48
+//	LINK: https://www.cprogramming.com/c++11/c++11-lambda-closures.html
+//	}}}
 
 //	(Book claim:) The functionality of the C++ lambda can be accomplished without it.
 //	Lambdas provide a convenient way to create function objects, (and make C++ a better programming language).
@@ -59,27 +79,23 @@ constexpr bool is_lvalue(T&& x) {
 //	Lambdas provide a convenient way to <create/supply> smartpointer custom deleters. <(Lambdas provide a way to specify predicates for condition variables in the threading API)>.
 //	Lambdas are used to encapsulate a few lines, for passing to an algorithm / asynchronous-function.
 //	Basic use of the STL '_if' algorithms (find_if, remove_if, count_if) <(which take a 'begin()' pointer, and 'end()' pointer, and a conditional function?)> is typically with a trivial predicate (simple boolean function), <(while lambdas provide a powerful tool for expanded <flexibility/capability>?)>
+//	Lambdas cannot be overloaded (by argument)
 	
 
-//	lambda expression: an expression, <(<Literal form>, passable as argument without needing to assign to variable)>
+//	'lambda-expression': 
 //		[ captureClause ] ( parameters ) -> returnType { body };
-//	Example:
-//		[](int val) { return 0 < val && val < 10; }
 
-//	Lambdas cannot be overloaded (by argument)
-
-//	closure: runtime object created by a lambda.
+//	'closure': runtime object created by a lambda.
 //	Depending on capture mode, holds copies-of/references-to captured data.
 //		or can be assigned to a variable object 
 //	<(possible to have multiple closures of a closure type corresponding to a single lambda?)>
 
-//	closure class: <(class from which a closure is instantiated?)>
-//	<(Each lambda causes the compiler to generate a unique closure class)>
-//	Ongoing: 2022-05-04T02:37:15AEST meaning/example of/for closure class?
+//	'closure-class': Class from which a closure is instantiated. 
+//	Each lambda causes the compiler to generate a unique closure class.
+
 
 
 //	LINK: https://en.cppreference.com/w/cpp/language/lambda
-//	{{{
 //	Forms of a lambda:
 //	1		[ captures ] ( params ) <(specs)> <(requires(optional))> { body }
 //	2		[ captures ] { body }																			<C++23>
@@ -91,6 +107,7 @@ constexpr bool is_lvalue(T&& x) {
 //		2	Omitted parameters list
 //		3	Same as 1, but specifies a generic lambda and explicitly proves a list of template parameters
 //		4	Same as 2, but specifies a generic lambda and explicitly proves a list of template parameters
+//	{{{
 //	captures: comma separated list of zero/more captures, (optionally) beginning with <(capture-default?)>
 //				can use variable without capturing it if: 
 //						it is non-local, static, or thread local storage duration *1
@@ -99,10 +116,22 @@ constexpr bool is_lvalue(T&& x) {
 //						has const non-volatile integral/enumeration type, and has been initialized by constant-expression
 //						is constexpr and has no mutable members
 //				*1	(in which case the variable cannot be captured)
+//	{{{
+//		1) simple by-copy capture
+//		2) simple by-copy capture that is a pack expansion
+//		3) by-copy capture with an initializer
+//		4) simple by-reference capture
+//		5) simple by-reference capture that is a pack expansion
+//		6) by-reference capture with an initializer
+//		7) simple by-reference capture of the current object
+//		8) simple by-copy capture of the current object
+//		9) by-copy capture with an initializer that is a pack expansion
+//		10) by-reference capture with an initializer that is a pack expansion
+//	}}}
 //	tparams: non-empty comma-separated list of template parameters 
 //				<(provide names to the template parameters of a generic lambda, see 'ClosureType::operator()')>
 //	params: list of parameters (as in named function)
-//	specs: <(specifiers, exception, attr, and trailing-return-type (in order) (each being optional))>
+//	specs: <(specifiers, exception, attr, and trailing-return-type (in order) (each being optional))> 
 //	specifiers: if not provided, objects capture by copy are const in lambda body
 //				mutable, allows body to modify objects called by copy and to call their non-const member functions
 //				constexpr, function-call-operator/operator-template-specialization is a constexpr function
@@ -113,36 +142,13 @@ constexpr bool is_lvalue(T&& x) {
 //	trailing-return-type: <(ret, where ret specifies the return type. If trailing-return-type is not present, the return type of the closure's operator() is deduced from return statements as if for a function whose return type is declared auto)>
 //	requires: <since-C++20> add constraints(?) to the 'operator()' of the closure type
 //	body: function body
+//	}}}
 
 //	<(If 'auto' is used as a type of a parameter (or <since-C++20> an-explicit-template-parameter-list(?) is provided), the lambda is a generic-lambda)>
-
 //	<(Dangling references: if a non-reference entity is captured by reference (explicitly or implicitly), and the function call operator or a specialization of the function call operator template of the closure object is invoked after the entity's lifetime has ended, undefined behavior occurs. The C++ closures do not extend the lifetimes of objects captured by reference (Same applies to the lifetime of the current *this object captured via this))>
-
-//	Lambda-capture: 
-//	{{{
-//		<>
-//	1) simple by-copy capture
-//	2) simple by-copy capture that is a pack expansion
-//	3) by-copy capture with an initializer
-//	4) simple by-reference capture
-//	5) simple by-reference capture that is a pack expansion
-//	6) by-reference capture with an initializer
-//	7) simple by-reference capture of the current object
-//	8) simple by-copy capture of the current object
-//	9) by-copy capture with an initializer that is a pack expansion
-//	10) by-reference capture with an initializer that is a pack expansion
-//	}}}
-
-
-//	Ongoing: 2022-05-04T03:49:44AEST 'cppreference' provides extensive/exhorbitant/unhelpfully-detailed details on the lambda -> better results from (starting with) friendlier <reference/source>-material?
-//	Ongoing: 2022-05-04T03:37:54AEST lambdas, (problems?) calling non-const member functions of captured objects(?)
-//	Ongoing: 2022-05-04T03:40:53AEST (a lot of) words above used above (without providing the <C++> definition) (i.e: attribute-specification, operator-template-specialization, dynamic-exception-specification, <...>) 
-//	Ongoing: 2022-05-04T03:45:35AEST later definitions (see above) copied, (their) <meaning/definition> still unclear
-//	}}}
 
 
 //	LINK: https://docs.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp?view=msvc-170
-//	{{{
 //	Parts of a Lambda:
 //	[=] () mutable throw() -> int { ... }
 //		1)	'[=]' 			capture-clause (or lambda-introducer)
@@ -151,38 +157,37 @@ constexpr bool is_lvalue(T&& x) {
 //		4)	'throw()' 		exception-specialization
 //		5)	'-> int'		trailing-return-type (optional)
 //		6)	{ ... }			lambda-body
-
+//	{{{
 //	capture clause:
 //		A lambda can access (capture) variables from the surrounding scope. The capture clause specifies these variables, and whether they are captured by-value or by-reference '&'. <(An empty capture clause '[]' indicates the lambda accesses no variables in the enclosing scope?)>. 
 //	capture-default mode: 
 //		[&] <(all variables referred to are captured by reference)> 
 //		[=] <(all variables referred to are captured by value)>
 //	Ongoing: 2022-05-04T19:11:45AEST '[&]' / '[=]' mean any (available) variable referred to in the lambda is captured(?)
-//	Rules:
+//	Examples: valid/invalid
 //	{{{
-//	[&, i]			//	Ok
-//	[&, &i]			//	Error, 'i' preceded by & when '&' is the default
-//	[=, this]		//	Error, 'this' (without '*') when '=' is the default
-//	[=, *this]		//	Ok, captures 'this' by-value
-//	[i, i]			//	Error, 'i' repeated
+//		[&, i]			//	Ok
+//		[&, &i]			//	Error, 'i' preceded by & when '&' is the default
+//		[=, this]		//	Error, 'this' (without '*') when '=' is the default
+//		[=, *this]		//	Ok, captures 'this' by-value
+//		[i, i]			//	Error, 'i' repeated
 //	}}}
 //	To use lambda expressions in the body of a class member function, pass the this pointer to the capture clause to provide access to the member functions and data members of the enclosing class.
-//	variadic template: <>
+//	variadic template: <(are a thing for templates too (are they any different to how they are in functions?))>
 //		[args...]
 //	Reference captures introduce a lifetime dependency, but value captures have no lifetime dependencies. It's especially important when the lambda runs asynchronously. If you capture a local by reference in an async lambda, that local could easily be gone by the time the lambda runs. Your code could cause an access violation at run time.
-
-//	generalized capture <C++14>: introduce/initialize new variables in the capture clause 
-//		auto a = [ptr = move(pNums)]() {};
+//	generalized capture <C++14>: introduce/initialize new variables in the capture clause, <(types as if using auto?)>
+//			auto a = [ptr = move(pNums)]() {};
 
 //	parameter-list: (optional), resembles parameter (argument) list for a function
-//		auto y = [](int first, int second) {};
+//			auto y = [](int first, int second) {};
+//	An empty parameter list '()' can be omitted if the lambda doesn't contain exception-specification, trailing-return-type, or mutable.
 //	<(If the parameter type is generic, 'auto' can be used as the type - telling the compiler to create the function call operator as a template (each instance of 'auto' is equivalent to a distinct type parameter))>
 //		auto y = [](auto first, auto second) {};
-//	An empty parameter list '()' can be omitted if the lambda doesn't contain exception-specification, trailing-return-type, or mutable.
 
 //	mutable-specification: <(allows a lambda to modify variables that are captured by value)>
-//	<(a lambda's function call operator is const-by-value if the lambda is not declared mutable)>
 //	Modifying variables captured by-value modifies the copy specific to the lambda, not the original variable.
+//	<(a lambda's function call operator is const-by-value if the lambda is not declared mutable)>
 
 //	exception-specification: Use 'noexcept' to indicate a lambda does not throw exceptions
 //	Ongoing: 2022-05-04T19:27:20AEST lambda exception-specification, <old-C++> use of 'throw()'?
@@ -215,11 +220,8 @@ constexpr int example_constexpr_result = add_32(53);
 //	}}}
 
 
-//	Ongoing: 2022-05-04T04:00:59AEST continue through links until a complete picture of lambdas appears?
 //	LINK: https://stackoverflow.com/questions/7627098/what-is-a-lambda-expression-in-c11
-//	{{{
 //	Lambdas provide inline anonymous functions 
-
 //	<C++03> technique: (use of 'for_each')
 //	{{{
 //		namespace {
@@ -249,17 +251,11 @@ void func3(vector<int>& v) {
 }
 void func4(std::vector<double>& v) {
 	std::transform(v.begin(), v.end(), v.begin(),
-	[](double d) -> double {
-		if (d < 0.0001) {
-			return 0;
-		} else {
-			return d;
-		}
-	});
+		[](double d) -> double { if (d < 0.0001) { return 0; } else { return d; } }
+	);
 }
-//	Ongoing: 2022-05-04T21:00:40AEST most beautiful/correct way to write 'func4'?
 
-//	Return type: deduced by compiler where possible. Use '-> T' to specify trailing return type where deduction is not possible.
+//	Lambda Return type: deduced by compiler where possible. Use '-> T' to specify trailing return type where deduction is not possible.
 
 //	Capturing variables:
 //	<(the value of (by-value) capture values are set when the lambda is defined)>
@@ -276,32 +272,34 @@ void func4(std::vector<double>& v) {
 
 //	Initialized Lambda Captures:
 //	An element of the capture list can now be initialized with '='. This allows renaming of variables and to capture by moving. <(Types are automatically deduced (using 'auto' rules?))>
+//	{{{
 //	An example taken from the standard:
-//		int x = 4;
-//		auto y = [&r = x, x = x+1]()->int {
-//		            r += 2;
-//		            return x+2;
-//		         }();  // Updates ::x to 6, and initializes y to 7.
+//			int x = 4;
+//			auto y = [&r = x, x = x+1]()->int {
+//			            r += 2;
+//			            return x+2;
+//			         }();  // Updates ::x to 6, and initializes y to 7.
+//	}}}
 //	Example: capture with 'move()'
-//		auto ptr = std::make_unique<int>(10); 
-//		auto lambda = [ptr = std::move(ptr)] { return *ptr; };
+//			auto ptr = std::make_unique<int>(10); 
+//			auto lambda = [ptr = std::move(ptr)] { return *ptr; };
 //	Ongoing: 2022-05-04T21:32:57AEST meaning of '[&r = x, x = x+1]'(?) -> '&r' is an lvalue reference to x(?)
 
 
 //	Generic Lambda:
 //		auto lambda = [](auto x, auto y) {return x + y;};
 
-//	Execute lambda immediately upon definition: (a powerful tool for refactoring complex functions)
-//	equivalent:
-//		[&](){ /* do something */ }();
-//		{ /* do something */ }
 
-//	}}}
+//	Example: Execute lambda immediately upon definition: (a powerful tool for refactoring complex functions)
+//		[&](){ /* do something */ }();				//	these expressions are
+//		{ /* do something */ }						//	equivalent
 
 
-//	<(Some of the?)> Core Guidelines on Lambdas:
+
+//	Core Guidelines on Lambdas: <(is this all of them? more/less/different from book items?)>
 //	LINK: https://www.modernescpp.com/index.php/c-core-guidelines-function-objects-and-lambas
-//	Use a lambda when a function won’t do (to capture local variables, or to write a local function)
+
+//	1) Use a lambda when a function won't do (to capture local variables, or to write a local function)
 //	{{{
 //		std::function<int(int)> makeLambda(int a){    // (1)
 //		    return [a](int b){ return a + b; };
@@ -312,7 +310,8 @@ void func4(std::vector<double>& v) {
 //		    add5(10) == add10(5);                     // (4)
 //		}
 //	}}}
-//	Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms, (and conversely) Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread
+
+//	2) Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms, (and conversely) Avoid capturing by reference in lambdas that will be used nonlocally, including returned, stored on the heap, or passed to another thread
 //	{{{
 //	For efficiency and correctness reasons, your lambda expression should capture its variables by reference if the lambda expression is locally used. Accordingly, if the lambda expression is not used locally, you should not capture the variables by reference but copy the arguments. If you break the last statement you will get undefined behavior.
 //	Here is an example of undefined behavior with lambda expressions: (The undefined behavior is that the function makeLambda returns a lambda expression with a reference to the local variable local).
@@ -332,7 +331,8 @@ void func4(std::vector<double>& v) {
 //		  std::cout << std::endl;
 //		}
 //	}}}
-//	Use lambdas for complex initialization, especially of const variables:
+
+//	3) Use lambdas for complex initialization, especially of const variables:
 //	{{{
 //		//	bad example: (not synchronized, not suitable for multithreading)
 //		widget x;   // should be const, but:
@@ -353,41 +353,7 @@ void func4(std::vector<double>& v) {
 //	Thanks to the in-place executed lambda, you can define the widget x as a constant. You can not change its value and, therefore, you can use it in a multithreading program without expensive synchronization.
 //	}}}
 
-
-//	LINK: https://towardsdatascience.com/c-basics-understanding-lambda-7df00705fa48
-//	{{{
-//	<(There are two ways to pass a lambda as argument(?))>
-auto AddOne = [value=1](const int x) { return x + value; };
-
-//	Using a template (STL way)
-template<typename T>
-int Plus_Template(const int a, T fp) { return fp(a); }
-
-//	Using std::function
-int Plus_Func(const int a, std::function<int(const int)> fp) { return fp(a); }
-//int Plus_Func_ii(const int a, std::function<decltype(AddOne)> fp) { return fp(a); }		//	error?
-
-
-//	Ongoing: 2022-05-05T19:54:35AEST a template is neater (way to pass a lambda), (but if std::function wasn't neccessary, it wouldn't <exist/be-recomended-as-such>?)
-//	Ongoing: 2022-05-05T19:47:03AEST using std::function to pass lambda requires <specifying/supplying> the type of that lambda (to specalize std::function)(?) [...] -> is using 'decltype()' (any) improvement? (it does not work?)
-//	}}}
-
-//	LINK: https://www.cprogramming.com/c++11/c++11-lambda-closures.html
-//	{{{
-
-//	One big advantage of std::function over templates is that if you write a template, you need to put the whole function in the header file, whereas std::function does not.
-
-//	Example: Delegate, creating a regular function from a method:
-//		EmailProcessor processor;
-//		MessageSizeStore size_store;
-//		processor.setHandlerFunc( 
-//		        [&] (const std::string& message) { size_store.checkMessage( message ); } 
-//		);	
-
-//	}}}
-
-
-//	Lambdas that capture "this" should capture everything explicitly
+//	4) Lambdas that capture "this" should capture everything explicitly
 //	LINK: https://rules.sonarsource.com/cpp/RSPEC-5019
 //	{{{
 //	A lambda can only capture local variables. When a lambda is defined within a member function, you may believe that you are capturing a member variable of the current class, but in fact, what you are capturing is this. This may be very surprising, and lead to bugs if the lambda is then used after the current object has been destroyed.
@@ -426,7 +392,8 @@ int Plus_Func(const int a, std::function<int(const int)> fp) { return fp(a); }
 //	};
 //	}}}
 //	}}}
-//	Core Guideline: If you capture this, capture all variables explicitly (no default capture)
+
+//	5) If you capture this, capture all variables explicitly (no default capture)
 //	LINK: https://github.com/isocpp/CppCoreGuidelines/blob/036324/CppCoreGuidelines.md#f54-if-you-capture-this-capture-all-variables-explicitly-no-default-capture
 //	{{{
 //	Reason
@@ -462,18 +429,35 @@ int Plus_Func(const int a, std::function<int(const int)> fp) { return fp(a); }
 //	}}}
 
 
+//	Example: <(There are two ways to pass a lambda as argument?)>
+auto AddOne = [value=1](const int x) { return x + value; };
+//		Using a template (STL way)
+template<typename T>
+int Plus_Template(const int a, T fp) { return fp(a); }
+//		Using std::function
+int Plus_Func(const int a, std::function<int(const int)> fp) { return fp(a); }
+//int Plus_Func_ii(const int a, std::function<decltype(AddOne)> fp) { return fp(a); }		//	error? (why cannot we use decltype(lambda) -> (what does this imply about decltype and lambdas?)
+
+
+//	Example: use a lambda as a Delegate (creating a regular function from a method of an object)
+//		EmailProcessor processor;
+//		MessageSizeStore size_store;
+//		processor.setHandlerFunc( 
+//			[&] (const std::string& message) { size_store.checkMessage( message ); } 
+//		);	
+
+
 //	Intuition for by-value capture values being const by default: calling lambda with same arguments <should/will> produce the same result each time (not true for by-reference capture variables, which can be modified by a non-mutable lambda).
-
-//	<(Lambdas can use <?> variables without having to capture them?)>
+//	<(Lambdas can use <global/?> variables without having to capture them?)>
 //	<(In a lambda 'this' refers to the outer scope's object, not to the <(hidden pointer, (pointer to functor object that a lambda <is/becomes>))>
-
 
 
 //	<(Lambda expression / closure / nested lambda)>:
 //	<>
 
 
-//	Example: lambda equivalent functor
+//	Example: lambda equivalent functor class
+//	<(Can a functor class be equivalent to a lambda (<something-something> 'this')?)>
 //	<>
 
 
@@ -482,8 +466,10 @@ int Plus_Func(const int a, std::function<int(const int)> fp) { return fp(a); }
 //		<function pointers?>
 //		<?>
 
+//	One big advantage of std::function over templates is that if you write a template, you need to put the whole function in the header file, whereas std::function does not.
 
-//	Ongoing: 2022-05-04T02:39:16AEST (declaring a lambda with a (captured?) global variable), details of error 'does not have automatic storage duration'
+
+//	Example: global variable capture/access
 int x = 23;
 //auto c1 = [x](int y) { return x * y > 55; };		//	error: 'x' cannot be captured because it does not have automatic storage duration
 auto c1 = [](int y) { return x * y > 55; };			//	Lambda can access global variable 'x'
@@ -496,37 +482,38 @@ int main()
 	//	auto:
 	int x = 23;
 	auto c1 = [x](int y) { return x * y > 55; };			
+	//	<>
 	//	typeof(c1):
-		//	YCM: T = 'class(lambda)'
-		//	get_type_name: T = 'lambda at lambdas-and-function-pointers.cpp:87:12'
+	//		YCM: auto = 'class(lambda)', c1 = [x](int y) {}; // In main
+	//		get_type_name<decltype(c1)> = 'lambda at lambdas-and-function-pointers.cpp:87:12'
 	//	Ongoings:
 	//	{{{
+	//	Ongoing: 2022-05-06T01:42:13AEST does it (ever) make sense to assign a lambda to a variable of type other than 'auto'?
 	//	Ongoing: 2022-05-04T02:43:50AEST (the problem of deducing 'auto' as if auto had been 'T'?)
 	//	Ongoing: 2022-05-04T02:42:14AEST YCM GetType: auto = 'class(lamba)', c1 = '[x](int y) {};'
 	//	Ongoing: 2022-05-04T02:32:42AEST some C++ get-type method which can get more details about 'lambda' than just 'lambda' [...] 'YcmCompleter GetType' does, (use it on 'c1' not on 'auto')
 	//	Ongoing: 2022-05-04T02:36:12AEST (some meaning <to?> (the significance of) a copy of a lambda?)
 	//	}}}
-
 	cout << "get_type_name<decltype(c1)>()=(" << get_type_name<decltype(c1)>() << ")\n";
 	cout << "\n";
+
 
 	//	Example: cannot modify variables captured by value without 'mutable' (copy is modified, original is not).
 	int m = 0;
 	int n = 0;
-	//[&, n] (int a) mutable { m = 53; n = 27; }(4);
-	//[&, n] (int a) { m = 53; n = 27; }(4);
-	//	Ongoing: 2022-05-04T20:01:56AEST this is syntax (see above) to declare and call a lambda in a single statement?
+	[&, n] (int a) mutable { m = 53; n = 27; }(4);
+	//[&, n] (int a) { m = 53; n = 27; }(4);			//	error, cannot assign to 'n' in non-mutable lambda
 	cout << "(m,n)=(" << m << "," << n << ")\n";
 	cout << "\n";
 
-	//	Example: lambda as callback-function
-	//	transform(Iterator inputBegin, Iterator inputEnd, Iterator outputBegin, unary_operation)
+
+	//	Example: lambda as callback-function to 'std::transform'
 	auto PlusOne = [](const int value) { return value + 1; };
 	vector<int> testData = {1,2,3,4};
 	std::transform(testData.begin(), testData.end(), testData.begin(), PlusOne);
 
 
-	(void) example_constexpr_result;
+	(void) x; (void) c1; (void) AddOne; (void) example_constexpr_result; 
 	return 0;
 }
 
