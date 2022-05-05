@@ -97,6 +97,8 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 
 //	functor: classes which implement 'operator()', creating objects which can be called like functions
 
+//	callback function: a function supplied as argument to other code in order to customize the behaviour of that code
+
 
 //	Undefined behaviour: A nightmare, which may manifest as any of the following
 //	{{{
