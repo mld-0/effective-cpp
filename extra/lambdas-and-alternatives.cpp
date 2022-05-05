@@ -44,6 +44,8 @@ constexpr bool is_lvalue(T&& x) {
 //	}}}
 //	Ongoings:
 //	{{{
+//	Ongoing: 2022-05-05T19:43:46AEST by default, 'operator()' is const
+//	Ongoing: 2022-05-05T19:26:27AEST lambda vs custom functor object - difference in meaning of 'this'?
 //	Ongoing: 2022-05-04T21:13:15AEST default capture (by-reference) (also somehow dependent-on/captures values (as they were) when the lambda is defined?)
 //	Ongoing: 2022-05-04T21:12:49AEST default capture (by-value) (also) captures the values of variables as of when the lambda is defined?
 //	Ongoing: 2022-05-04T02:14:22AEST extra/stl-algorithms, (an item for) STL '_if' algorithms (find_if, remove_if, count_if) (and alike), (use with 'most trivial predicates' (for their basic functionality), and with lambdas for expanded <flexibility/capability>)
@@ -59,13 +61,12 @@ constexpr bool is_lvalue(T&& x) {
 //	Basic use of the STL '_if' algorithms (find_if, remove_if, count_if) <(which take a 'begin()' pointer, and 'end()' pointer, and a conditional function?)> is typically with a trivial predicate (simple boolean function), <(while lambdas provide a powerful tool for expanded <flexibility/capability>?)>
 	
 
-
 //	lambda expression: an expression, <(<Literal form>, passable as argument without needing to assign to variable)>
 //		[ captureClause ] ( parameters ) -> returnType { body };
 //	Example:
 //		[](int val) { return 0 < val && val < 10; }
 
-//	Lambdas cannot be overloaded
+//	Lambdas cannot be overloaded (by argument)
 
 //	closure: runtime object created by a lambda.
 //	Depending on capture mode, holds copies-of/references-to captured data.
@@ -300,7 +301,6 @@ void func4(std::vector<double>& v) {
 
 //	<(Some of the?)> Core Guidelines on Lambdas:
 //	LINK: https://www.modernescpp.com/index.php/c-core-guidelines-function-objects-and-lambas
-//	{{{
 //	Use a lambda when a function won’t do (to capture local variables, or to write a local function)
 //	{{{
 //		std::function<int(int)> makeLambda(int a){    // (1)
@@ -352,20 +352,38 @@ void func4(std::vector<double>& v) {
 //		}();
 //	Thanks to the in-place executed lambda, you can define the widget x as a constant. You can not change its value and, therefore, you can use it in a multithreading program without expensive synchronization.
 //	}}}
-//	}}}
 
 
-//	LINK: https://www.geeksforgeeks.org/lambda-expression-in-c/
-//	{{{
-//	}}}
 //	LINK: https://towardsdatascience.com/c-basics-understanding-lambda-7df00705fa48
 //	{{{
+//	<(There are two ways to pass a lambda as argument(?))>
+auto AddOne = [value=1](const int x) { return x + value; };
+
+//	Using a template (STL way)
+template<typename T>
+int Plus_Template(const int a, T fp) { return fp(a); }
+
+//	Using std::function
+int Plus_Func(const int a, std::function<int(const int)> fp) { return fp(a); }
+//int Plus_Func_ii(const int a, std::function<decltype(AddOne)> fp) { return fp(a); }		//	error?
+
+
+//	Ongoing: 2022-05-05T19:54:35AEST a template is neater (way to pass a lambda), (but if std::function wasn't neccessary, it wouldn't <exist/be-recomended-as-such>?)
+//	Ongoing: 2022-05-05T19:47:03AEST using std::function to pass lambda requires <specifying/supplying> the type of that lambda (to specalize std::function)(?) [...] -> is using 'decltype()' (any) improvement? (it does not work?)
 //	}}}
+
 //	LINK: https://www.cprogramming.com/c++11/c++11-lambda-closures.html
 //	{{{
-//	}}}
-//	LINK: https://www.softwaretestinghelp.com/lambdas-in-cpp/
-//	{{{
+
+//	One big advantage of std::function over templates is that if you write a template, you need to put the whole function in the header file, whereas std::function does not.
+
+//	Example: Delegate, creating a regular function from a method:
+//		EmailProcessor processor;
+//		MessageSizeStore size_store;
+//		processor.setHandlerFunc( 
+//		        [&] (const std::string& message) { size_store.checkMessage( message ); } 
+//		);	
+
 //	}}}
 
 
@@ -443,16 +461,19 @@ void func4(std::vector<double>& v) {
 //	This is under active discussion in standardization, and may be addressed in a future version of the standard by adding a new capture mode or possibly adjusting the meaning of [=]. For now, just be explicit.
 //	}}}
 
+
 //	Intuition for by-value capture values being const by default: calling lambda with same arguments <should/will> produce the same result each time (not true for by-reference capture variables, which can be modified by a non-mutable lambda).
 
 //	<(Lambdas can use <?> variables without having to capture them?)>
+//	<(In a lambda 'this' refers to the outer scope's object, not to the <(hidden pointer, (pointer to functor object that a lambda <is/becomes>))>
 
-
-//	Capture modes: <C++11> by-reference and by-value
-//	<>
 
 
 //	<(Lambda expression / closure / nested lambda)>:
+//	<>
+
+
+//	Example: lambda equivalent functor
 //	<>
 
 
@@ -463,9 +484,9 @@ void func4(std::vector<double>& v) {
 
 
 //	Ongoing: 2022-05-04T02:39:16AEST (declaring a lambda with a (captured?) global variable), details of error 'does not have automatic storage duration'
-//	<(error: 'x' cannot be captured because it does not have automatic storage duration)>
-//int x = 23;
-//auto c1 = [x](int y) { return x * y > 55; };
+int x = 23;
+//auto c1 = [x](int y) { return x * y > 55; };		//	error: 'x' cannot be captured because it does not have automatic storage duration
+auto c1 = [](int y) { return x * y > 55; };			//	Lambda can access global variable 'x'
 
 
 int main()
@@ -497,6 +518,12 @@ int main()
 	//	Ongoing: 2022-05-04T20:01:56AEST this is syntax (see above) to declare and call a lambda in a single statement?
 	cout << "(m,n)=(" << m << "," << n << ")\n";
 	cout << "\n";
+
+	//	Example: lambda as callback-function
+	//	transform(Iterator inputBegin, Iterator inputEnd, Iterator outputBegin, unary_operation)
+	auto PlusOne = [](const int value) { return value + 1; };
+	vector<int> testData = {1,2,3,4};
+	std::transform(testData.begin(), testData.end(), testData.begin(), PlusOne);
 
 
 	(void) example_constexpr_result;
