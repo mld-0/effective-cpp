@@ -1,3 +1,9 @@
+TODO: 2022-05-07T04:24:20AEST effective-c++, extra/lambdas-and-alternatives, meaning of copying (moveing?) a lambda
+
+TODO: 2022-05-03T21:32:50AEST effective-c++, item 16, thread safety const member funcs, (a book on the topic of exception/thread safety)
+
+TODO: 2022-05-03T21:18:56AEST effective-c++, item 16, thread safety const member funcs, (an example of) thread1/thread2 calling 'p.roots()' with/without mutex
+
 TODO: 2022-04-29T03:42:59AEST effective-c++, extra/member-variable-initialization, constructor delegation
 
 TODO: 2022-04-29T03:32:36AEST effective-c++, extra/member-variable-initalization, member variables that are static and/or const
@@ -211,4 +217,6 @@ TODO: 2022-01-25T22:37:54AEDT effective-c++, extra/copy-and-swap, what (special 
 TODO: 2022-01-25T07:03:21AEDT effective-c++, 11-handle-self-assignment, (this being a slightly complicated topic of which <from the book we adapt a half finished example (further)>), how best to do the 'swap()' in 'copy-and-swap' is a somewhat involved subject (swap as member/friend function, implemented best / in terms of a default?) (does copy-and-swap warrent a dedicated example (something the book doesn't make a dedicated item?)) (best copy and swap implements both move and swap (together)?)
 
 TODO: 2022-01-25T01:49:06AEDT effective-c++, applying the 'return *this' (i.e: reference to the LHS of the expresion(?)) rule for assignment operator to the two-argument form of the assignment operators
+
+TODO: 2022-05-03T03:03:11AEST effective-c++, extra/member-variable-initialization, many ongoings / incomplete examples / cleanup needed
 

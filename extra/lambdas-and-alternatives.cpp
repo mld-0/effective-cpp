@@ -73,6 +73,8 @@ constexpr bool is_lvalue(T&& x) {
 //	LINK: https://www.cprogramming.com/c++11/c++11-lambda-closures.html
 //	}}}
 
+//	TODO: 2022-05-07T04:24:20AEST effective-c++, extra/lambdas-and-alternatives, meaning of copying (moveing?) a lambda
+
 //	(Book claim:) The functionality of the C++ lambda can be accomplished without it.
 //	Lambdas provide a convenient way to create function objects, (and make C++ a better programming language).
 
@@ -353,7 +355,7 @@ void func4(std::vector<double>& v) {
 //	Thanks to the in-place executed lambda, you can define the widget x as a constant. You can not change its value and, therefore, you can use it in a multithreading program without expensive synchronization.
 //	}}}
 
-//	4) Lambdas that capture "this" should capture everything explicitly
+//	4) Lambdas that capture 'this' should capture everything explicitly
 //	LINK: https://rules.sonarsource.com/cpp/RSPEC-5019
 //	{{{
 //	A lambda can only capture local variables. When a lambda is defined within a member function, you may believe that you are capturing a member variable of the current class, but in fact, what you are capturing is this. This may be very surprising, and lead to bugs if the lambda is then used after the current object has been destroyed.
