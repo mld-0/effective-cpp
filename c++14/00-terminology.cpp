@@ -99,6 +99,12 @@ enum class Color { Yello, Red, Blue };				//	scoped enum definition (see item 10
 
 //	callback function: a function supplied as argument to other code in order to customize the behaviour of that code
 
+//	operator: <>
+//	operator-overloading: implementing operators (as functions) for custom data types
+//	operand: A variable/value involved in an operation
+//	unar-operator: operator that performs its operation on one operand
+//	binary-operator: operator that performs its operation on two operands
+
 
 //	Undefined behaviour: A nightmare, which may manifest as any of the following
 //	{{{
