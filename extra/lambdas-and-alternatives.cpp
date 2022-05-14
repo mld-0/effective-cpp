@@ -73,6 +73,7 @@ constexpr bool is_lvalue(T&& x) {
 //	LINK: https://www.cprogramming.com/c++11/c++11-lambda-closures.html
 //	}}}
 
+//	TODO: 2022-05-14T15:19:47AEST effective-c++, extra/lambdas-and-alternatives, passing lambdas/function-objects: by value, by reference, moving, (best practices)
 //	TODO: 2022-05-07T04:24:20AEST effective-c++, extra/lambdas-and-alternatives, meaning of copying (moveing?) a lambda
 
 //	(Book claim:) The functionality of the C++ lambda can be accomplished without it.
