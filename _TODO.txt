@@ -1,3 +1,15 @@
+TODO: 2022-05-15T01:13:46AEST effective-c++, debug/gcc-optimization, ((read link) (see below) (gcc.gnu.org) (on gcc/g++ 'Debug' mode)) -> what is gcc already doing for us vis-a-vis debugging, and (the point is: are flags like 'lookout for undefined-behaviour/leaks/stackoverflow/bad-stuff' enabled when we -Og or -O0?)
+
+TODO: 2022-05-14T22:14:39AEST effective-c++, extra/by-ref-vs-val-swap-assignment, (run and bench in 3 modes) (what different ways might one do that?): both by-ref/by-val swap-assignment, and the custom-assignment [...] <(point of <article-example> is custom-assign vs assign-by-swap(?))> [...] interface-class and implementation class (that must implement assignment?)
+
+TODO: 2022-05-14T17:10:34AEST effective-c++, extra/fast-by-value, 'Want Speed? Pass by Value.' archived article (read comments) much discussion (with many examples) for link to archived article (web.archive.org) -> consider all examples for item
+
+TODO: 2022-05-14T16:48:22AEST effective-c++, extra/by-ref-vs-val-swap-assignment (review example (and 'MyVector'))
+
+TODO: 2022-05-14T15:19:47AEST effective-c++, extra/lambdas-and-alternatives, passing lambdas/function-objects: by value, by reference, moving, (best practices)
+
+TODO: 2022-05-14T15:09:50AEST effective-c++, extra/fast-by-value, (why it is better to pass iterators / function-objects by value?)
+
 TODO: 2022-05-07T04:24:20AEST effective-c++, extra/lambdas-and-alternatives, meaning of copying (moveing?) a lambda
 
 TODO: 2022-05-03T21:32:50AEST effective-c++, item 16, thread safety const member funcs, (a book on the topic of exception/thread safety)
