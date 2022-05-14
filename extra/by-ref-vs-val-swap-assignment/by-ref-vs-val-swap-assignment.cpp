@@ -8,6 +8,7 @@ using namespace std;
 //	LINK: http://web.archive.org/web/20140113221447/http://cpp-next.com/archive/2009/08/want-speed-pass-by-value/
 //	Benchmark by-value vs by-reference swap-implemented assignment for custom 'MyVector' -> (what am I even looking at with 'MyVector'?)
 
+
 //	Results:
 //	by-value
 //	clang++ -stdlib=libc++ -std=c++11 -O3 -DUSE_SWAP_ASSIGNMENT by-ref-vs-val-swap-assignment.cpp
@@ -73,38 +74,51 @@ public:
 
 #ifndef USE_SWAP_ASSIGNMENT
 
+    //MyVector& operator=(const MyVector& v)
+    //{
+    //    if (this != &v)
+    //    {
+    //        std::size_t N = v.size();
+    //        if (capacity() < N)
+    //        {
+    //            clear();
+    //            ::operator delete(begin_);
+    //            begin_ = end_ = static_cast<T*>(::operator new(N*sizeof(T)));
+    //            capacity_ = begin_ + N;
+    //        }
+    //        T* p = begin_;
+    //        const T* q = v.begin_;
+    //        for (; p < end_ && q < v.end_; ++p, ++q)
+    //            *p = *q;
+    //        if (q < v.end_)
+    //        {
+    //            for (; q < v.end_; ++q, ++end_)
+    //                ::new(end_) T(*q);
+    //        }
+    //        else
+    //        {
+    //            while (end_ > p)
+    //            {
+    //                --end_;
+    //                end_->~T();
+    //            }
+    //        }
+    //    }
+    //    return *this;
+    //}
+
     MyVector& operator=(const MyVector& v)
     {
-        if (this != &v)
-        {
-            std::size_t N = v.size();
-            if (capacity() < N)
-            {
-                clear();
-                ::operator delete(begin_);
-                begin_ = end_ = static_cast<T*>(::operator new(N*sizeof(T)));
-                capacity_ = begin_ + N;
-            }
-            T* p = begin_;
-            const T* q = v.begin_;
-            for (; p < end_ && q < v.end_; ++p, ++q)
-                *p = *q;
-            if (q < v.end_)
-            {
-                for (; q < v.end_; ++q, ++end_)
-                    ::new(end_) T(*q);
-            }
-            else
-            {
-                while (end_ > p)
-                {
-                    --end_;
-                    end_->~T();
-                }
-            }
-        }
+		auto tmp = v;
+        swap(tmp);
         return *this;
     }
+    //MyVector& operator=(MyVector&& v)
+    //{
+    //    clear();
+    //    swap(v);
+    //    return *this;
+    //}
 
     MyVector& operator=(MyVector&& v)
     {
@@ -114,6 +128,19 @@ public:
     }
 
 #else
+
+    //MyVector& operator=(const MyVector& v)
+    //{
+	//		auto tmp = v;
+    //    swap(tmp);
+    //    return *this;
+    //}
+    //MyVector& operator=(MyVector&& v)
+    //{
+    //    clear();
+    //    swap(v);
+    //    return *this;
+    //}
 
     MyVector& operator=(MyVector v)
     {
