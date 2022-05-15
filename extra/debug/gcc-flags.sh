@@ -130,7 +130,13 @@
 #			-o <file>               Write output to <file>
 #			-pedantic               Warn on language extensions
 
+#			-S						(output assembly) only run preprocess/compilation steps
+
 #			-B <prefix>             Search $prefix/$triple-$file and $prefix$file for executables, libraries, includes, and data files used by the compiler. $prefix may or may not be a directory
+
+#			-save-temps			save intermediate compilation results
+
+#			-save-stats
 
 #			<(and many more)>
 
