@@ -17,10 +17,12 @@ using namespace std;
 
 //	Member function interfaces are always inherited: Any function that applies to the Base class must also apply to the Derived class
 
+//	Example: Abstract Base Class
 class Shape {		
 public:
 	virtual ~Shape() = default;					//	Any class with virtual functions should have a virtual destructor <(what about Derived classes?)>
 	virtual void draw() const = 0;				//	declaring a pure virtual function makes this an abstract class
+	//	note: '= 0' makes a function an abstract class (cannot be created) -> '= delete' does not
 	virtual void error(const string& msg) {
 		cerr << "Shape::error, msg=(" << msg << ")\n";
 	}
