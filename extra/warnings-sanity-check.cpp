@@ -6,6 +6,8 @@
 #include <iomanip>
 using namespace std;
 //	{{{2
+//	TODO: 2022-05-23T16:35:51AEST effective-c++, warnings-sanity-check, a more reasonable set of maximalist warnings
+
 
 //	Before questioning one's sanity while debugging, try enabling all warnings:
 //	Note: likely produces so many warnings the bug-related-warning may be buried

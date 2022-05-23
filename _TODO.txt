@@ -1,3 +1,5 @@
+TODO: 2022-05-23T16:35:51AEST effective-c++, warnings-sanity-check, a more reasonable set of maximalist warnings
+
 TODO: 2022-05-15T01:13:46AEST effective-c++, debug/gcc-optimization, 'gcc Debug Mode' ((read link) (see below) (gcc.gnu.org) (on gcc/g++ 'Debug' mode)) -> what is gcc already doing for us vis-a-vis debugging, and (the point is: are flags like 'lookout for undefined-behaviour/leaks/stackoverflow/bad-stuff' enabled when we -Og or -O0?)
 
 TODO: 2022-05-14T22:14:39AEST effective-c++, extra/by-ref-vs-val-swap-assignment, (run and bench in 3 modes) (what different ways might one do that?): both by-ref/by-val swap-assignment, and the custom-assignment [...] <(point of <article-example> is custom-assign vs assign-by-swap(?))> [...] interface-class and implementation class (that must implement assignment?)
